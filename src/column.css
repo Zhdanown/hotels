@@ -1,0 +1,9 @@
+.column {
+    flex: 1;
+    height: 100vh;
+}
+
+.column .container {
+    text-align: center;
+    padding: 20px;
+}
