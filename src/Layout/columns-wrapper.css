@@ -1,6 +1,7 @@
 body {
     margin: 0;
 }
-.columns-wrapper {
+.desktop-layout {
     display: flex;
+    overflow: hidden;
 }

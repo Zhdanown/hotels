@@ -1,0 +1,31 @@
+.splash {
+  /* background: rgba(50,50,50,1); */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: all 0.4s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background-color: #333;
+}
+
+.splash.out {
+  animation-name: dissolve;
+  animation-fill-mode: forwards;
+  /* animation-duration: 2s; */
+}
+
+@keyframes dissolve {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(5);
+  }
+}

@@ -1,0 +1,43 @@
+.desktop-layout .column {
+  flex: 1;
+  /* flex: 8; */
+  height: 100vh;
+  transition: all 0.5s;
+  /* transform-origin: right; */
+  overflow: hidden;
+  /* transform: scale(.8); */
+
+}
+
+.desktop-layout .column .column-wrapper {
+  overflow-y: scroll;
+  height: 100%;
+  
+}
+
+.desktop-layout .column .container {
+  text-align: center;
+  padding: 1rem;
+  
+  box-sizing: border-box;
+  /* transition: all 0.5s; */
+}
+
+.desktop-layout .column.active {
+  /* flex: 14; */
+  /* transform: scale(1); */
+
+}
+
+.desktop-layout .column.offscreen {
+  transform: scaleX(0.5) translateX(100%);
+}
+
+.desktop-layout .column:nth-child(1) {
+  transform-origin: left;
+}
+.desktop-layout .column:nth-child(2) {
+}
+.desktop-layout .column:nth-child(3) {
+  transform-origin: right;
+}
