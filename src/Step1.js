@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import DateRangePicker from "./DateRangePicker";
-import Travelers from "./Travelers";
+import Guests from "./Guests";
+import LayoutContext from "./Layout/LayoutContext";
+import Button from "./components/Button";
 
-function Step1({ onSelect, inactive }) {
+function Step1({ inactive, config }) {
+  const layoutContext = useContext(LayoutContext);
+
+  const { setStep } = layoutContext;
   const onButtonClick = () => {
-    onSelect();
+
+    setStep(step => ++step);
   };
   // if (inactive) {
   //   return (
@@ -51,16 +57,10 @@ function Step1({ onSelect, inactive }) {
 
   return (
     <>
-      <Travelers />
-      <DateRangePicker />
+      <Guests children={config.hotel_child_categories} />
+      <DateRangePicker availabilityColors={config.hotel_availability_colors} />
 
-      <button
-        className="btn btn-block btn-warning"
-        type="button"
-        onClick={onButtonClick}
-      >
-        Искать номера
-      </button>
+      <Button onClick={onButtonClick}>Искать номера</Button>
     </>
   );
 }

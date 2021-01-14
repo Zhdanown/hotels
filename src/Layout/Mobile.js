@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import useWindowWidth from "../hooks/useWindowWidth";
 import "./layout-mobile.css";
 
 function LayoutMobile({ children, currentStep, setStep }) {
-  //   const [index, setIndex] = useState(currentStep);
-
   const goBack = () => {
     setStep(step => --step);
   };
@@ -41,9 +39,12 @@ function LayoutMobile({ children, currentStep, setStep }) {
 
 function MColumn({ children, active, goBack, goForward }) {
   return (
-    <div className={"column" + (active ? " active" : "")} style={{
+    <div
+      className={"column" + (active ? " active" : "")}
+      style={{
         opacity: active ? 1 : 0.5,
-    }}>
+      }}
+    >
       <div className="column-wrapper">
         <ColumnNavigation goBack={goBack} goForward={goForward} />
         <div className="_container">{children}</div>

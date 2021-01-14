@@ -1,15 +1,65 @@
 import React, { useState, useEffect } from "react";
 import Litepicker from "litepicker";
+import styled from "styled-components";
 
-const _range = [
-  new Date(2021, 0, 8),
-  new Date(2021, 0, 9),
-  new Date(2021, 0, 10),
-  new Date(2021, 0, 11),
-];
+const ColorSquare = styled.span`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: ${props => props.color};
+  margin-right: 1rem;
+`;
 
-function DateRangePicker() {
-  const [range, setRange] = useState({ start: null, end: null });
+const AvailabilityItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0;
+`;
+
+const InputContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 1rem;
+`;
+
+const DatePickerContainer = styled.div`
+  position: relative;
+  text-align: center;
+`;
+
+// const _range = [
+//   new Date(2021, 0, 8),
+//   new Date(2021, 0, 9),
+//   new Date(2021, 0, 10),
+//   new Date(2021, 0, 11),
+// ];
+
+function DateRangePicker({ availabilityColors }) {
+  const [, setRange] = useState({ start: null, end: null });
+  // const [availableDates, setAvailability] = useState([])
+  // const config = useContext(ConfigContext);
+
+  
+
+  // useEffect(() => {
+  //   if (config && config.color_availability) {
+  //     // const url = `https://nlb.agex.space/api/v1/${config.pms_type}/avilability/${config.id}/?arrival=11.02.2021&departure=13.02.2021&adults=2`
+  //     const url = "http://localhost:5000/nlb_api/availability";
+
+  //     async function fetchAvailableDates (url) {
+  //       const res = await fetch(url);
+  //       const json = await res.json();
+  //       setAvailability(json);
+  //     }
+
+  //     fetchAvailableDates(url)
+  //   }
+  // }, [config]);
+
+
 
   useEffect(() => {
     let picker = new Litepicker({
@@ -42,9 +92,9 @@ function DateRangePicker() {
     });
 
     function onStartChange(startDate) {
-      const inRange = _range.find(
-        date => date.getDate() === startDate.getDate()
-      );
+      // const inRange = _range.find(
+      //   date => date.getDate() === startDate.getDate()
+      // );
 
       //   if (inRange) {
       //   debugger
@@ -57,41 +107,30 @@ function DateRangePicker() {
 
   return (
     <div style={{ margin: "1rem 0" }}>
-      <div
-        style={{
-          
-          // textAlign: "center",
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
+      <InputContainer>
         <input
           type="date"
           name="startDate"
           id="startDate"
           style={{ width: "8.5rem" }}
         />
-
-        <span>{" - "}</span>
-
+        <span style={{ margin: "0 .5rem" }}>{" - "}</span>
         <input
           type="date"
           name="endDate"
           id="endDate"
           style={{ width: "8.5rem" }}
         />
+      </InputContainer>
+      <DatePickerContainer id="date-rande-picker"></DatePickerContainer>
+      <div>
+        {availabilityColors.map(item => (
+          <AvailabilityItem key={item.id}>
+            <ColorSquare color={item.color}></ColorSquare>
+            <span>{item.name}</span>
+          </AvailabilityItem>
+        ))}
       </div>
-      <div id="date-rande-picker" style={{
-        position: "relative",
-        textAlign: 'center'
-      }}></div>
-      <p style={{ margin: "1rem 0", textAlign: "center" }}>Выбранные даты:</p>
-      <p style={{ textAlign: "center" }}>
-        {range.start && range.start.toLocaleDateString()} -{" "}
-        {range.end && range.end.toLocaleDateString()}
-      </p>
     </div>
   );
 }

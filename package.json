@@ -2,10 +2,12 @@
   "name": "hotelsClient",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://nlb.agex.space/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.21.1",
     "litepicker": "^1.5.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -16,7 +18,8 @@
     "react-transition-group": "^4.4.1",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
