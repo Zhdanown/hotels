@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
+import LayoutContext from "./LayoutContext";
 import useWindowWidth from "../hooks/useWindowWidth";
 import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
-
-import LayoutContext from "./LayoutContext";
 
 // const stepsConfig = {
 //   1: [1],

@@ -3,6 +3,7 @@ import produce from "immer";
 import api from "./redux/api";
 
 const SET_CONFIG = "SET_CONFIG";
+const CONFIG_ERROR = "CONFIG_ERROR";
 const CHANGE_PARAMS = "reservation/CHANGE_PARAMS";
 const SUBMIT_ORDER = "reservation/SUBMIT_ORDER";
 const IS_BOOKING = "reservation/IS_BOOKING";
@@ -10,6 +11,7 @@ const SET_BOOKING_RESPONSE = "reservation/SET_BOOKING_RESPONSE";
 
 const initialState = {
   config: null,
+  configError: null,
   params: {
     room: null,
     rate: null,
@@ -28,6 +30,9 @@ const reducer = produce((draft, action) => {
   switch (action.type) {
     case SET_CONFIG:
       return { ...draft, config: action.payload };
+
+    case CONFIG_ERROR:
+      return { ...draft, configError: action.error };
 
     case CHANGE_PARAMS:
       draft.params = { ...draft.params, ...action.payload };
@@ -49,10 +54,18 @@ const reducer = produce((draft, action) => {
 export default reducer;
 
 export const loadConfig = slug => async dispatch => {
-  const url = "api/v1/hotel-config/welna_kaluga/";
-  const response = await api.get(url);
+  try {
+    const url = `api/v1/hotel-config/${slug}/`;
+    const response = await api.get(url);
 
-  dispatch({ type: SET_CONFIG, payload: response.data });
+    dispatch({ type: SET_CONFIG, payload: response.data });
+  } catch (error) {
+    if (error.response.status === 404) {
+      dispatch({ type: CONFIG_ERROR, error: "Отель не найден :(" });
+    } else {
+      throw Error(error);
+    }
+  }
 };
 
 export function changeParams(payload) {
@@ -139,6 +152,7 @@ async function requestRoom(bookingInfo) {
 }
 
 export const getConfig = state => state.reservation.config;
+export const getConfigError = state => state.reservation.configError;
 export const getParams = state => state.reservation.params;
 export const getRoom = state => state.reservation.params.room;
 export const getRate = state => state.reservation.params.rate;
