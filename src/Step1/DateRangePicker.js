@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Litepicker from "litepicker";
 import styled from "styled-components";
+
+import { changeParams, getAvailabilityColors } from "../reservation";
 
 const ColorSquare = styled.span`
   display: inline-block;
@@ -37,12 +40,24 @@ const DatePickerContainer = styled.div`
 //   new Date(2021, 0, 11),
 // ];
 
-function DateRangePicker({ availabilityColors }) {
-  const [, setRange] = useState({ start: null, end: null });
+function DateRangePicker() {
+  const [range, setRange] = useState(null);
+  const dispatch = useDispatch();
   // const [availableDates, setAvailability] = useState([])
-  // const config = useContext(ConfigContext);
 
-  
+  const availabilityColors = useSelector(getAvailabilityColors);
+
+  useEffect(() => {
+    if (!range) return;
+    
+    const { start, end } = range;
+
+    dispatch(changeParams({
+      arrival: start.toLocaleDateString(),
+      departure: end.toLocaleDateString(),
+    }))
+
+  }, [dispatch, range]);
 
   // useEffect(() => {
   //   if (config && config.color_availability) {
@@ -58,8 +73,6 @@ function DateRangePicker({ availabilityColors }) {
   //     fetchAvailableDates(url)
   //   }
   // }, [config]);
-
-
 
   useEffect(() => {
     let picker = new Litepicker({
@@ -95,7 +108,6 @@ function DateRangePicker({ availabilityColors }) {
       // const inRange = _range.find(
       //   date => date.getDate() === startDate.getDate()
       // );
-
       //   if (inRange) {
       //   debugger
       //   picker.setLockDays(range);
