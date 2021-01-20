@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getConfig, getConfigError, loadConfig } from "./reservation";
-import { withSplash } from "./Splash";
+import SplashScreen from "./Splash";
 
 import Layout, { Navbar } from "./Layout/Layout";
 import Step1 from "./Step1/Step1";
@@ -21,34 +21,38 @@ function ConfigLoader({ children }) {
   const configError = useSelector(getConfigError);
 
   useEffect(() => {
-    if (slug) dispatch(loadConfig(slug));
+    if (slug) {
+      dispatch(loadConfig(slug));
+    }
   }, [dispatch, slug]);
 
-  if (!slug) {
-    return (
-      <Centered column fullScreen>
-        <h4>Необходим адрес отеля</h4>
-      </Centered>
-    );
-  } else if (configError) {
+  const getMessage = () => {
+    const text = () => {
+      if (!slug) return "Необходим адрес отеля";
+      else if (configError) return "Проверьте url адрес";
+      else if (!config) return "Загрузка";
+      else return null;
+    };
+
+    if (!text()) return null;
+
     return (
       <Centered column fullScreen>
         <h4>{configError}</h4>
-        <h6>Проверьте url адрес</h6>
+        <h6>{text()}</h6>
       </Centered>
     );
-  } else if (!config) {
-    return (
-      <Centered column fullScreen>
-        <h6>Загрузка...</h6>
-      </Centered>
-    );
-  } else {
-    return <>{children}</>;
-  }
+  };
+
+  return (
+    <>
+      <SplashScreen>{getMessage()}</SplashScreen>
+      {config ? children : null}
+    </>
+  );
 }
 
-export default withSplash(App);
+export default App;
 
 function App() {
   return (
@@ -56,7 +60,6 @@ function App() {
       <Route path="/:slug?">
         <ConfigLoader>
           {false && <Navbar />}
-
           <LayoutContextProvider>
             <Layout>
               <Step1 />

@@ -158,6 +158,19 @@ export const getRoom = state => state.reservation.params.room;
 export const getRate = state => state.reservation.params.rate;
 export const getPrimaryColor = state =>
   getConfig(state).hotel_style_config.primary_color;
+export const getSvgBgColor = state => {
+  const config = getConfig(state);
+  return config ? config.hotel_style_config.svg_background_color : null;
+};
+export const getSvgUrl = state => {
+  const config = getConfig(state);
+  return config ? config.hotel_style_config.svg : null;
+};
+export const getCssUrl = state => {
+  const config = getConfig(state);
+  return config ? config.hotel_style_config.splash : null;
+};
+
 export const getchildCategories = state =>
   getConfig(state).hotel_child_categories;
 export const getAvailabilityColors = state =>
