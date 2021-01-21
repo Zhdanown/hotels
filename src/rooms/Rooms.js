@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import DOMpurify from "dompurify";
 import styled from "styled-components";
 
 import LayoutContext from "../Layout/LayoutContext";
+import HTMLParser from "./HTMLParser";
 import Button from "../components/Button";
 import { changeParams, getPrimaryColor } from "../reservation";
 import { getRooms, getRoomsLoadState } from "./roomsReducer";
@@ -29,8 +29,20 @@ const StyledRoomShowcase = styled.div`
   border: 1px solid black;
   border-radius: 0.5rem;
   margin: 1rem;
-  padding: 0.5rem;
+  overflow: hidden;
 `;
+
+const RoomTitle = styled.div`
+  position: absolute;
+  top: 0;
+  color: white;
+  width: 100%;
+  padding: 1rem;
+`;
+
+const Content = styled.div`
+  padding: 1rem;
+`
 
 function RoomShowcase({ room }) {
   const layoutContext = useContext(LayoutContext);
@@ -39,10 +51,11 @@ function RoomShowcase({ room }) {
   const primaryColor = useSelector(getPrimaryColor);
 
   const {
+    preview_img,
     name,
     room_code,
     max_price,
-    short_descriprion: short_description,
+    short_description,
     rates,
   } = room;
 
@@ -53,44 +66,67 @@ function RoomShowcase({ room }) {
   };
 
   return (
-    <StyledRoomShowcase bgColor={primaryColor}>
-      <h6>{name}</h6>
-      <p>
-        Code: <b>{room_code}</b>
-      </p>
-      <p>
-        Max Price: <b>{max_price}</b>
-      </p>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: DOMpurify.sanitize(short_description),
-        }}
-      ></div>
-      <h4 style={{ textAlign: "center" }}>Тарифы</h4>
-      {rates.map(rate => (
-        <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
-      ))}
+    <StyledRoomShowcase bgColor={primaryColor} style={{ position: "relative" }}>
+      <div className="image-preview">
+        <img src={preview_img} alt="" style={{ width: "100%" }} />
+        <RoomTitle>
+          <h4>{name}</h4>
+          <span>
+            <b>{max_price} &#8381;</b>
+          </span>
+        </RoomTitle>
+      </div>
+
+      <Content>
+        <HTMLParser html={short_description} />
+        <h4 style={{ textAlign: "center" }}>Тарифы</h4>
+        {rates.map(rate => (
+          <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
+        ))}
+      </Content>
     </StyledRoomShowcase>
   );
 }
 
 const StyledRoomRate = styled.div`
-  margin: 1rem;
+  margin: 2rem 0;
+  border: 1px solid ${props => props.bg};
+  padding: .5rem;
 `;
+
 const RateHeader = styled.h5`
   display: flex;
   justify-content: space-between;
 `;
 
+const Night = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 function RoomRate({ rate, onClick }) {
-  const { rate_code, short_description } = rate;
+  const primaryColor = useSelector(getPrimaryColor)
+  const {
+    rate_code,
+    short_description,
+    long_description,
+    total_price,
+    nights,
+  } = rate;
   return (
-    <StyledRoomRate>
-      <RateHeader>
-        {rate_code}
+    <StyledRoomRate bg={primaryColor}>
+      <RateHeader bg={primaryColor}>
+        {rate_code} {total_price} &#8381;
         <Button onClick={() => onClick(rate)}>Выбрать</Button>
       </RateHeader>
-      <p>{short_description}</p>
+      <HTMLParser html={short_description} />
+      <HTMLParser html={long_description} />
+      {nights.map(night => (
+        <Night key={night.date}>
+          <span>{night.date}</span>
+          <b>{night.price} &#8381;</b>
+        </Night>
+      ))}
     </StyledRoomRate>
   );
 }
