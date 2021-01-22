@@ -97,7 +97,6 @@ function* bookRoom(action) {
     ...bookingInfo,
   });
   yield put(isBooking(false));
-
   yield put(setBookingResponse(payload));
 
   console.log(payload);
@@ -148,7 +147,7 @@ async function requestRoom(bookingInfo) {
   //   room: "STD",
   // };
 
-  return response;
+  return response.data;
 }
 
 export const getConfig = state => state.reservation.config;

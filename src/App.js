@@ -6,7 +6,7 @@ import SplashScreen from "./Splash";
 import Layout, { Navbar } from "./Layout/Layout";
 import Step1 from "./Step1/Step1";
 import Rooms from "./rooms/Rooms";
-import Step3 from "./Step3";
+import Step3 from "./Step3/Step3";
 import { Centered } from "./components/Centered";
 import { LayoutContextProvider } from "./Layout/LayoutContext";
 import { BrowserRouter, Route } from "react-router-dom";
