@@ -7,6 +7,11 @@ import {
   getBookingState,
   getBookingResponse,
 } from "../reservation";
+import Modal from "../components/Modal";
+import FormNewGuest from "./FormNewGuest";
+import FormHasAccount from "./FormHasAccount";
+import Button from "../components/Button";
+import FormNoRegistration from "./FormNoRegistration";
 
 const fields = [
   { type: "text", label: "Имя", name: "firstName" },
@@ -15,12 +20,21 @@ const fields = [
   { type: "text", label: "Телефон", name: "tel" },
 ];
 
+const forms = [
+  { id: "have-account", label: "Есть аккаунт" },
+  { id: "new-guest", label: "Новый гость" },
+  { id: "no-registration", label: "Без регистрации" },
+];
+
 function Confirm() {
   const dispatch = useDispatch();
 
   const room = useSelector(getRoom);
   const rate = useSelector(getRate);
   const isBooking = useSelector(getBookingState);
+
+  const [curForm, setForm] = useState(forms[2]);
+  const [modal, setModal] = useState(false);
 
   const [guest, setGuest] = useState({
     firstName: "John",
@@ -42,6 +56,14 @@ function Confirm() {
     console.log("Book room", guest);
   };
 
+  const selectForm = formName => {
+    setForm(formName);
+  };
+
+  const openModal = () => {
+    setModal(true);
+  };
+
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
   } else {
@@ -54,44 +76,63 @@ function Confirm() {
             {rate && <p>{rate.short_description}</p>}
           </div>
         )}
-        <form action="" onSubmit={onSubmit}>
-          {fields.map(field => (
-            <InputField
-              key={field.name}
-              type={field.type}
-              label={field.label}
-              name={field.name}
-              value={guest[field.name]}
-              onChange={onGuestChange}
-            />
-          ))}
 
-          <button type="submit">Продолжить</button>
-        </form>
+        <div className="buttons has-addons is-centered mt-4">
+          {forms.map(form => (
+            <button
+              key={form.id}
+              className={
+                "button is-small" +
+                (curForm.id === form.id ? " is-selected is-success" : "")
+              }
+              onClick={() => selectForm(form)}
+            >
+              {form.label}
+            </button>
+          ))}
+        </div>
+
+        {curForm.id === "new-guest" && (
+          <FormNewGuest
+            guest={guest}
+            onSubmit={onSubmit}
+            onGuestChange={onGuestChange}
+          />
+        )}
+
+        {curForm.id === "have-account" && (
+          <FormHasAccount
+            guest={guest}
+            onSubmit={onSubmit}
+            onGuestChange={onGuestChange}
+          />
+        )}
+        {curForm.id === "no-registration" && (
+          <FormNoRegistration
+            guest={guest}
+            onSubmit={onSubmit}
+            onGuestChange={onGuestChange}
+          />
+        )}
+        <div className="mt-6" style={{ textAlign: "center" }}>
+          <Button block onClick={openModal}>
+            Продолжить
+          </Button>
+        </div>
+
+        <Modal open={modal} toggle={setModal}>
+          <h1 className="is-size-4">Варианты бронирования</h1>
+          <div className="mt-3">
+            <Button block>Оплатить картой</Button>
+          </div>
+
+          <div className="mt-3">
+            <Button block>Забронировать</Button>
+          </div>
+        </Modal>
       </div>
     );
   }
 }
 
 export default Confirm;
-
-function InputField({ type, label, name, value, onChange }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        margin: ".5rem",
-      }}
-    >
-      <label htmlFor={name}>{label}</label>
-      <input
-        type={type}
-        name={name}
-        id={name}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  );
-}

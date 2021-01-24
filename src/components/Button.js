@@ -14,7 +14,7 @@ function Button({ children, onClick, ...props }) {
   return (
     <ColoredButton
       type="button"
-      className="btn"
+      className={"button" + (props.small ? ' is-small' : '')}
       bgColor={primaryColor}
       onClick={onClick}
       {...props}
