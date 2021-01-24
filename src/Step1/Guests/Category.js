@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import { useSelector } from "react-redux";
+import styled from "styled-components";
 import {
   StyledCategory,
   CategoryName,
   CategoryLabel,
   CounterValue,
+  CounterButton,
 } from "./styled";
-import Button from "../../components/Button";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import { getPrimaryColor } from "../../reservation";
+import { Centered } from "../../components/Centered";
+
+const Sign = styled.button`
+  font-size: 1.2rem;
+  color: ${props => props.color};
+`;
 
 function Category({ initialValue, onChange, name, annotation }) {
   const [count, setCount] = useState(initialValue);
+  const primaryColor = useSelector(getPrimaryColor);
+  console.log("primaryColor", primaryColor);
 
   const decrement = () => setCount(x => (x > 0 ? --x : x));
   const increment = () => setCount(x => ++x);
@@ -19,17 +30,21 @@ function Category({ initialValue, onChange, name, annotation }) {
   }, [count, onChange]);
 
   return (
-    <StyledCategory>
+    <StyledCategory justified>
       <CategoryName>
         <CategoryLabel>{name}</CategoryLabel>
         <span>{annotation}</span>
       </CategoryName>
 
-      <div>
-        <Button onClick={decrement}>-</Button>
+      <Centered>
+        <CounterButton onClick={decrement} color={primaryColor}>
+          <Sign as={MinusOutlined} color={primaryColor} />
+        </CounterButton>
         <CounterValue>{count}</CounterValue>
-        <Button onClick={increment}>+</Button>
-      </div>
+        <CounterButton onClick={increment} color={primaryColor}>
+          <Sign as={PlusOutlined} color={primaryColor} />
+        </CounterButton>
+      </Centered>
     </StyledCategory>
   );
 }

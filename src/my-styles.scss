@@ -40,3 +40,7 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/helpers/spacing.sass";
 @import "../node_modules/bulma/sass/components/modal.sass";
 @import "../node_modules/bulma/sass/elements/box.sass";
+
+body {
+    background: white;
+}

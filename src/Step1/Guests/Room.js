@@ -11,6 +11,7 @@ function Room() {
 
   const [childs, setChilds] = useState(childCategories);
   const [adults, setAdults] = useState(1);
+  const [roomCount, setRoomCount] = useState(1);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -41,6 +42,8 @@ function Room() {
           onChange={(count, code) => updateChilds(count, index)}
         ></ChildCategory>
       ))}
+            <Category name="Количество комнат" initialValue={roomCount} onChange={setRoomCount} />
+
     </StyledRoom>
   );
 }
