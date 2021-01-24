@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { hexToRgb, withOpacity } from "../../hexToRgb";
 import { Centered } from "../../components/Centered";
 
 export const StyledRoom = styled.section`
@@ -37,16 +38,6 @@ export const CounterValue = styled.span`
   text-align: center;
 `;
 
-function hexToRgb(hex = "#aaaaaa", opacity) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
-
-  return `${r},${g},${b}, ${opacity}`;
-}
-
 export const CounterButton = styled.button`
   border: none;
   border-radius: 50%;
@@ -59,6 +50,6 @@ export const CounterButton = styled.button`
   align-items: center;
 
   &:hover {
-    background: rgba(${props => hexToRgb(props.color, 0.3)});
+    background: rgba(${props => withOpacity(hexToRgb(props.primaryColor), 0.3)});
   }
 `;

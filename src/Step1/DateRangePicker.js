@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Litepicker from "litepicker";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+import {
+  changeParams,
+  getAvailabilityColors,
+  getPrimaryColor,
+} from "../reservation";
+import { hexToRgb, withOpacity } from "../hexToRgb";
 
-import { changeParams, getAvailabilityColors } from "../reservation";
+const CalendarTheme = createGlobalStyle`
+  :root {
+    --litepickerDayIsStartBg: ${props => props.primaryColor} !important;
+    --litepickerDayIsEndBg: ${props => props.primaryColor};
+    --litepickerDayIsInRange: rgba(${props =>
+      withOpacity(hexToRgb(props.primaryColor), 0.3)});
+    --litepickerDayColorHover: #333333;
+    --litepickerDayIsTodayColor: ${props => props.primaryColor};
+    --litepickerMonthButtonHover: ${props => props.primaryColor};
+  }
+`;
 
 const ColorSquare = styled.span`
   display: inline-block;
@@ -29,10 +45,11 @@ const InputContainer = styled.div`
 `;
 
 const Input = styled.input`
-  width: 8.5rem;
+  width: 8rem;
+  font-size: .8rem;
   border: 1px solid ${props => props.color};
-  padding: .25rem;
-`
+  padding: 0.25rem;
+`;
 
 const DatePickerContainer = styled.div`
   position: relative;
@@ -51,18 +68,20 @@ function DateRangePicker() {
   const dispatch = useDispatch();
   // const [availableDates, setAvailability] = useState([])
 
-  const availabilityColors = useSelector(getAvailabilityColors);
+  // const availabilityColors = useSelector(getAvailabilityColors);
+  const primaryColor = useSelector(getPrimaryColor);
 
   useEffect(() => {
     if (!range) return;
-    
+
     const { start, end } = range;
 
-    dispatch(changeParams({
-      arrival: start.toLocaleDateString(),
-      departure: end.toLocaleDateString(),
-    }))
-
+    dispatch(
+      changeParams({
+        arrival: start.toLocaleDateString(),
+        departure: end.toLocaleDateString(),
+      })
+    );
   }, [dispatch, range]);
 
   // useEffect(() => {
@@ -135,13 +154,14 @@ function DateRangePicker() {
         />
         <span style={{ margin: "0 .5rem" }}>{" - "}</span>
         <Input
-        color="green"
+          color="green"
           className="input"
           type="date"
           name="endDate"
           id="endDate"
         />
       </InputContainer>
+      <CalendarTheme primaryColor={primaryColor} />
       <DatePickerContainer id="date-rande-picker"></DatePickerContainer>
       {/* <div>
         {availabilityColors.map(item => (
