@@ -6,6 +6,12 @@ import Guests from "./Guests";
 import DateRangePicker from "./DateRangePicker";
 import Button from "../components/Button";
 import { searchRooms } from "../rooms/roomsReducer";
+import { Centered } from "../components/Centered";
+import styled from "styled-components";
+
+const Conditions = styled(Centered)`
+  margin: 1rem 0;
+`;
 
 function Step1() {
   const layoutContext = useContext(LayoutContext);
@@ -22,7 +28,17 @@ function Step1() {
     <>
       <Guests />
       <DateRangePicker />
-      <Button onClick={onButtonClick}>Искать номера</Button>
+
+      <Conditions column>
+        <label>
+          время заезда <span>17:00</span>, время выезда <span>15:00</span>
+        </label>
+        <a href="#">Правила и услуги</a>
+      </Conditions>
+
+      <Button block onClick={onButtonClick}>
+        Подобрать номера
+      </Button>
     </>
   );
 }

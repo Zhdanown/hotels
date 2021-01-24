@@ -28,6 +28,12 @@ const InputContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
+const Input = styled.input`
+  width: 8.5rem;
+  border: 1px solid ${props => props.color};
+  padding: .25rem;
+`
+
 const DatePickerContainer = styled.div`
   position: relative;
   text-align: center;
@@ -118,31 +124,33 @@ function DateRangePicker() {
   }, []);
 
   return (
-    <div style={{ margin: "1rem 0" }}>
+    <div style={{ margin: "2rem 0" }}>
       <InputContainer>
-        <input
+        <Input
+          color="green"
+          className="input"
           type="date"
           name="startDate"
           id="startDate"
-          style={{ width: "8.5rem" }}
         />
         <span style={{ margin: "0 .5rem" }}>{" - "}</span>
-        <input
+        <Input
+        color="green"
+          className="input"
           type="date"
           name="endDate"
           id="endDate"
-          style={{ width: "8.5rem" }}
         />
       </InputContainer>
       <DatePickerContainer id="date-rande-picker"></DatePickerContainer>
-      <div>
+      {/* <div>
         {availabilityColors.map(item => (
           <AvailabilityItem key={item.id}>
             <ColorSquare color={item.color}></ColorSquare>
             <span>{item.name}</span>
           </AvailabilityItem>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
