@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   submitOrder,
@@ -12,13 +12,6 @@ import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
 import Button from "../components/Button";
 import FormNoRegistration from "./FormNoRegistration";
-
-const fields = [
-  { type: "text", label: "Имя", name: "firstName" },
-  { type: "text", label: "Фамилия", name: "lastName" },
-  { type: "email", label: "Email", name: "email" },
-  { type: "text", label: "Телефон", name: "tel" },
-];
 
 const forms = [
   { id: "have-account", label: "Есть аккаунт" },
@@ -41,14 +34,17 @@ function Confirm() {
     lastName: "McClane",
     email: "die@hard.com",
     tel: "555-911",
+    login: "",
+    password: "",
+    password2: "",
   });
 
-  const onGuestChange = ({ target }) => {
+  const onGuestChange = useCallback(({ target }) => {
     setGuest(user => ({
       ...user,
       [target.name]: target.value,
     }));
-  };
+  }, []);
 
   const onSubmit = e => {
     e.preventDefault();

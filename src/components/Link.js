@@ -10,7 +10,7 @@ const Anchor = styled.a`
 
 function Link({ href, children }) {
   const color = useSelector(getPrimaryColor);
-  console.log(color);
+
   return (
     <Anchor color={color} href={href}>
       {children}

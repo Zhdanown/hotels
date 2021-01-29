@@ -9,8 +9,8 @@ import {
   CounterButton,
 } from "./styled";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { getPrimaryColor } from "../../reservation";
 import { Centered } from "../../components/Centered";
+import { getPrimaryColor } from "../../reservation";
 
 const Sign = styled.button`
   font-size: 1.2rem;
@@ -20,7 +20,6 @@ const Sign = styled.button`
 function Category({ initialValue, onChange, name, annotation }) {
   const [count, setCount] = useState(initialValue);
   const primaryColor = useSelector(getPrimaryColor);
-  console.log("primaryColor", primaryColor);
 
   const decrement = () => setCount(x => (x > 0 ? --x : x));
   const increment = () => setCount(x => ++x);
