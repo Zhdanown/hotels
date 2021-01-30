@@ -3,6 +3,8 @@ import LayoutContext from "./LayoutContext";
 import useWindowWidth from "../hooks/useWindowWidth";
 import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
+import { MenuOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 // const stepsConfig = {
 //   1: [1],
@@ -35,13 +37,16 @@ function Layout({ children }) {
 
   if (isDesktop) {
     return (
-      <LayoutDesktop
-        currentStep={currentStep}
-        isShowStep={isShowStep}
-        setStep={setStep}
-      >
-        {children}
-      </LayoutDesktop>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <Navbar />
+        <LayoutDesktop
+          currentStep={currentStep}
+          isShowStep={isShowStep}
+          setStep={setStep}
+        >
+          {children}
+        </LayoutDesktop>
+      </div>
     );
   } else {
     return (
@@ -52,24 +57,24 @@ function Layout({ children }) {
   }
 }
 
+const NavbarContainer = styled.div`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  box-shadow: 0 0 7px 0 #dddddd;
+  z-index: 1;
+  justify-content: space-between;
+  font-size 1.4rem;
+
+`;
+
 export function Navbar() {
   return (
-    <div
-      style={{
-        height: "50px",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 1rem",
-      }}
-    >
-      <span
-        style={{
-          fontSize: "1.5rem",
-        }}
-      >
-        Arturs Hotel{" "}
-      </span>
-    </div>
+    <NavbarContainer>
+      <div>Arturs Hotel </div>
+      <MenuOutlined />
+    </NavbarContainer>
   );
 }
 
