@@ -50,9 +50,15 @@ function Layout({ children }) {
     );
   } else {
     return (
-      <LayoutMobile currentStep={currentStep} setStep={setStep}>
-        {children}
-      </LayoutMobile>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <LayoutMobile
+          currentStep={currentStep}
+          setStep={setStep}
+          renderNavbar={() => <Navbar />}
+        >
+          {children}
+        </LayoutMobile>
+      </div>
     );
   }
 }

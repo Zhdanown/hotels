@@ -1,8 +1,36 @@
 import React from "react";
+import styled, { createGlobalStyle } from "styled-components";
 import useWindowWidth from "../hooks/useWindowWidth";
-import "./layout-mobile.css";
 
-function LayoutMobile({ children, currentStep, setStep }) {
+const HTMLOverflowHidden = createGlobalStyle`
+  html {
+    overflow: hidde;
+  }
+`;
+
+const NavbarWrapper = styled.div`
+  transform: translateY(0);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  background: white;
+`;
+
+const Layout = styled.div`
+  overflow-x: hidden;
+  margin-top: 50px;
+
+  .wrapper {
+    display: flex;
+    width: 300%;
+    transition: transform 0.5s;
+    overflow-y: hidden;
+    transform: translateX(${p => p.step * -33.33}%);
+  }
+`;
+
+function LayoutMobile({ children, currentStep, setStep, renderNavbar }) {
   const goBack = () => {
     setStep(step => --step);
   };
@@ -12,46 +40,104 @@ function LayoutMobile({ children, currentStep, setStep }) {
   };
 
   return (
-    <div className="layout-mobile">
-      <div
-        className="wrapper"
-        style={{
-          transform: `translateX(${-33.33 * (currentStep - 1)}%)`,
-        }}
-      >
-        <MColumn active={currentStep === 1} goForward={goForward}>
-          {children[0]}
-        </MColumn>
-        <MColumn
-          active={currentStep === 2}
-          goBack={goBack}
-          goForward={goForward}
-        >
-          {children[1]}
-        </MColumn>
-        <MColumn active={currentStep === 3} goBack={goBack}>
-          {children[2]}
-        </MColumn>
-      </div>
-    </div>
+    <>
+      <HTMLOverflowHidden />
+      <NavbarWrapper>{renderNavbar()}</NavbarWrapper>
+      <Layout className="layout-mobile" step={currentStep - 1}>
+        <div className="wrapper">
+          <MColumn active={currentStep === 1} goForward={goForward}>
+            {children[0]}
+          </MColumn>
+          <MColumn
+            active={currentStep === 2}
+            goBack={goBack}
+            goForward={goForward}
+          >
+            {children[1]}
+          </MColumn>
+          <MColumn active={currentStep === 3} goBack={goBack}>
+            {children[2]}
+          </MColumn>
+        </div>
+      </Layout>
+    </>
   );
 }
 
+const MediaQueries = `
+  @media screen and (max-width: 768px) {
+    & {
+      width: 500px;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    & {
+      width: 420px;
+    }
+  }
+  @media screen and (max-width: 550px) {
+    & {
+      width: 400px;
+    }
+  }
+  @media screen and (max-width: 425px) {
+    & {
+      width: 100%;
+      min-width: 300px;
+      padding: 0.5rem;
+    }
+  }
+`;
+
+const StyledColumn = styled.div`
+  height: calc(100vh - 50px);
+  flex: 1;
+  transition: all 0.5s;
+  transform: scale(0.4);
+  overflow-y: hidden;
+  opacity: 0.5;
+
+  &.active {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .column-wrapper {
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  ${MediaQueries}
+`;
+
+const ColumnContainer = styled.div`
+  padding: 1rem;
+  width: 550px;
+  margin: 0 auto;
+
+  ${MediaQueries}
+`;
+
 function MColumn({ children, active, goBack, goForward }) {
   return (
-    <div
-      className={"column" + (active ? " active" : "")}
-      style={{
-        opacity: active ? 1 : 0.5,
-      }}
-    >
+    <StyledColumn className={"column" + (active ? " active" : "")}>
       <div className="column-wrapper">
         <ColumnNavigation goBack={goBack} goForward={goForward} />
-        <div className="_container">{children}</div>
+        <ColumnContainer>{children}</ColumnContainer>
       </div>
-    </div>
+    </StyledColumn>
   );
 }
+
+const MobileButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  width: 550px;
+  margin: 0 auto;
+
+  ${MediaQueries}
+`;
 
 function ColumnNavigation({ goBack, goForward }) {
   const windowWidth = useWindowWidth();
@@ -68,57 +154,62 @@ function ColumnNavigation({ goBack, goForward }) {
     );
   } else {
     return (
-      <div
-        className="mobile-nav-buttons"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
+      <MobileButtonsContainer>
         {goBack && <MobileNavButton prev onClick={goBack} />}
         {goForward && <MobileNavButton next onClick={goForward} />}
-      </div>
+      </MobileButtonsContainer>
     );
   }
 }
 
-function MobileNavButton({ prev, next, onClick }) {
-  const type = (() => {
-    if (prev) return "prev";
-    else if (next) return "next";
-  })();
+const MobileButtonContainer = styled.div`
+  flex: 1;
+  text-align: ${p => (p.prev ? "left" : "right")};
+  button {
+    border: none;
+    padding: 0.5rem 1rem;
+    opacity: 0.7;
 
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+function MobileNavButton({ prev, next, onClick }) {
   return (
-    <div
-      className={"mobile-nav-button " + type}
-      style={{ flex: 1, textAlign: prev ? "left" : "right" }}
-    >
+    <MobileButtonContainer prev={prev}>
       <button onClick={onClick}>{prev ? "назад" : "вперёд"}</button>
-    </div>
+    </MobileButtonContainer>
   );
 }
 
-function TabletNavButton({ prev, next, onClick }) {
-  const type = (() => {
-    if (prev) return "prev";
-    else if (next) return "next";
-  })();
+const TabletButtonContainer = styled.div`
+  display: inline-block;
+  position: absolute;
+  background: lightgray;
+  top: 50%;
+  transform: translateY(-50%);
+  ${p => (p.prev ? "left: 20px;" : "right: 20px;")}
 
+  button {
+    border: none;
+    padding: 2rem 1rem;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+function TabletNavButton({ prev, onClick }) {
   return (
-    <div
-      className={"tablet-nav-button " + type}
-      style={{
-        display: "inline-block",
-        position: "absolute",
-        background: "lightgray",
-        top: "50%",
-        transform: "translateY(-50%)",
-      }}
-    >
+    <TabletButtonContainer prev={prev}>
       <button type="button" onClick={onClick}>
         {prev ? "назад" : "вперёд"}
       </button>
-    </div>
+    </TabletButtonContainer>
   );
 }
 
