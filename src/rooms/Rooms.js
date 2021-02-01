@@ -5,6 +5,7 @@ import styled from "styled-components";
 import LayoutContext from "../Layout/LayoutContext";
 import HTMLParser from "./HTMLParser";
 import Button from "../components/Button";
+import Accordion, { Title, Icon } from "../components/Accordion";
 import { changeParams, getPrimaryColor } from "../reservation";
 import { getRooms, getRoomsLoadState } from "./roomsReducer";
 
@@ -28,7 +29,7 @@ function Rooms() {
 const StyledRoomShowcase = styled.div`
   border: 1px solid black;
   border-radius: 0.5rem;
-  margin: 1rem;
+  margin: 1rem 0;
   overflow: hidden;
 `;
 
@@ -42,7 +43,7 @@ const RoomTitle = styled.div`
 
 const Content = styled.div`
   padding: 1rem;
-`
+`;
 
 function RoomShowcase({ room }) {
   const layoutContext = useContext(LayoutContext);
@@ -78,8 +79,18 @@ function RoomShowcase({ room }) {
       </div>
 
       <Content>
-        <HTMLParser html={short_description} />
-        <h4 style={{ textAlign: "center" }}>Тарифы</h4>
+        <Accordion
+          opened
+          renderTitle={(toggle, active) => (
+            <Title onClick={toggle} style={{ justifyContent: "center" }}>
+              Информация о номере <Icon active={active ? 1 : 0} />
+            </Title>
+          )}
+        >
+          <HTMLParser html={short_description} />
+        </Accordion>
+
+        <h4 style={{ textAlign: "center", marginTop: "2rem" }}>Тарифы</h4>
         {rates.map(rate => (
           <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
         ))}
@@ -89,9 +100,13 @@ function RoomShowcase({ room }) {
 }
 
 const StyledRoomRate = styled.div`
-  margin: 2rem 0;
-  border: 1px solid ${props => props.bg};
-  padding: .5rem;
+  border-bottom: 1px solid ${props => props.bg};
+  padding: 1rem 0;
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
 `;
 
 const RateHeader = styled.h5`
@@ -105,7 +120,7 @@ const Night = styled.div`
 `;
 
 function RoomRate({ rate, onClick }) {
-  const primaryColor = useSelector(getPrimaryColor)
+  const primaryColor = useSelector(getPrimaryColor);
   const {
     rate_code,
     short_description,
@@ -115,12 +130,29 @@ function RoomRate({ rate, onClick }) {
   } = rate;
   return (
     <StyledRoomRate bg={primaryColor}>
-      <RateHeader bg={primaryColor}>
-        {rate_code} {total_price} &#8381;
-        <Button onClick={() => onClick(rate)}>Выбрать</Button>
-      </RateHeader>
-      <HTMLParser html={short_description} />
-      <HTMLParser html={long_description} />
+      <Accordion
+        renderTitle={(toggle, active) => (
+          <>
+            <RateHeader bg={primaryColor}>
+              <Title onClick={toggle}>
+                {rate_code} {total_price} &#8381;{" "}
+                <Icon active={active ? 1 : 0} />
+              </Title>
+              <Button small onClick={() => onClick(rate)}>
+                Выбрать
+              </Button>
+            </RateHeader>
+            <HTMLParser html={short_description} />
+          </>
+        )}
+        style={{ marginBottom: "2rem" }}
+      >
+        {long_description ? (
+          <HTMLParser html={long_description} />
+        ) : (
+          <p>Нет описания</p>
+        )}
+      </Accordion>
       {nights.map(night => (
         <Night key={night.date}>
           <span>{night.date}</span>

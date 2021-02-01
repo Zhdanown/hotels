@@ -13,6 +13,10 @@ const ColoredButton = styled.button`
   cursor: pointer;
   transition: background .2s, opacity .2s;
 
+  &.small {
+    padding: .25rem .5rem;
+  }
+
   &:hover {
     background: ${props => props.hoverColor}
   }
@@ -30,6 +34,7 @@ function Button({ children, onClick, disabled, ...props }) {
   return (
     <ColoredButton
       type="button"
+      className={props.small ? 'small' : ''}
       // className={"button" + (props.small ? ' is-small' : '')}
       bgColor={primaryColor}
       hoverColor={hoverColor}
