@@ -19,8 +19,12 @@ function Room() {
   }, [adults, dispatch]);
 
   useEffect(() => {
+    dispatch(changeParams({ rooms_count: roomCount }));
+  }, [roomCount, dispatch]);
+
+  useEffect(() => {
     const newChilds = childs.map(({ code, count }) => ({ code, count }));
-    dispatch(changeParams(newChilds));
+    dispatch(changeParams({ childs: newChilds }));
   }, [childs, dispatch]);
 
   const updateChilds = useCallback((count, index) => {
@@ -42,8 +46,11 @@ function Room() {
           onChange={(count, code) => updateChilds(count, index)}
         ></ChildCategory>
       ))}
-            <Category name="Количество комнат" initialValue={roomCount} onChange={setRoomCount} />
-
+      <Category
+        name="Количество комнат"
+        initialValue={roomCount}
+        onChange={setRoomCount}
+      />
     </StyledRoom>
   );
 }

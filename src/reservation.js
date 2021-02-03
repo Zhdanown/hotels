@@ -13,6 +13,7 @@ const initialState = {
   config: null,
   configError: null,
   params: {
+    guest: {},
     room: null,
     rate: null,
     arrival: null,
@@ -93,8 +94,8 @@ function* bookRoom(action) {
 
   yield put(isBooking(true));
   const payload = yield call(requestRoom, {
-    guest: action.payload,
     ...bookingInfo,
+    payment: action.payload,
   });
   yield put(isBooking(false));
   yield put(setBookingResponse(payload));
@@ -103,9 +104,11 @@ function* bookRoom(action) {
 }
 
 async function requestRoom(bookingInfo) {
-  const { guest, adults, childs } = bookingInfo;
+  const { guest, payment } = bookingInfo;
+  const { adults, childs } = bookingInfo;
   const { room_code, rate_code } = bookingInfo;
   const { arrival, departure } = bookingInfo;
+  const { rooms_count } = bookingInfo;
 
   const hotel_id = 1;
   const pms = "fidelio";
@@ -124,8 +127,9 @@ async function requestRoom(bookingInfo) {
       arrival,
       departure,
       adults,
-      rooms_count: 1,
+      rooms_count,
       childs,
+      payment,
       // notes: [
       //   {
       //     code: "RES",
@@ -176,13 +180,17 @@ export const getchildCategories = state =>
   getConfig(state).hotel_child_categories;
 export const getAvailabilityColors = state =>
   state.reservation.config.hotel_availability_colors;
+export const getPaymentOptions = state =>
+  getConfig(state).hotel_payment_methods;
 export const getBookingInfo = state => {
-  const { room, rate } = state.reservation.params;
+  const { room, rate, rooms_count } = state.reservation.params;
   const { arrival, departure } = state.reservation.params;
-  const { adults, childs } = state.reservation.params;
+  const { guest, adults, childs } = state.reservation.params;
   return {
+    guest,
     room_code: room.room_code,
     rate_code: rate.rate_code,
+    rooms_count,
     adults,
     childs: childs.filter(x => x.count),
     arrival,
