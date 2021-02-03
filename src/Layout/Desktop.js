@@ -15,19 +15,32 @@ const HTMLOverflowHidden = createGlobalStyle`
 const DesktopLayoutContainer = styled.div`
   display: flex;
   overflow: hidden;
+  width: 120%;
 `;
 
 function LayoutDesktop({ children, currentStep, isShowStep }) {
   return (
     <DesktopLayoutContainer>
       <HTMLOverflowHidden />
-      <Column active={currentStep === 1} visible={isShowStep(1)}>
+      <Column
+        active={currentStep === 1}
+        visible={isShowStep(1)}
+        currentStep={currentStep}
+      >
         {children[0]}
       </Column>
-      <Column active={currentStep === 2} visible={isShowStep(2)}>
+      <Column
+        active={currentStep === 2}
+        visible={isShowStep(2)}
+        icurrentStep={currentStep}
+      >
         {children[1]}
       </Column>
-      <Column active={currentStep === 3} visible={isShowStep(3)}>
+      <Column
+        active={currentStep === 3}
+        visible={isShowStep(3)}
+        currentStep={currentStep}
+      >
         {children[2]}
       </Column>
     </DesktopLayoutContainer>
@@ -37,19 +50,12 @@ function LayoutDesktop({ children, currentStep, isShowStep }) {
 export default LayoutDesktop;
 
 const StyledColumn = styled.div`
-  flex: 1;
+  width: 40%;
   height: calc(100vh - 50px);
   transition: all 0.5s;
   overflow: hidden;
-  opacity: ${p => (p.active ? 1 : 0.7)};
-  transform: scale(${p => (p.active ? 1 : 0.8)});
-
-  &:nth-child(1) {
-    transform-origin: left;
-  }
-  &:nth-child(3) {
-    transform-origin: right;
-  }
+  opacity: ${p => (p.active ? 1 : 0.3)};
+  transform: translateX(-${p => (p.currentStep - 1) * 25}%);
 `;
 
 const ColumnWrapper = styled.div`
@@ -64,9 +70,9 @@ const ColumnWrapper = styled.div`
   }
 `;
 
-function Column({ children, visible, active }) {
+function Column({ children, active, currentStep }) {
   return (
-    <StyledColumn active={active}>
+    <StyledColumn active={active} currentStep={currentStep}>
       <ColumnWrapper scrollbarWidth={scrollbarWidth} className="column-wrapper">
         <div className="container">{children}</div>
       </ColumnWrapper>
