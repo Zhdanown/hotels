@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import useWindowWidth from "../hooks/useWindowWidth";
+import useWindowWidth from "./hooks/useWindowWidth";
+import useNavbarHeight from "./hooks/useNavbarHeight";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
@@ -19,7 +20,7 @@ const NavbarWrapper = styled.div`
 
 const Layout = styled.div`
   overflow-x: hidden;
-  margin-top: 50px;
+  margin-top: ${p => p.navbarHeight}px;
 
   .wrapper {
     display: flex;
@@ -31,6 +32,7 @@ const Layout = styled.div`
 `;
 
 function LayoutMobile({ children, currentStep, setStep, renderNavbar }) {
+  const navbarHeight = useNavbarHeight();
   const goBack = () => {
     setStep(step => --step);
   };
@@ -43,7 +45,11 @@ function LayoutMobile({ children, currentStep, setStep, renderNavbar }) {
     <>
       <HTMLOverflowHidden />
       <NavbarWrapper>{renderNavbar()}</NavbarWrapper>
-      <Layout className="layout-mobile" step={currentStep - 1}>
+      <Layout
+        className="layout-mobile"
+        step={currentStep - 1}
+        navbarHeight={useNavbarHeight}
+      >
         <div className="wrapper">
           <MColumn active={currentStep === 1} goForward={goForward}>
             {children[0]}
@@ -90,17 +96,12 @@ const MediaQueries = `
 `;
 
 const StyledColumn = styled.div`
-  height: calc(100vh - 50px);
+  height: calc(100vh - ${p => p.navbarHeight}px);
   flex: 1;
   transition: all 0.5s;
-  transform: scale(0.4);
   overflow-y: hidden;
-  opacity: 0.5;
-
-  &.active {
-    transform: scale(1);
-    opacity: 1;
-  }
+  transform: scale(${p => (p.active ? 1 : 0.4)});
+  opacity: ${p => (p.active ? 1 : 0.5)};
 
   .column-wrapper {
     overflow-y: auto;
@@ -119,8 +120,10 @@ const ColumnContainer = styled.div`
 `;
 
 function MColumn({ children, active, goBack, goForward }) {
+  const navbarHeight = useNavbarHeight();
+
   return (
-    <StyledColumn className={"column" + (active ? " active" : "")}>
+    <StyledColumn active={active} navbarHeight={navbarHeight}>
       <div className="column-wrapper">
         <ColumnNavigation goBack={goBack} goForward={goForward} />
         <ColumnContainer>{children}</ColumnContainer>

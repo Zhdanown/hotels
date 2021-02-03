@@ -2,6 +2,7 @@ import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
 import { scrollbarWidth } from "./scrollbarWidth";
+import useNavbarHeight from "./hooks/useNavbarHeight";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
@@ -32,7 +33,7 @@ function LayoutDesktop({ children, currentStep, isShowStep }) {
       <Column
         active={currentStep === 2}
         visible={isShowStep(2)}
-        icurrentStep={currentStep}
+        currentStep={currentStep}
       >
         {children[1]}
       </Column>
@@ -51,7 +52,7 @@ export default LayoutDesktop;
 
 const StyledColumn = styled.div`
   width: 40%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - ${p => p.navbarHeight}px);
   transition: all 0.5s;
   overflow: hidden;
   opacity: ${p => (p.active ? 1 : 0.3)};
@@ -71,8 +72,13 @@ const ColumnWrapper = styled.div`
 `;
 
 function Column({ children, active, currentStep }) {
+  const navbarHeight = useNavbarHeight();
   return (
-    <StyledColumn active={active} currentStep={currentStep}>
+    <StyledColumn
+      active={active}
+      currentStep={currentStep}
+      navbarHeight={navbarHeight}
+    >
       <ColumnWrapper scrollbarWidth={scrollbarWidth} className="column-wrapper">
         <div className="container">{children}</div>
       </ColumnWrapper>

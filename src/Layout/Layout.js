@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import LayoutContext from "./LayoutContext";
-import useWindowWidth from "../hooks/useWindowWidth";
+import useWindowWidth from "./hooks/useWindowWidth";
 import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
 import { MenuOutlined } from "@ant-design/icons";
@@ -77,7 +77,7 @@ const NavbarContainer = styled.div`
 
 export function Navbar() {
   return (
-    <NavbarContainer>
+    <NavbarContainer id="navbar">
       <div>Arturs Hotel </div>
       <MenuOutlined />
     </NavbarContainer>
