@@ -1,17 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  submitOrder,
   getRoom,
   getRate,
   getBookingState,
-  getBookingResponse,
+  changeParams,
 } from "../reservation";
 import Modal from "../components/Modal";
 import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
-import Button from "../components/Button";
 import FormNoRegistration from "./FormNoRegistration";
+import PaymentOptions from "./PaymentOptions";
 
 const forms = [
   { id: "have-account", label: "Есть аккаунт" },
@@ -21,7 +20,6 @@ const forms = [
 
 function Confirm() {
   const dispatch = useDispatch();
-
   const room = useSelector(getRoom);
   const rate = useSelector(getRate);
   const isBooking = useSelector(getBookingState);
@@ -48,16 +46,12 @@ function Confirm() {
 
   const onSubmit = e => {
     e.preventDefault();
-    // dispatch(submitOrder(guest));
-    console.log("Book room", guest);
+    dispatch(changeParams({ guest }));
+    setModal(true);
   };
 
   const selectForm = formName => {
     setForm(formName);
-  };
-
-  const openModal = () => {
-    setModal(true);
   };
 
   if (isBooking) {
@@ -110,21 +104,9 @@ function Confirm() {
             onGuestChange={onGuestChange}
           />
         )}
-        <div className="mt-6" style={{ textAlign: "center" }}>
-          <Button block onClick={openModal}>
-            Продолжить
-          </Button>
-        </div>
 
         <Modal open={modal} toggle={setModal}>
-          <h1 className="is-size-4">Варианты бронирования</h1>
-          <div className="mt-3">
-            <Button block>Оплатить картой</Button>
-          </div>
-
-          <div className="mt-3">
-            <Button block>Забронировать</Button>
-          </div>
+          <PaymentOptions />
         </Modal>
       </div>
     );

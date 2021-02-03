@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../components/Button";
 import Input from "../components/Input";
 
 const fields = [
@@ -12,7 +13,7 @@ const fields = [
 
 function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
   return (
-    <form action="" onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       {fields.map((field, i) => (
         <div key={field.name} style={{ margin: "1.5rem 0" }}>
           <Input
@@ -24,7 +25,7 @@ function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
           />
         </div>
       ))}
-      {/* <Button type="submit">Продолжить</Button> */}
+      <Button type="submit">Продолжить</Button>
     </form>
   );
 }

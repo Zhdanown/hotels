@@ -12,7 +12,14 @@ function Step3() {
 
   return (
     <>
-      {bookingResponse && <Redirect to={`${url}/success`} />}
+      {bookingResponse && (
+        <Route
+          component={() => {
+            window.location.replace(bookingResponse.redirect_url);
+            return null;
+          }}
+        />
+      )}
       <Switch>
         <Route exact path={path}>
           <Confirm></Confirm>
