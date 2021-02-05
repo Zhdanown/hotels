@@ -175,7 +175,10 @@ export const getCssUrl = state => {
   const config = getConfig(state);
   return config ? config.hotel_style_config.splash : null;
 };
-
+export const getArrivalDepartureTime = state => {
+  const { time_arrival, time_departure } = getConfig(state);
+  return { arrivalTime: time_arrival, departureTime: time_departure };
+};
 export const getchildCategories = state =>
   getConfig(state).hotel_child_categories;
 export const getAvailabilityColors = state =>

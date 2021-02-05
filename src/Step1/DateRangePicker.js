@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Litepicker from "litepicker";
 import styled, { createGlobalStyle } from "styled-components";
-import { changeParams, getPrimaryColor } from "../reservation";
+import { getPrimaryColor, getArrivalDepartureTime } from "../reservation";
+import { changeParams } from "../reservation";
 import { hexToRgb, withOpacity } from "../hexToRgb";
 import Input from "../components/Input";
 
@@ -38,6 +39,7 @@ function DateRangePicker() {
 
   const dispatch = useDispatch();
   const primaryColor = useSelector(getPrimaryColor);
+  const { arrivalTime, departureTime } = useSelector(getArrivalDepartureTime);
 
   useEffect(() => {
     if (!range) return;
@@ -106,7 +108,7 @@ function DateRangePicker() {
           type="text"
           name="startDate"
           id="startDate"
-          label="Заезд"
+          label={`Заезд (${arrivalTime})`}
           value={range.start}
           readOnly
           inputStyles={{ width: "7rem" }}
@@ -118,7 +120,7 @@ function DateRangePicker() {
           type="text"
           name="endDate"
           id="endDate"
-          label="Выезд"
+          label={`Выезд (${departureTime})`}
           value={range.end}
           readOnly
         />

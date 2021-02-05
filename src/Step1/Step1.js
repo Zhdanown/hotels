@@ -32,9 +32,6 @@ function Step1() {
       <DateRangePicker />
 
       <Conditions column>
-        <label>
-          время заезда <span>17:00</span>, время выезда <span>15:00</span>
-        </label>
         <Link href="#">Правила и услуги</Link>
       </Conditions>
 
