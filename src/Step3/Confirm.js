@@ -6,6 +6,7 @@ import {
   getBookingState,
   changeParams,
 } from "../reservation";
+import Tabs from "../components/Tabs";
 import Modal from "../components/Modal";
 import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
@@ -13,9 +14,21 @@ import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
 
 const forms = [
-  { id: "have-account", label: "Есть аккаунт" },
-  { id: "new-guest", label: "Новый гость" },
-  { id: "no-registration", label: "Без регистрации" },
+  {
+    id: "have-account",
+    label: "Есть аккаунт",
+    render: props => <FormHasAccount {...props} />,
+  },
+  {
+    id: "new-guest",
+    label: "Новый гость",
+    render: props => <FormNewGuest {...props} />,
+  },
+  {
+    id: "no-registration",
+    label: "Без регистрации",
+    render: props => <FormNoRegistration {...props} />,
+  },
 ];
 
 function Confirm() {
@@ -24,7 +37,6 @@ function Confirm() {
   const rate = useSelector(getRate);
   const isBooking = useSelector(getBookingState);
 
-  const [curForm, setForm] = useState(forms[2]);
   const [modal, setModal] = useState(false);
 
   const [guest, setGuest] = useState({
@@ -50,10 +62,6 @@ function Confirm() {
     setModal(true);
   };
 
-  const selectForm = formName => {
-    setForm(formName);
-  };
-
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
   } else {
@@ -67,43 +75,13 @@ function Confirm() {
           </div>
         )}
 
-        <div className="buttons has-addons is-centered mt-4">
-          {forms.map(form => (
-            <button
-              key={form.id}
-              className={
-                "button is-small" +
-                (curForm.id === form.id ? " is-selected is-success" : "")
-              }
-              onClick={() => selectForm(form)}
-            >
-              {form.label}
-            </button>
-          ))}
-        </div>
-
-        {curForm.id === "new-guest" && (
-          <FormNewGuest
-            guest={guest}
-            onSubmit={onSubmit}
-            onGuestChange={onGuestChange}
-          />
-        )}
-
-        {curForm.id === "have-account" && (
-          <FormHasAccount
-            guest={guest}
-            onSubmit={onSubmit}
-            onGuestChange={onGuestChange}
-          />
-        )}
-        {curForm.id === "no-registration" && (
-          <FormNoRegistration
-            guest={guest}
-            onSubmit={onSubmit}
-            onGuestChange={onGuestChange}
-          />
-        )}
+        <Tabs
+          tabs={forms}
+          preSelected={2}
+          guest={guest}
+          onSubmit={onSubmit}
+          onGuestChange={onGuestChange}
+        />
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
