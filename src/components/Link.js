@@ -4,15 +4,15 @@ import styled from "styled-components";
 import { getPrimaryColor } from "../reservation";
 
 const Anchor = styled.a`
-  color: green;
-  text-decoration: underline;
+  color: ${p => p.color};
+  text-decoration: ${p => (p.underlined ? "underline" : "none")};
 `;
 
-function Link({ href, children }) {
-  const color = useSelector(getPrimaryColor);
+function Link({ href, color, children, ...props }) {
+  const primaryColor = useSelector(getPrimaryColor);
 
   return (
-    <Anchor color={color} href={href}>
+    <Anchor color={color || primaryColor} href={href} {...props}>
       {children}
     </Anchor>
   );

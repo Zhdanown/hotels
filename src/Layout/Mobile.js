@@ -5,22 +5,12 @@ import useNavbarHeight from "./hooks/useNavbarHeight";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
-    overflow: hidde;
+    overflow: hidden;
   }
-`;
-
-const NavbarWrapper = styled.div`
-  transform: translateY(0);
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  background: white;
 `;
 
 const Layout = styled.div`
   overflow-x: hidden;
-  margin-top: ${p => p.navbarHeight}px;
 
   .wrapper {
     display: flex;
@@ -31,8 +21,7 @@ const Layout = styled.div`
   }
 `;
 
-function LayoutMobile({ children, currentStep, setStep, renderNavbar }) {
-  const navbarHeight = useNavbarHeight();
+function LayoutMobile({ children, currentStep, setStep }) {
   const goBack = () => {
     setStep(step => --step);
   };
@@ -44,12 +33,7 @@ function LayoutMobile({ children, currentStep, setStep, renderNavbar }) {
   return (
     <>
       <HTMLOverflowHidden />
-      <NavbarWrapper>{renderNavbar()}</NavbarWrapper>
-      <Layout
-        className="layout-mobile"
-        step={currentStep - 1}
-        navbarHeight={useNavbarHeight}
-      >
+      <Layout className="layout-mobile" step={currentStep - 1}>
         <div className="wrapper">
           <MColumn active={currentStep === 1} goForward={goForward}>
             {children[0]}
@@ -120,10 +104,8 @@ const ColumnContainer = styled.div`
 `;
 
 function MColumn({ children, active, goBack, goForward }) {
-  const navbarHeight = useNavbarHeight();
-
   return (
-    <StyledColumn active={active} navbarHeight={navbarHeight}>
+    <StyledColumn active={active} navbarHeight={useNavbarHeight}>
       <div className="column-wrapper">
         <ColumnNavigation goBack={goBack} goForward={goForward} />
         <ColumnContainer>{children}</ColumnContainer>
@@ -143,7 +125,7 @@ const MobileButtonsContainer = styled.div`
 `;
 
 function ColumnNavigation({ goBack, goForward }) {
-  const windowWidth = useWindowWidth();
+  const [windowWidth] = useWindowWidth();
   const isTablet = windowWidth >= 768;
 
   if (isTablet) {

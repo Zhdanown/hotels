@@ -18,19 +18,13 @@ const DesktopLayoutContainer = styled.div`
   overflow: hidden;
 `;
 
-function LayoutDesktop({ children, currentStep, isShowStep }) {
+function LayoutDesktop({ children, currentStep }) {
   return (
     <DesktopLayoutContainer>
       <HTMLOverflowHidden />
-      <Column active={currentStep === 1} visible={isShowStep(1)}>
-        {children[0]}
-      </Column>
-      <Column active={currentStep === 2} visible={isShowStep(2)}>
-        {children[1]}
-      </Column>
-      <Column active={currentStep === 3} visible={isShowStep(3)}>
-        {children[2]}
-      </Column>
+      <Column active={currentStep === 1}>{children[0]}</Column>
+      <Column active={currentStep === 2}>{children[1]}</Column>
+      <Column active={currentStep === 3}>{children[2]}</Column>
     </DesktopLayoutContainer>
   );
 }
@@ -70,12 +64,11 @@ const ColumnWrapper = styled.div`
 `;
 
 function Column({ children, active }) {
-  const navbarHeight = useNavbarHeight();
   return (
-    <StyledColumn active={active} navbarHeight={navbarHeight}>
+    <StyledColumn active={active} navbarHeight={useNavbarHeight}>
       <ColumnWrapper scrollbarWidth={scrollbarWidth} className="column-wrapper">
         <ColumnContainer>{children}</ColumnContainer>
       </ColumnWrapper>
     </StyledColumn>
   );
-}
+} 

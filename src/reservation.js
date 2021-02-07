@@ -156,6 +156,7 @@ async function requestRoom(bookingInfo) {
 
 export const getConfig = state => state.reservation.config;
 export const getConfigError = state => state.reservation.configError;
+export const getHotelName = state => getConfig(state).name;
 export const getParams = state => state.reservation.params;
 export const getRoom = state => state.reservation.params.room;
 export const getRate = state => state.reservation.params.rate;

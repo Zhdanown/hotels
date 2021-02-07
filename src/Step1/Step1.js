@@ -32,7 +32,7 @@ function Step1() {
       <DateRangePicker />
 
       <Conditions column>
-        <Link href="#">Правила и услуги</Link>
+        <Link href="#" underlined>Правила и услуги</Link>
       </Conditions>
 
       <Button block onClick={onButtonClick}>
