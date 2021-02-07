@@ -1,47 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+
 import { getPrimaryColor } from "../reservation";
+
+const SPEED = 0.4 // in seconds
 
 const InputContainer = styled.div`
   position: relative;
-  margin: 20px 0 0;
+  height: 2rem;
+`;
 
-  & input {
-    width: 100%;
-    height: 30px;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid ${p => p.color};
-    z-index: 1;
-    position: relative;
+const LabelContainer = styled.div`
+  position: absolute;
+  bottom: 100%;
+  width: 100%;
+  overflow: hidden;
+  height: 1rem;
+`;
 
-    & + label {
-      color: ${p => p.color};
-      position: absolute;
-      top: 5px;
-      left: 3px;
-      transition: all 0.2s ease-out;
-    }
+const StyledInput = styled.input`
+  width: 100%;
+  height: 100%;
+  border: 1px solid ${p => p.color};
+  border-radius: 3px;
 
-    &:focus {
-      outline: none;
-      border-width: 2px;
-      border-color: ${p => p.color};
-    }
+  &::placeholder {
+    transition: transform ${SPEED}s;
+  }
 
-    &:focus + label,
-    &.has-value + label {
-      top: -15px;
-      font-size: 0.8rem;
-      color: ${p => p.color};
-      font-weight: bold;
-    }
+  &:focus {
+    outline: none;
+    border-width: 2px;
 
-    &.has-value:not(:focus) + label {
-      color: ${p => p.color};
+    &::placeholder {
+      transform: translateY(-25px);
     }
   }
+`;
+
+const Label = styled.label`
+  position: absolute;
+  left: 0;
+  top: 100%;
+  color: ${p => p.color};
+  font-size: 0.8rem;
+  transition: top ${SPEED}s;
+
+  ${StyledInput}:focus + ${LabelContainer} > & {
+    top: 0;
+  }
+  ${p => p.hasValue && `top: 0;`}
 `;
 
 function Input({ type, label, name, value, onChange, ...props }) {
@@ -55,16 +64,21 @@ function Input({ type, label, name, value, onChange, ...props }) {
 
   return (
     <InputContainer color={color}>
-      <input
+      <StyledInput
         style={props.inputStyles}
-        className={value ? "has-value" : ""}
+        placeholder={label}
+        color={color}
         type={type}
         name={name}
         id={name}
         value={inputValue}
         onChange={e => setInputValue(e.target.value)}
       />
-      <label htmlFor="">{label}</label>
+      <LabelContainer>
+        <Label color={color} hasValue={value}>
+          {label}
+        </Label>
+      </LabelContainer>
     </InputContainer>
   );
 }

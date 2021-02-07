@@ -10,6 +10,7 @@ const ColoredButton = styled.button`
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border: none;
+  border-radius: 3px;
   cursor: pointer;
   transition: background .2s, opacity .2s;
 
@@ -35,7 +36,6 @@ function Button({ children, onClick, disabled, ...props }) {
     <ColoredButton
       type="button"
       className={props.small ? 'small' : ''}
-      // className={"button" + (props.small ? ' is-small' : '')}
       bgColor={primaryColor}
       hoverColor={hoverColor}
       disabled={disabled}
