@@ -1,23 +1,25 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getConfig, getConfigError, loadConfig } from "./reservation";
-import SplashScreen from "./Splash";
+import { BrowserRouter, Route } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { getConfig, getConfigError, getConfigLoading } from "./reservation";
+import { loadConfig } from "./reservation";
 
+import SplashScreen from "./Splash";
 import Layout, { Navbar } from "./Layout/Layout";
 import Step1 from "./Step1/Step1";
 import Rooms from "./rooms/Rooms";
 import Step3 from "./Step3/Step3";
 import { Centered } from "./components/Centered";
 import { LayoutContextProvider } from "./Layout/LayoutContext";
-import { BrowserRouter, Route } from "react-router-dom";
 
-import { useParams } from "react-router-dom";
 
 function ConfigLoader({ children }) {
   let { slug } = useParams();
 
   const dispatch = useDispatch();
   const config = useSelector(getConfig);
+  const configLoading = useSelector(getConfigLoading);
   const configError = useSelector(getConfigError);
 
   useEffect(() => {
@@ -29,8 +31,8 @@ function ConfigLoader({ children }) {
   const getMessage = () => {
     const text = () => {
       if (!slug) return "Необходим адрес отеля";
-      else if (configError) return "Проверьте url адрес";
-      else if (!config) return "Загрузка";
+      else if (configError) return configError;
+      else if (configLoading) return "Загрузка";
       else return null;
     };
 
@@ -38,7 +40,6 @@ function ConfigLoader({ children }) {
 
     return (
       <Centered column fullScreen>
-        <h4>{configError}</h4>
         <h6>{text()}</h6>
       </Centered>
     );
