@@ -6,7 +6,7 @@ import useWindowWidth from "./hooks/useWindowWidth";
 import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
 import Navbar from "./Navbar/index";
-import { getIsShowNavbar } from "../reservation";
+import { getIsShowNavbar } from "../redux/hotelConfig";
 
 function Layout({ children }) {
   const layoutContext = useContext(LayoutContext);

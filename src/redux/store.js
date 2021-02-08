@@ -3,13 +3,15 @@ import { combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
 import thunk from "redux-thunk";
 
-import reservationReducer from "../reservation";
+import reservationReducer from "./booking";
+import configReducer from "./hotelConfig";
 import roomsReducer from "../rooms/roomsReducer";
 import rootSaga from "./rootSaga";
 
 const rootReducer = combineReducers({
   rooms: roomsReducer,
   reservation: reservationReducer,
+  hotelConfig: configReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

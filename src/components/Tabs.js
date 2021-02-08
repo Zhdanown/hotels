@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { getHoverColor } from "../reservation";
+import { getHoverColor } from "../redux/hotelConfig";
 
 const Tab = styled.button`
   flex: 1;

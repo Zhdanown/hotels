@@ -1,7 +1,7 @@
 import { all } from "redux-saga/effects";
 import roomsSaga from "../rooms/roomsSaga";
-import { reservationWatcher } from "../reservation";
+import { bookingSaga } from "./booking";
 
 export default function* rootSaga() {
-  yield all([roomsSaga(), reservationWatcher()]);
+  yield all([roomsSaga(), bookingSaga()]);
 }

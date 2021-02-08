@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Litepicker from "litepicker";
 import styled, { createGlobalStyle } from "styled-components";
-import { getPrimaryColor, getArrivalDepartureTime } from "../reservation";
-import { changeParams } from "../reservation";
+import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
+import { changeParams } from "../redux/booking";
 import { hexToRgb, withOpacity } from "../hexToRgb";
 import Input from "../components/Input";
 

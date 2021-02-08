@@ -6,7 +6,7 @@ import SPEED from "./MENU_SPEED";
 import useWindowWidth from "../hooks/useWindowWidth";
 import Link from "../../components/Link";
 import { Centered } from "../../components/Centered";
-import { getMenuItems, getMenuColor } from "../../reservation";
+import { getMenuItems, getMenuColor } from "../../redux/hotelConfig";
 
 const Backdrop = styled.div`
   position: fixed;

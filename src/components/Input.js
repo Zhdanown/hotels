@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { getPrimaryColor } from "../reservation";
+import { getPrimaryColor } from "../redux/hotelConfig";
 
 const SPEED = 0.4 // in seconds
 

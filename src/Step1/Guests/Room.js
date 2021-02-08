@@ -4,10 +4,11 @@ import produce from "immer";
 
 import Category, { ChildCategory } from "./Category";
 import { StyledRoom, RoomHeader } from "./styled";
-import { changeParams, getchildCategories } from "../../reservation";
+import { changeParams } from "../../redux/booking";
+import { getChildCategories } from "../../redux/hotelConfig";
 
 function Room() {
-  const childCategories = useSelector(getchildCategories);
+  const childCategories = useSelector(getChildCategories);
 
   const [childs, setChilds] = useState(childCategories);
   const [adults, setAdults] = useState(1);

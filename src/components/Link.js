@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { getPrimaryColor } from "../reservation";
+import { getPrimaryColor } from "../redux/hotelConfig";
 
 const Anchor = styled.a`
   color: ${p => p.color};

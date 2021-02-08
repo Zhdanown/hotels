@@ -2,7 +2,7 @@ import { takeEvery, put, call, select } from "redux-saga/effects";
 import api from "../redux/api";
 import { REQUEST_ROOMS, FOUND_ROOMS } from "./roomsReducer";
 import { isLoadingRooms } from "./roomsReducer";
-import { getParams } from "../reservation";
+import { getParams } from "../redux/booking";
 
 export default function* watcher() {
   yield takeEvery(REQUEST_ROOMS, requestRooms);

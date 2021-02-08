@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Switch, Redirect, useRouteMatch, Route } from "react-router-dom";
-import { getBookingResponse } from "../reservation";
+import { getBookingResponse } from "../redux/booking";
 import Confirm from "./Confirm";
 import Success from "./Success";
 

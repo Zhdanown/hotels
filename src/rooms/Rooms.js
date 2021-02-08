@@ -6,7 +6,8 @@ import LayoutContext from "../Layout/LayoutContext";
 import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import Accordion, { Title, Icon } from "../components/Accordion";
-import { changeParams, getPrimaryColor } from "../reservation";
+import { changeParams } from "../redux/booking";
+import { getPrimaryColor } from "../redux/hotelConfig";
 import { getRooms, getRoomsLoadState } from "./roomsReducer";
 
 function Rooms() {

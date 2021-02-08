@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { getBookingResponse } from "../reservation";
+import { getBookingResponse } from "../redux/booking";
 import Button from "../components/Button"
 
 const Row = styled.div`

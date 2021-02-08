@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { getConfig, getConfigError, getConfigLoading } from "./reservation";
-import { loadConfig } from "./reservation";
+import { getConfig, getConfigError, getConfigLoading } from "./redux/hotelConfig";
+import { loadConfig } from "./redux/hotelConfig";
 
 import SplashScreen from "./Splash";
 import Layout, { Navbar } from "./Layout/Layout";

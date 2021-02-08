@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { getPrimaryColor, getHoverColor } from "../reservation";
+import { getPrimaryColor, getHoverColor } from "../redux/hotelConfig";
 
 const ColoredButton = styled.button`
   background-color: ${props => props.bgColor};

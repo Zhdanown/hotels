@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getPaymentForm } from "../reservation";
 import { Centered } from "../components/Centered";
 import Button from "../components/Button";
 import HTMLParser from "../components/HTMLParser";
-
-import { getPaymentOptions, submitOrder } from "../reservation";
+import { getPaymentOptions, getPaymentForm } from "../redux/hotelConfig";
+import { submitOrder } from "../redux/booking";
 
 const Option = styled.div`
   flex-grow: 1;

@@ -5,8 +5,8 @@ import {
   getRate,
   getBookingState,
   getBookingResponse,
-} from "../reservation";
-import { changeParams } from "../reservation";
+} from "../redux/booking";
+import { changeParams } from "../redux/booking";
 
 import Tabs from "../components/Tabs";
 import Modal from "../components/Modal";

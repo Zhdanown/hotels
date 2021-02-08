@@ -10,7 +10,7 @@ import {
 } from "./styled";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { Centered } from "../../components/Centered";
-import { getPrimaryColor } from "../../reservation";
+import { getPrimaryColor } from "../../redux/hotelConfig";
 
 const Sign = styled.button`
   font-size: 1.2rem;

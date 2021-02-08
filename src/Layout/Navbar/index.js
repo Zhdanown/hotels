@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import SPEED from "./MENU_SPEED";
 import FullScreenMenu from "./FullScreenMenu";
-import { getHotelName, getPrimaryColor } from "../../reservation";
+import { getHotelName, getPrimaryColor } from "../../redux/hotelConfig";
 
 const NavbarWrapper = styled.div`
   transform: translateY(0);

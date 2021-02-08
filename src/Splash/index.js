@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import { Centered } from "../components/Centered";
-import { getSvgBgColor, getCssUrl, getSvgUrl } from "../reservation";
+import { getSvgBgColor, getCssUrl, getSvgUrl } from "../redux/hotelConfig";
 import useStyledSvg from "./useStyledSVG";
 
 const logDissolve = keyframes`
