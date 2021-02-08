@@ -6,7 +6,7 @@ import SPEED from "./MENU_SPEED";
 import useWindowWidth from "../hooks/useWindowWidth";
 import Link from "../../components/Link";
 import { Centered } from "../../components/Centered";
-import { getPrimaryColor } from "../../reservation";
+import { getMenuItems, getPrimaryColor } from "../../reservation";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -49,6 +49,7 @@ const LinksWrapper = styled(Centered)`
 
 export default function FullScreenMenu({ open }) {
   const color = useSelector(getPrimaryColor);
+  const menuItems = useSelector(getMenuItems);
   const [w, h] = useWindowWidth();
   const r = Math.ceil(Math.sqrt(w ** 2 + h ** 2));
   const diameter = 2 * r;
@@ -58,21 +59,11 @@ export default function FullScreenMenu({ open }) {
       <Backdrop diameter={diameter} open={open} color={color} />
       <MenuWrapper open={open}>
         <LinksWrapper column>
-          <Link color="white" href="#">
-            Rooms
-          </Link>
-          <Link color="white" href="#">
-            Main page
-          </Link>
-          <Link color="white" href="#">
-            Events
-          </Link>
-          <Link color="white" href="#">
-            Special offers
-          </Link>
-          <Link color="white" href="#">
-            Contacts
-          </Link>
+          {menuItems.map((item, i) => (
+            <Link key={i} color="white" href={item.reference}>
+              {item.name}
+            </Link>
+          ))}
         </LinksWrapper>
       </MenuWrapper>
     </>

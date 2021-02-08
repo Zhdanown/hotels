@@ -151,6 +151,7 @@ export const getConfigError = state => state.reservation.configError;
 export const getIsShowNavbar = state =>
   getConfig(state).hotel_style_config.show_header;
 export const getHotelName = state => getConfig(state).name;
+export const getMenuItems = state => getConfig(state).hotel_menu_items;
 export const getParams = state => state.reservation.params;
 export const getRoom = state => state.reservation.params.room;
 export const getRate = state => state.reservation.params.rate;
