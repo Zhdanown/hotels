@@ -51,6 +51,9 @@ function RoomShowcase({ room }) {
 
   const primaryColor = useSelector(getPrimaryColor);
 
+  const getImageUrl = path =>
+    process.env.NODE_ENV === "production" ? process.env.REACT_APP_API + path : path;
+
   const {
     preview_img,
     name,
@@ -69,7 +72,7 @@ function RoomShowcase({ room }) {
   return (
     <StyledRoomShowcase bgColor={primaryColor} style={{ position: "relative" }}>
       <div className="image-preview">
-        <img src={preview_img} alt="" style={{ width: "100%" }} />
+        <img src={getImageUrl(preview_img)} alt="" style={{ width: "100%" }} />
         <RoomTitle>
           <h4>{name}</h4>
           <span>
