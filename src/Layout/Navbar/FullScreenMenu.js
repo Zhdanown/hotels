@@ -6,7 +6,7 @@ import SPEED from "./MENU_SPEED";
 import useWindowWidth from "../hooks/useWindowWidth";
 import Link from "../../components/Link";
 import { Centered } from "../../components/Centered";
-import { getMenuItems, getPrimaryColor } from "../../reservation";
+import { getMenuItems, getMenuColor } from "../../reservation";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -17,7 +17,6 @@ const Backdrop = styled.div`
   border-radius: 50%;
   z-index: 10;
   background: ${p => p.color};
-  opacity: 0.8;
   transform: scale(${p => (p.open ? 1 : 0)});
   transition: transform ${SPEED}s;
 `;
@@ -48,7 +47,7 @@ const LinksWrapper = styled(Centered)`
 `;
 
 export default function FullScreenMenu({ open }) {
-  const color = useSelector(getPrimaryColor);
+  const color = useSelector(getMenuColor);
   const menuItems = useSelector(getMenuItems);
   const [w, h] = useWindowWidth();
   const r = Math.ceil(Math.sqrt(w ** 2 + h ** 2));

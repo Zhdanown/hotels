@@ -159,6 +159,8 @@ export const getPrimaryColor = state =>
   getConfig(state).hotel_style_config.primary_color;
 export const getHoverColor = state =>
   getConfig(state).hotel_style_config.hover_color;
+export const getMenuColor = state =>
+  getConfig(state).hotel_style_config.menu_background_color;
 export const getSvgBgColor = state => {
   const config = getConfig(state);
   return config ? config.hotel_style_config.svg_background_color : null;
