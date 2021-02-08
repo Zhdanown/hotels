@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
+
 import LayoutContext from "./LayoutContext";
 import useWindowWidth from "./hooks/useWindowWidth";
 import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
 import Navbar from "./Navbar/index";
+import { getIsShowNavbar } from "../reservation";
 
 function Layout({ children }) {
   const layoutContext = useContext(LayoutContext);
+  const isShowNavbar = useSelector(getIsShowNavbar);
   const [windowWidth] = useWindowWidth();
   const isDesktop = windowWidth > 1024;
 
@@ -14,7 +18,7 @@ function Layout({ children }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Navbar />
+      {isShowNavbar && <Navbar />}
       {isDesktop ? (
         <LayoutDesktop currentStep={currentStep} setStep={setStep}>
           {children}

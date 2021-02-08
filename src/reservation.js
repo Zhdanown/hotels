@@ -148,6 +148,8 @@ async function requestRoom(bookingInfo) {
 export const getConfig = state => state.reservation.config;
 export const getConfigLoading = state => state.reservation.configLoading;
 export const getConfigError = state => state.reservation.configError;
+export const getIsShowNavbar = state =>
+  getConfig(state).hotel_style_config.show_header;
 export const getHotelName = state => getConfig(state).name;
 export const getParams = state => state.reservation.params;
 export const getRoom = state => state.reservation.params.room;
