@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import LayoutContext from "../Layout/LayoutContext";
-import HTMLParser from "./HTMLParser";
+import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import Accordion, { Title, Icon } from "../components/Accordion";
 import { changeParams, getPrimaryColor } from "../reservation";

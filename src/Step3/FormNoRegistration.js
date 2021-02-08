@@ -7,8 +7,7 @@ const fields = [
   { type: "text", label: "Фамилия", name: "lastName" },
   { type: "email", label: "Email", name: "email" },
   { type: "tel", label: "Телефон", name: "tel" },
-  { type: "password", label: "Пароль", name: "password" },
-  { type: "password", label: "Повторите пароль", name: "password2" },
+  
 ];
 
 function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
@@ -25,7 +24,7 @@ function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
           />
         </div>
       ))}
-      <Button type="submit">Продолжить</Button>
+      <Button block type="submit">Продолжить</Button>
     </form>
   );
 }

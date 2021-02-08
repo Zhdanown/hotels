@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
+import { getPaymentForm } from "../reservation";
+import { Centered } from "../components/Centered";
 import Button from "../components/Button";
+import HTMLParser from "../components/HTMLParser";
+
 import { getPaymentOptions, submitOrder } from "../reservation";
 
 const Option = styled.div`
@@ -17,10 +21,19 @@ export default function PaymentOptions() {
   const options = useSelector(getPaymentOptions);
   const dispatch = useDispatch();
 
+  const [selectedPayment, setPayment] = useState(null);
+
+  const bookRoom = payment => dispatch(submitOrder(payment));
+
   const onOptionSelect = opt => {
     const payment = opt.is_not_pay ? null : { percent: 100 };
-    dispatch(submitOrder(payment));
+    setPayment({ payment });
   };
+
+  if (selectedPayment)
+    return (
+      <PaymentForm selectedPayment={selectedPayment} bookRoom={bookRoom} />
+    );
 
   return (
     <>
@@ -36,4 +49,24 @@ export default function PaymentOptions() {
       </div>
     </>
   );
+}
+
+function PaymentForm({ selectedPayment: { payment }, bookRoom }) {
+  const paymentForm = useSelector(getPaymentForm);
+
+  useEffect(() => {
+    if (!payment) bookRoom(payment);
+  }, [payment, bookRoom]);
+
+  if (!payment) return null;
+
+  if (payment)
+    return (
+      <>
+        <HTMLParser html={paymentForm.details} />
+        <Centered>
+          <Button onClick={() => bookRoom(payment)}>Перейти к оплате</Button>
+        </Centered>
+      </>
+    );
 }

@@ -8,6 +8,8 @@ const fields = [
   { type: "text", label: "Фамилия", name: "lastName" },
   { type: "email", label: "Email", name: "email" },
   { type: "tel", label: "Телефон", name: "tel" },
+  { type: "password", label: "Пароль", name: "password" },
+  { type: "password", label: "Повторите пароль", name: "password2" },
 ];
 
 function FormNewGuest({ guest, onSubmit, onGuestChange }) {

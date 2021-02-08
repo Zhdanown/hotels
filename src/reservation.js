@@ -57,7 +57,7 @@ const reducer = produce((draft, action) => {
 export default reducer;
 
 export const loadConfig = slug => async dispatch => {
-  dispatch({type: LOADING_CONFIG, payload: true});
+  dispatch({ type: LOADING_CONFIG, payload: true });
   try {
     const url = `api/v1/hotel-config/${slug}/`;
     const response = await api.get(url);
@@ -178,6 +178,7 @@ export const getAvailabilityColors = state =>
   state.reservation.config.hotel_availability_colors;
 export const getPaymentOptions = state =>
   getConfig(state).hotel_payment_methods;
+export const getPaymentForm = state => getConfig(state).payment_form;
 export const getBookingInfo = state => {
   const { room, rate, rooms_count } = state.reservation.params;
   const { arrival, departure } = state.reservation.params;

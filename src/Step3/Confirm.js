@@ -1,17 +1,20 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getRoom,
   getRate,
   getBookingState,
-  changeParams,
+  getBookingResponse,
 } from "../reservation";
+import { changeParams } from "../reservation";
+
 import Tabs from "../components/Tabs";
 import Modal from "../components/Modal";
+import PaymentOptions from "./PaymentOptions";
+
 import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
 import FormNoRegistration from "./FormNoRegistration";
-import PaymentOptions from "./PaymentOptions";
 
 const forms = [
   {
@@ -36,6 +39,7 @@ function Confirm() {
   const room = useSelector(getRoom);
   const rate = useSelector(getRate);
   const isBooking = useSelector(getBookingState);
+  const bookingResponse = useSelector(getBookingResponse);
 
   const [modal, setModal] = useState(false);
 
@@ -62,8 +66,16 @@ function Confirm() {
     setModal(true);
   };
 
+  useEffect(() => {
+    if (bookingResponse) {
+      setModal(false);
+    }
+  }, [bookingResponse]);
+
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
+  } else if (bookingResponse) {
+    return <h4>Выполняется переадресация...</h4>;
   } else {
     return (
       <div>
