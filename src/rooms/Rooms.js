@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -7,22 +7,74 @@ import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import Accordion, { Title, Icon } from "../components/Accordion";
 import { changeParams } from "../redux/booking";
-import { getPrimaryColor } from "../redux/hotelConfig";
+import { getPackages, getPrimaryColor } from "../redux/hotelConfig";
 import { getRooms, getRoomsLoadState } from "./roomsReducer";
+
+const Packages = styled.div``;
 
 function Rooms() {
   const isLoadingRooms = useSelector(getRoomsLoadState);
   const rooms = useSelector(getRooms);
 
+  const [selected, setSelected] = useState(null);
+
+  const packages = useSelector(getPackages);
+
+  const onSelect = data => {
+    console.log(data);
+    setSelected(data);
+  };
+
+  const dispatch = useDispatch();
+  const { setStep } = useContext(LayoutContext);
+
+  const continueBooking = () => {
+    setStep(step => ++step);
+    dispatch(changeParams(selected));
+  };
+
+  const cancel = () => {
+    setSelected(null);
+  };
+
   if (isLoadingRooms) {
     return <h1>Загрузка...</h1>;
   }
   return (
-    <div>
-      <h3>Выбор номера</h3>
-      {rooms.map(room => (
-        <RoomShowcase key={room.id} room={room}></RoomShowcase>
-      ))}
+    <div style={{ position: "relative" }}>
+      {selected ? (
+        <>
+          <div style={{ margin: "1rem 0" }}>
+            <Button small onClick={cancel}>
+              Назад
+            </Button>
+          </div>
+          <div style={{ margin: "1rem 0" }}>
+            <Button small onClick={continueBooking}>
+              Продолжить бронирование
+            </Button>
+          </div>
+          <Packages>
+            Дополнительные услуги
+            {packages.map(packageItem => (
+              <div>
+                <p>{packageItem.name}</p>
+              </div>
+            ))}
+          </Packages>
+        </>
+      ) : (
+        <>
+          <h3>Выбор номера</h3>
+          {rooms.map(room => (
+            <RoomShowcase
+              key={room.id}
+              room={room}
+              onSelect={onSelect}
+            ></RoomShowcase>
+          ))}
+        </>
+      )}
     </div>
   );
 }
@@ -85,7 +137,7 @@ const ImagePreview = styled.div`
   }
 `;
 
-function RoomShowcase({ room }) {
+function RoomShowcase({ room, onSelect }) {
   const layoutContext = useContext(LayoutContext);
   const { setStep } = layoutContext;
 
@@ -105,10 +157,11 @@ function RoomShowcase({ room }) {
     rates,
   } = room;
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const onRateSelect = rate => {
-    setStep(step => ++step);
-    dispatch(changeParams({ room, rate }));
+    onSelect({ room, rate });
+    // setStep(step => ++step);
+    // dispatch(changeParams({ room, rate }));
   };
 
   return (
