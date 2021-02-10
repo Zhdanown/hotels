@@ -28,22 +28,61 @@ function Rooms() {
 }
 
 const StyledRoomShowcase = styled.div`
-  border: 1px solid black;
+  // border: 1px solid black;
+  box-shadow: 0 0 10px 5px #ddd;
   border-radius: 0.5rem;
   margin: 1rem 0;
   overflow: hidden;
 `;
 
-const RoomTitle = styled.div`
+const s1 = `
+  text-align: center;
+  
+`;
+
+const TitleSection = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 0;
   color: white;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
+  background: linear-gradient(0deg, black, transparent);
+  ${s1}
+`;
+
+const RoomName = styled.h4`
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  &:after {
+    content: "";
+    display: block;
+    width: 30%;
+    height: 2px;
+    background: white;
+    margin: auto;
+  }
 `;
 
 const Content = styled.div`
   padding: 1rem;
+`;
+
+const ImagePreview = styled.div`
+  position: relative;
+  overflow: hidden;
+
+  img {
+    transition: transform 1s;
+  }
+
+  &:hover {
+    ${TitleSection} {
+    }
+    img {
+      transform: scale(1.1);
+    }
+  }
 `;
 
 function RoomShowcase({ room }) {
@@ -53,7 +92,9 @@ function RoomShowcase({ room }) {
   const primaryColor = useSelector(getPrimaryColor);
 
   const getImageUrl = path =>
-    process.env.NODE_ENV === "production" ? process.env.REACT_APP_API + path : path;
+    process.env.NODE_ENV === "production"
+      ? process.env.REACT_APP_API + path
+      : path;
 
   const {
     preview_img,
@@ -71,16 +112,22 @@ function RoomShowcase({ room }) {
   };
 
   return (
-    <StyledRoomShowcase bgColor={primaryColor} style={{ position: "relative" }}>
-      <div className="image-preview">
-        <img src={getImageUrl(preview_img)} alt="" style={{ width: "100%" }} />
-        <RoomTitle>
-          <h4>{name}</h4>
+    <StyledRoomShowcase bgColor={primaryColor}>
+      <ImagePreview>
+        <img
+          src={getImageUrl(preview_img)}
+          alt=""
+          style={{
+            width: "100%",
+          }}
+        />
+        <TitleSection>
+          <RoomName>{name}</RoomName>
           <span>
             <b>{max_price} &#8381;</b>
           </span>
-        </RoomTitle>
-      </div>
+        </TitleSection>
+      </ImagePreview>
 
       <Content>
         <Accordion
