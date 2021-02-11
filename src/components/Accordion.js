@@ -1,18 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import { Collapse } from "react-collapse";
+import styled, { createGlobalStyle } from "styled-components";
 
 import { CaretDownFilled } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { getPrimaryColor } from "../redux/hotelConfig";
 
-const SPEED = 0.4;
+const SPEED = 500;
 
-const AccordionSection = styled.div`
-  display: flex;
-  flex-direction: column;
+const Transition = createGlobalStyle`
+  .ReactCollapse--collapse {
+    transition: height ${SPEED}ms;
+  }
 `;
 
-export const Title = styled.p`
+export default function Accordion({
+  children,
+  opened = false,
+  renderTitle,
+  renderTitleAfter,
+}) {
+  const [isOpened, setIsOpened] = useState(opened);
+  const toggle = () => {
+    setIsOpened(state => !state);
+  };
+
+  return (
+    <>
+      <Transition />
+      {renderTitle && renderTitle(toggle, isOpened)}
+      <Collapse isOpened={isOpened}>{children}</Collapse>
+      {renderTitleAfter && renderTitleAfter(toggle, isOpened)}
+    </>
+  );
+}
+
+const StyledTitle = styled.p`
   cursor: pointer;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
@@ -20,55 +43,23 @@ export const Title = styled.p`
   display: flex;
   align-items: center;
   transition: transform 0.2s;
-`;
 
-const TitleWrapper = styled.div`
-  transition: background-color ${SPEED}s ease;
-
-  ${Title}:hover {
+  &:hover {
     color: ${p => p.color};
   }
 `;
 
+export const Title = ({ children, ...props }) => {
+  const color = useSelector(getPrimaryColor);
+  return (
+    <StyledTitle color={color} {...props}>
+      {children}
+    </StyledTitle>
+  );
+};
+
 export const Icon = styled(CaretDownFilled)`
   margin-left: 0.5rem;
-  transition: transform ${SPEED}s ease;
-  ${p => (p.active ? "transform: rotate(180deg);" : "")}
+  transition: transform ${SPEED}ms ease;
+  ${p => (p.open ? "transform: rotate(180deg);" : "")}
 `;
-
-const ContentWrapper = styled.div`
-  background-color: white;
-  overflow: hidden;
-  transition: max-height ${SPEED}s ease, opacity ${SPEED * 2}s;
-  max-height: ${p => p.height};
-  opacity: ${p => (p.active ? 1 : 0)};
-`;
-
-function Accordion({ renderTitle, children, opened = false }) {
-  const color = useSelector(getPrimaryColor);
-  const [active, setActive] = useState(opened);
-  const [height, setHeight] = useState("0px");
-
-  const content = useRef(null);
-
-  useEffect(() => {
-    setHeight(active ? `${content.current.scrollHeight}px` : "0px");
-  }, [active]);
-
-  const toggleAccordion = () => {
-    setActive(state => !state);
-  };
-
-  return (
-    <AccordionSection>
-      <TitleWrapper active={active ? 1 : 0} color={color}>
-        {renderTitle && renderTitle(toggleAccordion, active)}
-      </TitleWrapper>
-      <ContentWrapper ref={content} height={height} active={active}>
-        {children}
-      </ContentWrapper>
-    </AccordionSection>
-  );
-}
-
-export default Accordion;

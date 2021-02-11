@@ -185,19 +185,27 @@ function RoomShowcase({ room, onSelect }) {
       <Content>
         <Accordion
           opened
-          renderTitle={(toggle, active) => (
+          renderTitle={(toggle, open) => (
             <Title onClick={toggle} style={{ justifyContent: "center" }}>
-              Информация о номере <Icon active={active ? 1 : 0} />
+              Информация о номере <Icon open={open} />
             </Title>
           )}
         >
           <HTMLParser html={short_description} />
         </Accordion>
 
-        <h4 style={{ textAlign: "center", marginTop: "2rem" }}>Тарифы</h4>
-        {rates.map(rate => (
-          <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
-        ))}
+        <Accordion
+          renderTitle={(toggle, open) => (
+            <Title onClick={toggle} style={{ justifyContent: "center" }}>
+              Тарифы <Icon open={open} />
+            </Title>
+          )}
+        >
+          {rates.map(rate => (
+            <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
+          ))}
+        </Accordion>
+        {/* <h4 style={{ textAlign: "center", marginTop: "2rem" }}>Тарифы</h4> */}
       </Content>
     </StyledRoomShowcase>
   );
