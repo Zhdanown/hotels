@@ -196,9 +196,10 @@ function RoomShowcase({ room, onSelect }) {
 
         <Accordion
           renderTitle={(toggle, open) => (
-            <Title onClick={toggle} style={{ justifyContent: "center" }}>
-              Тарифы <Icon open={open} />
-            </Title>
+            <Button small onClick={toggle} style={{ margin: ".5rem" }}>
+              {open ? "Скрыть тарифы" : "Выбрать тариф"}
+              <Icon open={open} />
+            </Button>
           )}
         >
           {rates.map(rate => (
