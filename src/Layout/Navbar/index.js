@@ -86,20 +86,16 @@ export default function Navbar() {
   const hotelName = useSelector(getHotelName);
   const color = useSelector(getPrimaryColor);
 
-  const openMenu = () => {
-    toggleMenu(state => !state);
-  };
-
   return (
     <NavbarWrapper>
       <NavbarContainer id="navbar">
         <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
         <MenuIcon open={isMenuOpen}>
-          <StyledMenuOutlined onClick={openMenu} color={color} />
-          <StyledCloseOutlined onClick={openMenu} />
+          <StyledMenuOutlined onClick={() => toggleMenu(true)} color={color} />
+          <StyledCloseOutlined onClick={() => toggleMenu(false)} />
         </MenuIcon>
       </NavbarContainer>
-      <FullScreenMenu open={isMenuOpen} />
+      <FullScreenMenu isOpen={isMenuOpen} close={() => toggleMenu(false)} />
     </NavbarWrapper>
   );
 }

@@ -7,6 +7,7 @@ import useWindowWidth from "../hooks/useWindowWidth";
 import Link from "../../components/Link";
 import { Centered } from "../../components/Centered";
 import { getMenuItems, getMenuColor } from "../../redux/hotelConfig";
+import { useEffect } from "react";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -46,17 +47,24 @@ const LinksWrapper = styled(Centered)`
   align-items: flex-start;
 `;
 
-export default function FullScreenMenu({ open }) {
+export default function FullScreenMenu({ isOpen, close }) {
   const color = useSelector(getMenuColor);
   const menuItems = useSelector(getMenuItems);
   const [w, h] = useWindowWidth();
   const r = Math.ceil(Math.sqrt(w ** 2 + h ** 2));
   const diameter = 2 * r;
 
+  useEffect(() => {
+    const handleEsc = e => e.code === "Escape" && close();
+    document.addEventListener("keydown", handleEsc);
+
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [close]);
+
   return (
     <>
-      <Backdrop diameter={diameter} open={open} color={color} />
-      <MenuWrapper open={open}>
+      <Backdrop diameter={diameter} open={isOpen} color={color} />
+      <MenuWrapper open={isOpen}>
         <LinksWrapper column>
           {menuItems.map((item, i) => (
             <Link key={i} color="white" href={item.reference}>
