@@ -52,7 +52,7 @@ const StyledColumn = styled.div`
   &:nth-child(2) {
     width: 40%;
     ${ColumnContainer} {
-      max-width: unset;
+      max-width: 600px;
     }
   }
 `;
@@ -71,4 +71,4 @@ function Column({ children, active }) {
       </ColumnWrapper>
     </StyledColumn>
   );
-} 
+}

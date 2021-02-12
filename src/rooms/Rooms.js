@@ -9,6 +9,9 @@ import Accordion, { Title, Icon } from "../components/Accordion";
 import { changeParams } from "../redux/booking";
 import { getPackages, getPrimaryColor } from "../redux/hotelConfig";
 import { getRooms, getRoomsLoadState } from "./roomsReducer";
+import ImageGallery from "./ImageGallery";
+import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
+import { urlWithHost } from "../Step3/urlWithHost";
 
 const Packages = styled.div``;
 
@@ -122,11 +125,7 @@ const Content = styled.div`
 
 const ImagePreview = styled.div`
   position: relative;
-  overflow: hidden;
-
-  img {
-    transition: transform 1s;
-  }
+  background: linear-gradient(0deg, black, gray);
 
   &:hover {
     ${TitleSection} {
@@ -137,19 +136,31 @@ const ImagePreview = styled.div`
   }
 `;
 
+const ImageContainer = styled.div`
+  overflow: hidden;
+  height: 230px;
+
+  img {
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+    transition: transform 1s;
+  }
+
+  ${ImagePreviewContainerQueries}
+`;
+
 function RoomShowcase({ room, onSelect }) {
   const layoutContext = useContext(LayoutContext);
   const { setStep } = layoutContext;
 
   const primaryColor = useSelector(getPrimaryColor);
 
-  const getImageUrl = path =>
-    process.env.NODE_ENV === "production"
-      ? process.env.REACT_APP_API + path
-      : path;
+
 
   const {
     preview_img,
+    images,
     name,
     room_code,
     max_price,
@@ -164,16 +175,20 @@ function RoomShowcase({ room, onSelect }) {
     // dispatch(changeParams({ room, rate }));
   };
 
+  const [isGalleryOpen, toggleGallery] = useState(false);
+
   return (
     <StyledRoomShowcase bgColor={primaryColor}>
-      <ImagePreview>
-        <img
-          src={getImageUrl(preview_img)}
-          alt=""
-          style={{
-            width: "100%",
-          }}
-        />
+      <ImageGallery
+        images={images}
+        open={isGalleryOpen}
+        toggle={toggleGallery}
+      />
+
+      <ImagePreview onClick={() => toggleGallery(true)}>
+        <ImageContainer>
+          <img src={urlWithHost(preview_img)} alt="room preview" />
+        </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
           <span>

@@ -2,6 +2,7 @@ import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import useWindowWidth from "./hooks/useWindowWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
+import { ColumnMobileQueries } from "./MediaQueries";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
@@ -54,31 +55,6 @@ function LayoutMobile({ children, currentStep, setStep }) {
   );
 }
 
-const MediaQueries = `
-  @media screen and (max-width: 768px) {
-    & {
-      width: 500px;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    & {
-      width: 420px;
-    }
-  }
-  @media screen and (max-width: 550px) {
-    & {
-      width: 400px;
-    }
-  }
-  @media screen and (max-width: 425px) {
-    & {
-      width: 100%;
-      min-width: 300px;
-      padding: 0.5rem;
-    }
-  }
-`;
-
 const StyledColumn = styled.div`
   height: calc(100vh - ${p => p.navbarHeight}px);
   flex: 1;
@@ -92,7 +68,7 @@ const StyledColumn = styled.div`
     height: 100%;
   }
 
-  ${MediaQueries}
+  ${ColumnMobileQueries}
 `;
 
 const ColumnContainer = styled.div`
@@ -100,7 +76,7 @@ const ColumnContainer = styled.div`
   width: 550px;
   margin: 0 auto;
 
-  ${MediaQueries}
+  ${ColumnMobileQueries}
 `;
 
 function MColumn({ children, active, goBack, goForward }) {
@@ -121,7 +97,7 @@ const MobileButtonsContainer = styled.div`
   width: 550px;
   margin: 0 auto;
 
-  ${MediaQueries}
+  ${ColumnMobileQueries}
 `;
 
 function ColumnNavigation({ goBack, goForward }) {
