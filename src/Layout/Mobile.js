@@ -5,6 +5,7 @@ import LayoutContext from "./LayoutContext";
 import { ColumnMobileQueries } from "./MediaQueries";
 import useWindowWidth from "./hooks/useWindowWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
+import TitleScreen from "./DesktopColTitleScreen";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
@@ -40,17 +41,13 @@ function LayoutMobile({ children }) {
       <HTMLOverflowHidden />
       <Layout className="layout-mobile" step={currentStep - 1}>
         <div className="wrapper">
-          <MColumn active={currentStep === 1} goForward={goForward}>
+          <MColumn num={1} goForward={goForward}>
             {children[0]}
           </MColumn>
-          <MColumn
-            active={currentStep === 2}
-            goBack={goBack}
-            goForward={goForward}
-          >
+          <MColumn num={2} goBack={goBack} goForward={goForward}>
             {children[1]}
           </MColumn>
-          <MColumn active={currentStep === 3} goBack={goBack}>
+          <MColumn num={3} goBack={goBack}>
             {children[2]}
           </MColumn>
         </div>
@@ -83,12 +80,16 @@ const ColumnContainer = styled.div`
   ${ColumnMobileQueries}
 `;
 
-function MColumn({ children, active, goBack, goForward }) {
+function MColumn({ children, num, goBack, goForward }) {
+  const { currentStep } = useContext(LayoutContext);
+  const active = currentStep === num;
+
   return (
     <StyledColumn active={active} navbarHeight={useNavbarHeight}>
       <div className="column-wrapper">
         <ColumnNavigation goBack={goBack} goForward={goForward} />
         <ColumnContainer>{children}</ColumnContainer>
+        <TitleScreen num={num} />
       </div>
     </StyledColumn>
   );

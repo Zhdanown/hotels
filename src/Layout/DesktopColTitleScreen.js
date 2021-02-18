@@ -4,6 +4,7 @@ import styled, { keyframes } from "styled-components";
 import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
 import Loader from "../components/Loader";
+import useWindowWidth from "./hooks/useWindowWidth";
 
 const fadeIn = keyframes`
   from {
@@ -33,8 +34,8 @@ const TitleScreenContainer = styled(Centered)`
 
 const TitleContent = styled(Centered)`
   width: 100%;
-  box-shadow: 0 0 10px 4px #ddd;
   flex-direction: column;
+  ${p => p.desktop && "box-shadow: 0 0 10px 4px #ddd;"}
 `;
 
 const ScreenHeader = styled.span`
@@ -53,6 +54,7 @@ const Subtitle = styled.span`
 
 export default function TitleScreen({ num }) {
   const { steps } = useContext(LayoutContext);
+  const [, , isDesktop] = useWindowWidth();
 
   const stepData = steps[num];
   const { enabled, title, isLoading } = stepData;
@@ -71,7 +73,7 @@ export default function TitleScreen({ num }) {
   if (!contentVisible) {
     return (
       <TitleScreenContainer visible={!enabled}>
-        <TitleContent>
+        <TitleContent desktop={isDesktop}>
           {isLoading && <Loader />}
           <ScreenHeader>{title}</ScreenHeader>
           {!isLoading && <Subtitle>Какой-то текст</Subtitle>}

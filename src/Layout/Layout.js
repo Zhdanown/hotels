@@ -9,8 +9,7 @@ import { getIsShowNavbar } from "../redux/hotelConfig";
 
 function Layout({ children }) {
   const isShowNavbar = useSelector(getIsShowNavbar);
-  const [windowWidth] = useWindowWidth();
-  const isDesktop = windowWidth > 1024;
+  const [, , isDesktop] = useWindowWidth();
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>

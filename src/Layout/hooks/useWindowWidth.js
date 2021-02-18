@@ -14,7 +14,10 @@ function useWindowWidth() {
 
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  return [windowWidth, windowHeight];
+
+  const isDesktop = windowWidth > 1024;
+
+  return [windowWidth, windowHeight, isDesktop];
 }
 
 export default useWindowWidth;
