@@ -48,9 +48,9 @@ const Label = styled.label`
   transition: top ${SPEED}s;
 
   ${StyledInput}:focus + ${LabelContainer} > & {
-    top: 0;
+    top: -2px;
   }
-  ${p => p.hasValue && `top: 0;`}
+  ${p => p.hasValue && `top: -2px;`}
 `;
 
 function Input({ type, label, name, value, onChange, ...props }) {
