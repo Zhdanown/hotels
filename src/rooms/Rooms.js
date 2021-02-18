@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import Accordion, { Title, Icon } from "../components/Accordion";
 import { changeParams } from "../redux/booking";
 import { getPackages, getPrimaryColor } from "../redux/hotelConfig";
-import { getRooms, getRoomsLoadState } from "./roomsReducer";
+import { getRooms } from "./roomsReducer";
 import ImageGallery from "./ImageGallery";
 import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { urlWithHost } from "../Step3/urlWithHost";
@@ -16,7 +16,6 @@ import { urlWithHost } from "../Step3/urlWithHost";
 const Packages = styled.div``;
 
 function Rooms() {
-  const isLoadingRooms = useSelector(getRoomsLoadState);
   const rooms = useSelector(getRooms);
 
   const [selected, setSelected] = useState(null);
@@ -40,9 +39,6 @@ function Rooms() {
     setSelected(null);
   };
 
-  if (isLoadingRooms) {
-    return <h1>Загрузка...</h1>;
-  }
   return (
     <div style={{ position: "relative" }}>
       {selected ? (
@@ -155,8 +151,6 @@ function RoomShowcase({ room, onSelect }) {
   const { setStep } = layoutContext;
 
   const primaryColor = useSelector(getPrimaryColor);
-
-
 
   const {
     preview_img,

@@ -27,7 +27,7 @@ function Step1() {
 
   return (
     <>
-      <h4 className="is-size-4 has-text-centered">Параметры бронирования</h4>
+      <h3>Параметры бронирования</h3>
       <Guests />
       <DateRangePicker />
 

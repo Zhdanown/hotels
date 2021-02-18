@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
+import LayoutContext from "./LayoutContext";
+import TitleScreen from "./DesktopColTitleScreen";
 import { scrollbarWidth } from "./scrollbarWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
 
@@ -18,13 +20,13 @@ const DesktopLayoutContainer = styled.div`
   overflow: hidden;
 `;
 
-function LayoutDesktop({ children, currentStep }) {
+function LayoutDesktop({ children }) {
   return (
     <DesktopLayoutContainer>
       <HTMLOverflowHidden />
-      <Column active={currentStep === 1}>{children[0]}</Column>
-      <Column active={currentStep === 2}>{children[1]}</Column>
-      <Column active={currentStep === 3}>{children[2]}</Column>
+      <Column num={1}>{children[0]}</Column>
+      <Column num={2}>{children[1]}</Column>
+      <Column num={3}>{children[2]}</Column>
     </DesktopLayoutContainer>
   );
 }
@@ -44,6 +46,7 @@ const StyledColumn = styled.div`
   transition: all 0.5s;
   overflow: hidden;
   opacity: ${p => (p.active ? 1 : 0.3)};
+  position: relative;
 
   ${ColumnContainer} {
     max-width: 360px;
@@ -63,11 +66,15 @@ const ColumnWrapper = styled.div`
   height: 100%;
 `;
 
-function Column({ children, active }) {
+function Column({ children, num }) {
+  const { currentStep } = useContext(LayoutContext);
+  const active = currentStep === num;
+
   return (
     <StyledColumn active={active} navbarHeight={useNavbarHeight}>
       <ColumnWrapper scrollbarWidth={scrollbarWidth} className="column-wrapper">
         <ColumnContainer>{children}</ColumnContainer>
+        <TitleScreen num={num} />
       </ColumnWrapper>
     </StyledColumn>
   );

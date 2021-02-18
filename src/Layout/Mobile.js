@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { createGlobalStyle } from "styled-components";
+
+import LayoutContext from "./LayoutContext";
+import { ColumnMobileQueries } from "./MediaQueries";
 import useWindowWidth from "./hooks/useWindowWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
-import { ColumnMobileQueries } from "./MediaQueries";
 
 const HTMLOverflowHidden = createGlobalStyle`
   html {
@@ -22,7 +24,9 @@ const Layout = styled.div`
   }
 `;
 
-function LayoutMobile({ children, currentStep, setStep }) {
+function LayoutMobile({ children }) {
+  const { currentStep, setStep } = useContext(LayoutContext);
+
   const goBack = () => {
     setStep(step => --step);
   };
