@@ -1,3 +1,4 @@
+import { LeftOutlined } from "@ant-design/icons";
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -12,30 +13,40 @@ const ColoredButton = styled.button`
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  transition: background .2s, opacity .2s;
+  transition: background 0.2s, opacity 0.2s;
 
   &.small {
-    padding: .25rem .5rem;
+    padding: 0.25rem 0.5rem;
   }
 
   &:hover {
-    background: ${props => props.hoverColor}
+    background: ${props => props.hoverColor};
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  ${p =>
+    p.outline &&
+    `
+  background: none;
+  color: green;
+  border: 1px solid green;
+  &:hover {
+    color: white;
+  }`}
 `;
 
 function Button({ children, onClick, disabled, ...props }) {
   const primaryColor = useSelector(getPrimaryColor);
-  const hoverColor = useSelector(getHoverColor)
+  const hoverColor = useSelector(getHoverColor);
 
   return (
     <ColoredButton
       type="button"
-      className={props.small ? 'small' : ''}
+      className={props.small ? "small" : ""}
       bgColor={primaryColor}
       hoverColor={hoverColor}
       disabled={disabled}
@@ -48,3 +59,12 @@ function Button({ children, onClick, disabled, ...props }) {
 }
 
 export default Button;
+
+export function BackButton({ children, ...props }) {
+  return (
+    <Button small outline {...props}>
+      <LeftOutlined />
+      {children}
+    </Button>
+  );
+}

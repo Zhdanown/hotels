@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import Link from "../components/Link";
 import { Centered } from "../components/Centered";
 import { searchRooms } from "../rooms/roomsReducer";
+import ColumnHeader from "../components/ColumnHeader";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
@@ -27,12 +28,14 @@ function Step1() {
 
   return (
     <>
-      <h3>Параметры бронирования</h3>
+      <ColumnHeader>Параметры бронирования</ColumnHeader>
       <Guests />
       <DateRangePicker />
 
       <Conditions column>
-        <Link href="#" underlined>Правила и услуги</Link>
+        <Link href="#" underlined>
+          Правила и услуги
+        </Link>
       </Conditions>
 
       <Button block onClick={onButtonClick}>

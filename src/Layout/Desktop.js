@@ -47,6 +47,7 @@ const StyledColumn = styled.div`
   overflow: hidden;
   opacity: ${p => (p.active ? 1 : 0.3)};
   position: relative;
+  ${p => !p.active && `pointer-events: none;`}
 
   ${ColumnContainer} {
     max-width: 360px;

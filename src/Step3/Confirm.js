@@ -15,6 +15,9 @@ import PaymentOptions from "./PaymentOptions";
 import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
 import FormNoRegistration from "./FormNoRegistration";
+import ColumnHeader from "../components/ColumnHeader";
+import { useContext } from "react";
+import LayoutContext from "../Layout/LayoutContext";
 
 const forms = [
   {
@@ -72,6 +75,12 @@ function Confirm() {
     }
   }, [bookingResponse]);
 
+  const { setStep } = useContext(LayoutContext);
+
+  const goBack = () => {
+    setStep(step => --step);
+  };
+
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
   } else if (bookingResponse) {
@@ -79,7 +88,7 @@ function Confirm() {
   } else {
     return (
       <div>
-        <h3>Подтверждение бронирования</h3>
+        <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
         {room && (
           <div style={{ textAlign: "left" }}>
             <span>{room.name.toUpperCase()}</span>

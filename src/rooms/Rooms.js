@@ -12,6 +12,7 @@ import { getRooms } from "./roomsReducer";
 import ImageGallery from "./ImageGallery";
 import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { urlWithHost } from "../Step3/urlWithHost";
+import ColumnHeader from "../components/ColumnHeader";
 
 const Packages = styled.div``;
 
@@ -30,6 +31,10 @@ function Rooms() {
   const dispatch = useDispatch();
   const { setStep } = useContext(LayoutContext);
 
+  const goBack = () => {
+    setStep(step => --step);
+  };
+
   const continueBooking = () => {
     setStep(step => ++step);
     dispatch(changeParams(selected));
@@ -43,18 +48,13 @@ function Rooms() {
     <div style={{ position: "relative" }}>
       {selected ? (
         <>
-          <div style={{ margin: "1rem 0" }}>
-            <Button small onClick={cancel}>
-              Назад
-            </Button>
-          </div>
+          <ColumnHeader goBack={cancel}>Дополнительные услуги</ColumnHeader>
           <div style={{ margin: "1rem 0" }}>
             <Button small onClick={continueBooking}>
               Продолжить бронирование
             </Button>
           </div>
           <Packages>
-            Дополнительные услуги
             {packages.map(packageItem => (
               <div>
                 <p>{packageItem.name}</p>
@@ -64,7 +64,7 @@ function Rooms() {
         </>
       ) : (
         <>
-          <h3>Выбор номера</h3>
+          <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
           {rooms.map(room => (
             <RoomShowcase
               key={room.id}

@@ -3,7 +3,6 @@ import styled, { createGlobalStyle } from "styled-components";
 
 import LayoutContext from "./LayoutContext";
 import { ColumnMobileQueries } from "./MediaQueries";
-import useWindowWidth from "./hooks/useWindowWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
 import TitleScreen from "./DesktopColTitleScreen";
 
@@ -80,102 +79,17 @@ const ColumnContainer = styled.div`
   ${ColumnMobileQueries}
 `;
 
-function MColumn({ children, num, goBack, goForward }) {
+function MColumn({ children, num }) {
   const { currentStep } = useContext(LayoutContext);
   const active = currentStep === num;
 
   return (
     <StyledColumn active={active} navbarHeight={useNavbarHeight}>
       <div className="column-wrapper">
-        <ColumnNavigation goBack={goBack} goForward={goForward} />
         <ColumnContainer>{children}</ColumnContainer>
         <TitleScreen num={num} />
       </div>
     </StyledColumn>
-  );
-}
-
-const MobileButtonsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  width: 550px;
-  margin: 0 auto;
-
-  ${ColumnMobileQueries}
-`;
-
-function ColumnNavigation({ goBack, goForward }) {
-  const [windowWidth] = useWindowWidth();
-  const isTablet = windowWidth >= 768;
-
-  if (isTablet) {
-    return (
-      <>
-        {goBack && <TabletNavButton prev onClick={goBack}></TabletNavButton>}
-        {goForward && (
-          <TabletNavButton next onClick={goForward}></TabletNavButton>
-        )}
-      </>
-    );
-  } else {
-    return (
-      <MobileButtonsContainer>
-        {goBack && <MobileNavButton prev onClick={goBack} />}
-        {goForward && <MobileNavButton next onClick={goForward} />}
-      </MobileButtonsContainer>
-    );
-  }
-}
-
-const MobileButtonContainer = styled.div`
-  flex: 1;
-  text-align: ${p => (p.prev ? "left" : "right")};
-  button {
-    border: none;
-    padding: 0.5rem 1rem;
-    opacity: 0.7;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-`;
-
-function MobileNavButton({ prev, next, onClick }) {
-  return (
-    <MobileButtonContainer prev={prev}>
-      <button onClick={onClick}>{prev ? "назад" : "вперёд"}</button>
-    </MobileButtonContainer>
-  );
-}
-
-const TabletButtonContainer = styled.div`
-  display: inline-block;
-  position: absolute;
-  background: lightgray;
-  top: 50%;
-  transform: translateY(-50%);
-  ${p => (p.prev ? "left: 20px;" : "right: 20px;")}
-
-  button {
-    border: none;
-    padding: 2rem 1rem;
-    opacity: 0.5;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-`;
-
-function TabletNavButton({ prev, onClick }) {
-  return (
-    <TabletButtonContainer prev={prev}>
-      <button type="button" onClick={onClick}>
-        {prev ? "назад" : "вперёд"}
-      </button>
-    </TabletButtonContainer>
   );
 }
 
