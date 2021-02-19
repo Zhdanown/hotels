@@ -22,6 +22,7 @@ import FloatingButton from "../components/FloatingButton";
 import LayoutContext from "../Layout/LayoutContext";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { Centered } from "../components/Centered";
+import Input from "../components/Input";
 
 const forms = [
   {
@@ -63,6 +64,7 @@ function Confirm() {
     login: "",
     password: "",
     password2: "",
+    comment: "",
   });
 
   const onGuestChange = useCallback(({ target }) => {
@@ -112,6 +114,14 @@ function Confirm() {
           guest={guest}
           onSubmit={onSubmit}
           onGuestChange={onGuestChange}
+        />
+
+        <Input
+          type="text"
+          label="Комментарий"
+          name="comment"
+          value={guest.comment}
+          onChange={onGuestChange}
         />
 
         <Conditions column>
