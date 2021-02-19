@@ -39,7 +39,6 @@ function DateRangePicker() {
 
   const dispatch = useDispatch();
   const primaryColor = useSelector(getPrimaryColor);
-  const { arrivalTime, departureTime } = useSelector(getArrivalDepartureTime);
 
   useEffect(() => {
     if (!range) return;
@@ -102,25 +101,20 @@ function DateRangePicker() {
 
   return (
     <div style={{ margin: "2rem 0" }}>
-      <InputContainer>
+      <ArrivalDepartureTime />
+      <InputContainer style={{ display: "none" }}>
         <Input
-          color="green"
           type="text"
           name="startDate"
-          id="startDate"
-          label={`Заезд (${arrivalTime})`}
+          label={`Заезд`}
           value={range.start}
           readOnly
-          inputStyles={{ width: "7rem" }}
         />
         <span style={{ margin: "0 1.25rem" }}>{" - "}</span>
         <Input
-          inputStyles={{ width: "7rem" }}
-          color="green"
           type="text"
           name="endDate"
-          id="endDate"
-          label={`Выезд (${departureTime})`}
+          label={`Выезд`}
           value={range.end}
           readOnly
         />
@@ -132,3 +126,21 @@ function DateRangePicker() {
 }
 
 export default DateRangePicker;
+
+function ArrivalDepartureTime() {
+  const { arrivalTime, departureTime } = useSelector(getArrivalDepartureTime);
+
+  const formatTime = time => {
+    const regex = /(\d{2}:\d{2}):\d{2}/;
+    let match = time.match(regex);
+    return match ? match[1] : time;
+  };
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      <span>{`Заезд (${formatTime(arrivalTime)})`}</span>
+      {" - "}
+      <span>{`Выезд (${formatTime(departureTime)})`}</span>
+    </div>
+  );
+}
