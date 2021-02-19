@@ -56,7 +56,7 @@ function Rooms() {
           </div>
           <Packages>
             {packages.map(packageItem => (
-              <div>
+              <div key={packageItem.id}>
                 <p>{packageItem.name}</p>
               </div>
             ))}
@@ -215,7 +215,6 @@ function RoomShowcase({ room, onSelect }) {
             <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
           ))}
         </Accordion>
-        {/* <h4 style={{ textAlign: "center", marginTop: "2rem" }}>Тарифы</h4> */}
       </Content>
     </StyledRoomShowcase>
   );
@@ -231,12 +230,7 @@ const StyledRoomRate = styled.div`
   }
 `;
 
-const RateHeader = styled.h5`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Night = styled.div`
+const Justified = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -250,37 +244,47 @@ function RoomRate({ rate, onClick }) {
     total_price,
     nights,
   } = rate;
+
+  const totalCost = nights.reduce((sum, night) => sum + night.price, 0);
+
   return (
     <StyledRoomRate bg={primaryColor}>
       <Accordion
         renderTitle={(toggle, active) => (
           <>
-            <RateHeader bg={primaryColor}>
-              <Title onClick={toggle}>
-                {rate_code} {total_price} &#8381;{" "}
+            <Justified bg={primaryColor} style={{ marginBottom: "1rem" }}>
+              <Title onClick={toggle} style={{ marginRight: "1rem" }}>
+                {short_description ? (
+                  <HTMLParser
+                    html={short_description}
+                    style={{ textAlign: "left" }}
+                  />
+                ) : (
+                  <span>Нет названия тарифа</span>
+                )}{" "}
                 <Icon active={active ? 1 : 0} />
               </Title>
               <Button small onClick={() => onClick(rate)}>
                 Выбрать
               </Button>
-            </RateHeader>
-            <HTMLParser html={short_description} />
+            </Justified>
           </>
         )}
         style={{ marginBottom: "2rem" }}
       >
         {long_description ? (
-          <HTMLParser html={long_description} />
+          <HTMLParser
+            html={long_description}
+            style={{ textAlign: "justify" }}
+          />
         ) : (
           <p>Нет описания</p>
         )}
       </Accordion>
-      {nights.map(night => (
-        <Night key={night.date}>
-          <span>{night.date}</span>
-          <b>{night.price} &#8381;</b>
-        </Night>
-      ))}
+      <Justified>
+        <span>Стоимость</span>
+        <b>{totalCost} &#8381;</b>
+      </Justified>
     </StyledRoomRate>
   );
 }

@@ -35,7 +35,7 @@ export default function Accordion({
   );
 }
 
-const StyledTitle = styled.p`
+const StyledTitle = styled.div`
   cursor: pointer;
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
