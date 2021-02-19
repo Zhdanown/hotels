@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "../components/Button";
 import Input from "../components/Input";
 
 const fields = [
@@ -7,7 +6,6 @@ const fields = [
   { type: "text", label: "Фамилия", name: "lastName" },
   { type: "email", label: "Email", name: "email" },
   { type: "tel", label: "Телефон", name: "tel" },
-  
 ];
 
 function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
@@ -24,7 +22,6 @@ function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
           />
         </div>
       ))}
-      <Button block type="submit">Продолжить</Button>
     </form>
   );
 }

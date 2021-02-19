@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
+
 import {
   getRoom,
   getRate,
@@ -7,17 +9,19 @@ import {
   getBookingResponse,
 } from "../redux/booking";
 import { changeParams } from "../redux/booking";
-
-import Tabs from "../components/Tabs";
-import Modal from "../components/Modal";
-import PaymentOptions from "./PaymentOptions";
-
 import FormNewGuest from "./FormNewGuest";
 import FormHasAccount from "./FormHasAccount";
 import FormNoRegistration from "./FormNoRegistration";
+import PaymentOptions from "./PaymentOptions";
+import Tabs from "../components/Tabs";
+import Link from "../components/Link";
+import Modal from "../components/Modal";
+import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
-import { useContext } from "react";
+import FloatingButton from "../components/FloatingButton";
 import LayoutContext from "../Layout/LayoutContext";
+import useWindowWidth from "../Layout/hooks/useWindowWidth";
+import { Centered } from "../components/Centered";
 
 const forms = [
   {
@@ -37,6 +41,10 @@ const forms = [
   },
 ];
 
+const Conditions = styled(Centered)`
+  margin: 1rem 0;
+`;
+
 function Confirm() {
   const dispatch = useDispatch();
   const room = useSelector(getRoom);
@@ -45,6 +53,7 @@ function Confirm() {
   const bookingResponse = useSelector(getBookingResponse);
 
   const [modal, setModal] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   const [guest, setGuest] = useState({
     firstName: "John",
@@ -80,6 +89,7 @@ function Confirm() {
   const goBack = () => {
     setStep(step => --step);
   };
+  const [, , isDesktop] = useWindowWidth();
 
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
@@ -103,6 +113,34 @@ function Confirm() {
           onSubmit={onSubmit}
           onGuestChange={onGuestChange}
         />
+
+        <Conditions column>
+          <Link href="#" underlined>
+            Правила и услуги
+          </Link>
+        </Conditions>
+
+        <input
+          type="checkbox"
+          name="consent"
+          id="consent"
+          value={consent}
+          onChange={() => setConsent(x => !x)}
+        />
+        <label htmlFor="consent">
+          Я подтверждаю своё согласие с Политикой в отношении обработки
+          персональных данныx
+        </label>
+
+        {isDesktop ? (
+          <Button block onClick={onSubmit}>
+            Продолжить
+          </Button>
+        ) : (
+          <FloatingButton onClick={onSubmit} disabled={!consent}>
+            {consent ? "Продолжить" : "Необходимо согласие"}
+          </FloatingButton>
+        )}
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
