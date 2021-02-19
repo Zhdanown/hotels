@@ -51,6 +51,7 @@ function Button({ children, onClick, disabled, ...props }) {
       hoverColor={hoverColor}
       disabled={disabled}
       onClick={onClick}
+      style={props.style}
       {...props}
     >
       {children}
