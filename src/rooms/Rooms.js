@@ -3,16 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import LayoutContext from "../Layout/LayoutContext";
+import ImageGallery from "./ImageGallery";
+import RoomFeatures from "./RoomFeatures";
 import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
+import ColumnHeader from "../components/ColumnHeader";
 import Accordion, { Title, Icon } from "../components/Accordion";
+import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
+import { getRooms } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { getPackages, getPrimaryColor } from "../redux/hotelConfig";
-import { getRooms } from "./roomsReducer";
-import ImageGallery from "./ImageGallery";
-import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { urlWithHost } from "../Step3/urlWithHost";
-import ColumnHeader from "../components/ColumnHeader";
 
 const Packages = styled.div``;
 
@@ -201,6 +202,7 @@ function RoomShowcase({ room, onSelect }) {
           )}
         >
           <HTMLParser html={short_description} />
+          <RoomFeatures />
         </Accordion>
 
         <Accordion
