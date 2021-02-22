@@ -92,18 +92,21 @@ const s1 = `
   
 `;
 
+const titleColor = "#333333";
+
 const TitleSection = styled.div`
   position: absolute;
   bottom: 0;
-  color: white;
+  color: ${titleColor};
   width: 100%;
   padding: 2rem;
-  background: linear-gradient(0deg, black, transparent);
+  background: linear-gradient(0deg, white, transparent);
   ${s1}
 `;
 
 const RoomName = styled.h4`
   font-size: 1.5rem;
+  font-weight: 600;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
   &:after {
@@ -111,7 +114,7 @@ const RoomName = styled.h4`
     display: block;
     width: 30%;
     height: 2px;
-    background: white;
+    background: ${titleColor};
     margin: auto;
   }
 `;
@@ -122,7 +125,7 @@ const Content = styled.div`
 
 const ImagePreview = styled.div`
   position: relative;
-  background: linear-gradient(0deg, black, gray);
+  background: white;
 
   &:hover {
     ${TitleSection} {
