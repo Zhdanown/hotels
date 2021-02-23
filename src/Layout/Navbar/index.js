@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
+
+import Button from "../../components/Button";
 import SPEED from "./MENU_SPEED";
 import FullScreenMenu from "./FullScreenMenu";
 import { getHotelName, getPrimaryColor } from "../../redux/hotelConfig";
+import Modal from "../../components/Modal";
+import LoginForm from "../../components/LoginForm";
 
 const NavbarWrapper = styled.div`
   transform: translateY(0);
@@ -45,6 +49,7 @@ const StyledCloseOutlined = styled(CloseOutlined)`
 const MenuIcon = styled.span`
   z-index: 11;
   position: relative;
+  width: 3rem;
 
   &:hover {
     cursor: pointer;
@@ -86,16 +91,35 @@ export default function Navbar() {
   const hotelName = useSelector(getHotelName);
   const color = useSelector(getPrimaryColor);
 
+  const [modal, setModal] = useState(false);
+
+  const openLoginModal = () => {
+    setModal(true);
+  };
+
   return (
-    <NavbarWrapper>
-      <NavbarContainer id="navbar">
-        <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
-        <MenuIcon open={isMenuOpen}>
-          <StyledMenuOutlined onClick={() => toggleMenu(true)} color={color} />
-          <StyledCloseOutlined onClick={() => toggleMenu(false)} />
-        </MenuIcon>
-      </NavbarContainer>
-      <FullScreenMenu isOpen={isMenuOpen} close={() => toggleMenu(false)} />
-    </NavbarWrapper>
+    <>
+      <NavbarWrapper>
+        <NavbarContainer id="navbar">
+          <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button outline small onClick={openLoginModal}>
+              Войти
+            </Button>
+            <MenuIcon open={isMenuOpen}>
+              <StyledMenuOutlined
+                onClick={() => toggleMenu(true)}
+                color={color}
+              />
+              <StyledCloseOutlined onClick={() => toggleMenu(false)} />
+            </MenuIcon>
+          </div>
+        </NavbarContainer>
+        <FullScreenMenu isOpen={isMenuOpen} close={() => toggleMenu(false)} />
+      </NavbarWrapper>
+      <Modal open={modal} toggle={setModal}>
+        <LoginForm />
+      </Modal>
+    </>
   );
 }

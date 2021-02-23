@@ -10,7 +10,6 @@ import {
 } from "../redux/booking";
 import { changeParams } from "../redux/booking";
 import FormNewGuest from "./FormNewGuest";
-import FormHasAccount from "./FormHasAccount";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
 import Tabs from "../components/Tabs";
@@ -25,11 +24,6 @@ import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 
 const forms = [
-  {
-    id: "have-account",
-    label: "Есть аккаунт",
-    render: props => <FormHasAccount {...props} />,
-  },
   {
     id: "new-guest",
     label: "Новый гость",
@@ -110,7 +104,7 @@ function Confirm() {
 
         <Tabs
           tabs={forms}
-          preSelected={2}
+          preSelected={1}
           guest={guest}
           onSubmit={onSubmit}
           onGuestChange={onGuestChange}
