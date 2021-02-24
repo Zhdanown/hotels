@@ -22,6 +22,7 @@ import LayoutContext from "../Layout/LayoutContext";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { Centered } from "../components/Centered";
 import Input from "../components/Input";
+import OrderSummary from "./OrderSummary";
 
 const forms = [
   {
@@ -42,8 +43,6 @@ const Conditions = styled(Centered)`
 
 function Confirm() {
   const dispatch = useDispatch();
-  const room = useSelector(getRoom);
-  const rate = useSelector(getRate);
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
 
@@ -95,12 +94,6 @@ function Confirm() {
     return (
       <div>
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
-        {room && (
-          <div style={{ textAlign: "left" }}>
-            <span>{room.name.toUpperCase()}</span>
-            {rate && <p>{rate.short_description}</p>}
-          </div>
-        )}
 
         <Tabs
           tabs={forms}
@@ -118,26 +111,29 @@ function Confirm() {
           onChange={onGuestChange}
         />
 
+        <OrderSummary />
+
         <Conditions column>
           <Link href="#" underlined>
             Правила и услуги
           </Link>
         </Conditions>
 
-        <input
-          type="checkbox"
-          name="consent"
-          id="consent"
-          value={consent}
-          onChange={() => setConsent(x => !x)}
-        />
-        <label htmlFor="consent">
-          Я подтверждаю своё согласие с Политикой в отношении обработки
-          персональных данныx
+        <label className="checkbox">
+          <input
+            type="checkbox"
+            name="consent"
+            id="consent"
+            value={consent}
+            onChange={() => setConsent(x => !x)}
+            style={{ marginRight: ".5rem" }}
+          />
+          Я подтверждаю своё согласие с{" "}
+          <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
         {isDesktop ? (
-          <Button block onClick={onSubmit}>
+          <Button block onClick={onSubmit} disabled={!consent}>
             Продолжить
           </Button>
         ) : (
