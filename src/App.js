@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { getConfig, getConfigError, getConfigLoading } from "./redux/hotelConfig";
+import { Router, Route, useParams } from "react-router-dom";
+import {
+  getConfig,
+  getConfigError,
+  getConfigLoading,
+} from "./redux/hotelConfig";
 import { loadConfig } from "./redux/hotelConfig";
 
 import SplashScreen from "./Splash";
@@ -12,7 +15,9 @@ import Rooms from "./rooms/Rooms";
 import Step3 from "./Step3/Step3";
 import { Centered } from "./components/Centered";
 import { LayoutContextProvider } from "./Layout/LayoutContext";
-
+import history from "./history";
+import AuthRoutes from "./Auth/AuthRoutes";
+import { startSession } from "./Auth/authReducer";
 
 function ConfigLoader({ children }) {
   let { slug } = useParams();
@@ -56,8 +61,14 @@ function ConfigLoader({ children }) {
 export default App;
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(startSession());
+  }, [dispatch]);
+
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <Route path="/:slug?">
         <ConfigLoader>
           {false && <Navbar />}
@@ -67,9 +78,10 @@ function App() {
               <Rooms />
               <Step3 />
             </Layout>
+            <AuthRoutes />
           </LayoutContextProvider>
         </ConfigLoader>
       </Route>
-    </BrowserRouter>
+    </Router>
   );
 }

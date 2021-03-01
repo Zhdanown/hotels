@@ -1,7 +1,7 @@
 import produce from "immer";
 import api from "./api";
 
-const SET_CONFIG = "config/SET";
+export const SET_CONFIG = "config/SET";
 const LOADING_CONFIG = "config/LOADING";
 const CONFIG_ERROR = "config/ERROR";
 
@@ -32,7 +32,7 @@ export default reducer;
 export const loadConfig = slug => async dispatch => {
   dispatch({ type: LOADING_CONFIG, payload: true });
   try {
-    const url = `api/v1/hotel-config/${slug}/`;
+    const url = `/api/v1/hotel-config/${slug}/`;
     const response = await api.get(url);
 
     dispatch({ type: SET_CONFIG, payload: response.data });
@@ -48,6 +48,7 @@ export const loadConfig = slug => async dispatch => {
 };
 
 export const getConfig = state => state.hotelConfig.params;
+export const getConfigId = state => getConfig(state).id;
 export const getConfigLoading = state => state.configLoading;
 export const getConfigError = state => state.configError;
 export const getIsShowNavbar = state =>

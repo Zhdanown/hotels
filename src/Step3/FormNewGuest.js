@@ -1,32 +1,58 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Button from "../components/Button";
-import Input from "../components/Input";
-
-const fields = [
-  { type: "text", label: "Имя", name: "firstName" },
-  { type: "text", label: "Фамилия", name: "lastName" },
-  { type: "email", label: "Email", name: "email" },
-  { type: "tel", label: "Телефон", name: "tel" },
-  { type: "password", label: "Пароль", name: "password" },
-  { type: "password", label: "Повторите пароль", name: "password2" },
-];
+import InputWithError from "../components/InputWithError";
+import userFields from "./userFields";
+import Loader from "../components/Loader";
+import {
+  getIsRegistrationPending,
+  getRegisterError,
+  getUser,
+} from "../Auth/authReducer";
+import { register } from "../Auth/authReducer";
 
 function FormNewGuest({ guest, onSubmit, onGuestChange }) {
+  const dispatch = useDispatch();
+
+  const user = useSelector(getUser);
+  const registerError = useSelector(getRegisterError);
+  const isPending = useSelector(getIsRegistrationPending);
+
+  const registerUser = e => {
+    e.preventDefault();
+
+    const bodyRequest = {
+      ...guest,
+    };
+
+    dispatch(register(bodyRequest));
+  };
+
+  if (user) {
+    return <Greetings name={user.first_name} />;
+  }
+
   return (
     <form action="" onSubmit={onSubmit}>
-      {fields.map(field => (
+      {userFields.map(field => (
         <div key={field.name} style={{ margin: "1.5rem 0" }}>
-          <Input
+          <InputWithError
             type={field.type}
             label={field.label}
             name={field.name}
             value={guest[field.name]}
             onChange={onGuestChange}
+            error={registerError}
           />
         </div>
       ))}
-      <Button block type="submit">
+      {isPending ? (
+        <div className="has-text-centered">
+          <Loader />
+        </div>
+      ) : null}
+      <Button block type="submit" onClick={registerUser}>
         Зарегистрироваться
       </Button>
     </form>
@@ -34,3 +60,10 @@ function FormNewGuest({ guest, onSubmit, onGuestChange }) {
 }
 
 export default FormNewGuest;
+
+const Greetings = ({ name }) => (
+  <h3 className="has-text-centered is-size-4" style={{ margin: "7rem 0" }}>
+    Вы вошли как <br />
+    {name}
+  </h3>
+);

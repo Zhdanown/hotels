@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 
-import Button from "../../components/Button";
 import SPEED from "./MENU_SPEED";
 import FullScreenMenu from "./FullScreenMenu";
 import { getHotelName, getPrimaryColor } from "../../redux/hotelConfig";
-import Modal from "../../components/Modal";
-import LoginForm from "../../components/LoginForm";
+import { useRouteMatch } from "react-router-dom";
+import AuthNavButton from "../../Auth/AuthNavButton";
 
 const NavbarWrapper = styled.div`
   transform: translateY(0);
@@ -84,6 +83,9 @@ const LogoTitle = styled.div`
   z-index: 11;
   color: ${p => (p.open ? "white" : "unset")};
   transition: color ${SPEED}s;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export default function Navbar() {
@@ -91,21 +93,13 @@ export default function Navbar() {
   const hotelName = useSelector(getHotelName);
   const color = useSelector(getPrimaryColor);
 
-  const [modal, setModal] = useState(false);
-
-  const openLoginModal = () => {
-    setModal(true);
-  };
-
   return (
     <>
       <NavbarWrapper>
         <NavbarContainer id="navbar">
           <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Button outline small onClick={openLoginModal}>
-              Войти
-            </Button>
+            <AuthNavButton />
             <MenuIcon open={isMenuOpen}>
               <StyledMenuOutlined
                 onClick={() => toggleMenu(true)}
@@ -117,9 +111,10 @@ export default function Navbar() {
         </NavbarContainer>
         <FullScreenMenu isOpen={isMenuOpen} close={() => toggleMenu(false)} />
       </NavbarWrapper>
-      <Modal open={modal} toggle={setModal}>
-        <LoginForm />
-      </Modal>
+
+      {/* <Modal open={modal} toggle={setModal}> */}
+      {/* <LoginForm /> */}
+      {/* </Modal> */}
     </>
   );
 }

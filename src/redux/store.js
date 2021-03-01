@@ -6,12 +6,14 @@ import thunk from "redux-thunk";
 import reservationReducer from "./booking";
 import configReducer from "./hotelConfig";
 import roomsReducer from "../rooms/roomsReducer";
+import authReducer from "../Auth/authReducer";
 import rootSaga from "./rootSaga";
 
 const rootReducer = combineReducers({
   rooms: roomsReducer,
   reservation: reservationReducer,
-  hotelConfig: configReducer
+  hotelConfig: configReducer,
+  auth: authReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -20,7 +22,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware, thunk, ))
+  composeEnhancers(applyMiddleware(sagaMiddleware, thunk))
 );
 
 sagaMiddleware.run(rootSaga);

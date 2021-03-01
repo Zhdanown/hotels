@@ -2,12 +2,7 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
-import {
-  getRoom,
-  getRate,
-  getBookingState,
-  getBookingResponse,
-} from "../redux/booking";
+import { getBookingState, getBookingResponse } from "../redux/booking";
 import { changeParams } from "../redux/booking";
 import FormNewGuest from "./FormNewGuest";
 import FormNoRegistration from "./FormNoRegistration";
@@ -50,13 +45,16 @@ function Confirm() {
   const [consent, setConsent] = useState(false);
 
   const [guest, setGuest] = useState({
-    firstName: "John",
-    lastName: "McClane",
+    username: "",
+    first_name: "John",
+    last_name: "McClane",
+    middle_name: "",
     email: "die@hard.com",
-    tel: "555-911",
-    login: "",
+    phone: "555-911",
+    date_of_birth: null,
+    is_hotel_guest: true,
     password: "",
-    password2: "",
+    password_confirm: "",
     comment: "",
   });
 
@@ -97,7 +95,7 @@ function Confirm() {
 
         <Tabs
           tabs={forms}
-          preSelected={1}
+          preSelected={0}
           guest={guest}
           onSubmit={onSubmit}
           onGuestChange={onGuestChange}
