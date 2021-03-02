@@ -11,68 +11,75 @@ import { getRooms } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { getPackages } from "../redux/hotelConfig";
 
-const Packages = styled.div``;
+const StyledPackages = styled.div``;
 
-function Rooms() {
+function Rooms({ onSelect, goBack }) {
   const rooms = useSelector(getRooms);
 
+  return (
+    <div style={{ position: "relative" }}>
+      <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
+      {rooms.map(room => (
+        <RoomShowcase
+          key={room.id}
+          room={room}
+          onSelect={onSelect}
+        ></RoomShowcase>
+      ))}
+    </div>
+  );
+}
+
+function RoomsWithPackages() {
+  const packages = useSelector(getPackages);
   const [selected, setSelected] = useState(null);
 
-  const packages = useSelector(getPackages);
-
-  const onSelect = data => {
-    console.log(data);
-    setSelected(data);
-  };
-
-  const dispatch = useDispatch();
   const { setStep } = useContext(LayoutContext);
-
-  const goBack = () => {
-    setStep(step => --step);
-  };
+  const dispatch = useDispatch();
 
   const continueBooking = () => {
     setStep(step => ++step);
     dispatch(changeParams(selected));
   };
 
-  const cancel = () => {
+  const onSelect = data => {
+    setSelected(data);
+    if (!packages.length) {
+      // skip packages
+      continueBooking();
+    }
+  };
+
+  const cancelPackages = () => {
     setSelected(null);
   };
 
-  return (
-    <div style={{ position: "relative" }}>
-      {selected ? (
-        <>
-          <ColumnHeader goBack={cancel}>Дополнительные услуги</ColumnHeader>
-          <div style={{ margin: "1rem 0" }}>
-            <Button small onClick={continueBooking}>
-              Продолжить бронирование
-            </Button>
-          </div>
-          <Packages>
-            {packages.map(packageItem => (
-              <div key={packageItem.id}>
-                <p>{packageItem.name}</p>
-              </div>
-            ))}
-          </Packages>
-        </>
-      ) : (
-        <>
-          <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
-          {rooms.map(room => (
-            <RoomShowcase
-              key={room.id}
-              room={room}
-              onSelect={onSelect}
-            ></RoomShowcase>
+  const goStepBack = () => {
+    setStep(step => --step);
+  };
+
+  if (selected && packages.length) {
+    return (
+      <>
+        <ColumnHeader goBack={cancelPackages}>
+          Дополнительные услуги
+        </ColumnHeader>
+        <div style={{ margin: "1rem 0" }}>
+          <Button small onClick={continueBooking}>
+            Продолжить бронирование
+          </Button>
+        </div>
+        <StyledPackages>
+          {packages.map(packageItem => (
+            <div key={packageItem.id}>
+              <p>{packageItem.name}</p>
+            </div>
           ))}
-        </>
-      )}
-    </div>
-  );
+        </StyledPackages>
+      </>
+    );
+  }
+  return <Rooms onSelect={onSelect} goBack={goStepBack} />;
 }
 
-export default Rooms;
+export default RoomsWithPackages;
