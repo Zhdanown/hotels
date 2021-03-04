@@ -19,6 +19,7 @@ const initialState = {
     rooms_count: 0,
     childs: [],
     notes: [],
+    promo_code: null
   },
   isBooking: false,
   response: null,

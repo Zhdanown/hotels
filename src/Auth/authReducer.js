@@ -2,7 +2,7 @@ const initialState = {
   isLoginPending: false,
   isRegistrationPending: false,
   loginError: null,
-  
+
   user: null,
   registerError: null,
 };
@@ -95,6 +95,7 @@ export function logout() {
 export const getIsLoginPending = state => state.auth.isLoginPending;
 export const getIsRegistrationPending = state => state.auth.isLoginPending;
 export const getUser = state => state.auth.user;
-export const getProfileId = state => state.auth.user.profileId;
+export const getProfileId = state =>
+  state.auth.user && state.auth.user.profileId;
 export const getRegisterError = state => state.auth.registerError;
 export const getLoginError = state => state.auth.loginError;

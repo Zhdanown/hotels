@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { getPrimaryColor } from "../redux/hotelConfig";
 
-const SPEED = 0.4 // in seconds
+const SPEED = 0.4; // in seconds
 
 const InputContainer = styled.div`
   position: relative;
@@ -63,7 +63,7 @@ function Input({ type, label, name, value, onChange, ...props }) {
   }, [name, inputValue, onChange]);
 
   return (
-    <InputContainer color={color}>
+    <InputContainer color={color} style={props.style}>
       <StyledInput
         style={props.inputStyles}
         placeholder={label}

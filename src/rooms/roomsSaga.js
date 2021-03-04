@@ -20,14 +20,23 @@ function* requestRooms(action) {
 }
 
 async function fetchRooms(searchParams) {
-  const { arrival, departure, adults, profileId } = searchParams;
+  const { arrival, departure, adults, profileId, promo_code } = searchParams;
 
   if (!(arrival && departure && adults)) {
     throw Error("Unexpected search parameters");
   }
 
-  const url = `/api/v1/fidelio/avilability/1/?arrival=${arrival}&departure=${departure}&adults=${adults}&profile_id=${profileId}`;
-  const response = await api.get(url);
+  const url = `/api/v1/fidelio/avilability/1/`;
+
+  const response = await api.get(url, {
+    params: {
+      arrival,
+      departure,
+      adults,
+      promo_code,
+      profile_id: profileId,
+    },
+  });
 
   return response.data;
 }
