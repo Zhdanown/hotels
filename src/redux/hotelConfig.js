@@ -49,6 +49,7 @@ export const loadConfig = slug => async dispatch => {
 
 export const getConfig = state => state.hotelConfig.params;
 export const getConfigId = state => getConfig(state).id;
+export const getHotelPms = state => getConfig(state).pms_type;
 export const getConfigLoading = state => state.configLoading;
 export const getConfigError = state => state.configError;
 export const getIsShowNavbar = state =>

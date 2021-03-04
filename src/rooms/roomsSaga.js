@@ -4,22 +4,35 @@ import { REQUEST_ROOMS, FOUND_ROOMS } from "./roomsReducer";
 import { isLoadingRooms } from "./roomsReducer";
 import { getParams } from "../redux/booking";
 import { getProfileId } from "../Auth/authReducer";
+import { getConfigId, getHotelPms } from "../redux/hotelConfig";
 
 export default function* watcher() {
   yield takeEvery(REQUEST_ROOMS, requestRooms);
 }
 
-function* requestRooms(action) {
-  const searchParams = yield select(getParams);
-  const profileId = yield select(getProfileId);
-
+function* requestRooms() {
   yield put(isLoadingRooms(true));
-  const payload = yield call(fetchRooms, { ...searchParams, profileId });
+  const payload = yield call(getParamsAndFetch);
   yield put({ type: FOUND_ROOMS, payload });
   yield put(isLoadingRooms(false));
 }
 
-async function fetchRooms(searchParams) {
+function* getParamsAndFetch() {
+  const searchParams = yield select(getParams);
+  const profileId = yield select(getProfileId);
+  const hotel_id = yield select(getConfigId);
+  const pms_type = yield select(getHotelPms);
+
+  const payload = yield call(fetchRooms, {
+    ...searchParams,
+    profileId,
+    hotel_id,
+    pms_type,
+  });
+  return payload;
+}
+
+async function fetchRooms(params) {
   const {
     arrival,
     departure,
@@ -27,13 +40,15 @@ async function fetchRooms(searchParams) {
     profileId,
     promo_code,
     childs,
-  } = searchParams;
+    hotel_id,
+    pms_type,
+  } = params;
 
   if (!(arrival && departure && adults)) {
     throw Error("Unexpected search parameters");
   }
 
-  const url = `/api/v1/fidelio/avilability/1/`;
+  const url = `/api/v1/${pms_type}/avilability/${hotel_id}/`;
 
   const response = await api.get(url, {
     params: {

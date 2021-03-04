@@ -2,6 +2,7 @@ import { takeEvery, call, select, put } from "redux-saga/effects";
 import produce from "immer";
 import api from "./api";
 import { getProfileId } from "../Auth/authReducer";
+import { getConfigId, getHotelPms } from "./hotelConfig";
 
 const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
@@ -19,7 +20,7 @@ const initialState = {
     rooms_count: 0,
     childs: [],
     notes: [],
-    promo_code: null
+    promo_code: null,
   },
   isBooking: false,
   response: null,
@@ -67,19 +68,27 @@ export function* bookingSaga() {
 }
 
 function* bookRoom(action) {
+  yield put(isBooking(true));
+  const payload = yield call(getParamsAndRequestRoom, action);
+  yield put(isBooking(false));
+  yield put(setBookingResponse(payload));
+}
+
+function* getParamsAndRequestRoom(action) {
   const bookingInfo = yield select(getBookingInfo);
   const profileId = yield select(getProfileId);
+  const hotel_id = yield select(getConfigId);
+  const pms_type = yield select(getHotelPms);
 
-  yield put(isBooking(true));
   const payload = yield call(requestRoom, {
     ...bookingInfo,
     payment: action.payload,
     profileId,
+    hotel_id,
+    pms_type,
   });
-  yield put(isBooking(false));
-  yield put(setBookingResponse(payload));
 
-  console.log(payload);
+  return payload;
 }
 
 async function requestRoom(bookingInfo) {
@@ -88,10 +97,9 @@ async function requestRoom(bookingInfo) {
   const { room_code, rate_code } = bookingInfo;
   const { arrival, departure } = bookingInfo;
   const { rooms_count } = bookingInfo;
+  const { hotel_id, pms_type } = bookingInfo;
 
-  const hotel_id = 1;
-  const pms = "fidelio";
-  const url = `api/v1/${pms}/reservation/${hotel_id}/`;
+  const url = `api/v1/${pms_type}/reservation/${hotel_id}/`;
 
   const bodyRequest = {
     guest: {
