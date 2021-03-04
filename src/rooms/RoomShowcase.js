@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import LayoutContext from "../Layout/LayoutContext";
 import RoomRate from "./RoomRate";
 import ImageGallery from "./ImageGallery";
 import RoomFeatures from "./RoomFeatures";
@@ -85,26 +84,19 @@ const ImageContainer = styled.div`
 `;
 
 export default function RoomShowcase({ room, onSelect }) {
-  const layoutContext = useContext(LayoutContext);
-  const { setStep } = layoutContext;
-
   const primaryColor = useSelector(getPrimaryColor);
 
   const {
     preview_img,
     images,
     name,
-    room_code,
     max_price,
     short_description,
     rates,
   } = room;
 
-  // const dispatch = useDispatch();
   const onRateSelect = rate => {
     onSelect({ room, rate });
-    // setStep(step => ++step);
-    // dispatch(changeParams({ room, rate }));
   };
 
   const [isGalleryOpen, toggleGallery] = useState(false);
@@ -142,19 +134,27 @@ export default function RoomShowcase({ room, onSelect }) {
           <RoomFeatures />
         </Accordion>
 
-        <Accordion
-          renderTitle={(toggle, open) => (
-            <Button small onClick={toggle} style={{ margin: ".5rem" }}>
-              {open ? "Скрыть тарифы" : "Выбрать тариф"}
-              <Icon open={open} />
-            </Button>
-          )}
-        >
-          {rates.map(rate => (
-            <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
-          ))}
-        </Accordion>
+        <Rates rates={rates} onRateSelect={onRateSelect} />
       </Content>
     </StyledRoomShowcase>
+  );
+}
+
+function Rates({ rates, onRateSelect }) {
+  return rates.length > 1 ? (
+    <Accordion
+      renderTitle={(toggle, open) => (
+        <Button small onClick={toggle} style={{ margin: ".5rem" }}>
+          {open ? "Скрыть тарифы" : "Смотреть тарифы"}
+          <Icon open={open} />
+        </Button>
+      )}
+    >
+      {rates.map(rate => (
+        <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
+      ))}
+    </Accordion>
+  ) : (
+    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
   );
 }
