@@ -20,7 +20,14 @@ function* requestRooms(action) {
 }
 
 async function fetchRooms(searchParams) {
-  const { arrival, departure, adults, profileId, promo_code } = searchParams;
+  const {
+    arrival,
+    departure,
+    adults,
+    profileId,
+    promo_code,
+    childs,
+  } = searchParams;
 
   if (!(arrival && departure && adults)) {
     throw Error("Unexpected search parameters");
@@ -33,10 +40,19 @@ async function fetchRooms(searchParams) {
       arrival,
       departure,
       adults,
+      childs: serializeChilds(childs),
       promo_code,
       profile_id: profileId,
     },
   });
 
   return response.data;
+}
+
+function serializeChilds(childs) {
+  const childsDictionary = childs.reduce((obj, category) => {
+    return { ...obj, [category.code]: category.count };
+  }, {});
+
+  return JSON.stringify(childsDictionary);
 }
