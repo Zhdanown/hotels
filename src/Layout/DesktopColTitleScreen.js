@@ -5,6 +5,9 @@ import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
 import Loader from "../components/Loader";
 import useWindowWidth from "./hooks/useWindowWidth";
+import { SvgIcon } from "../rooms/RoomFeatures";
+import { ReactComponent as Beds } from "../assets/select_beds.svg";
+import { ReactComponent as CreditCards } from "../assets/credit_cards.svg";
 
 const fadeIn = keyframes`
   from {
@@ -16,6 +19,7 @@ const fadeIn = keyframes`
 `;
 
 const SPEED = 400; // ms
+const iconFontSize = "10rem";
 
 const TitleScreenContainer = styled(Centered)`
   background: white;
@@ -42,14 +46,12 @@ const ScreenHeader = styled.span`
   font-size: 2rem;
 `;
 
-const Subtitle = styled.span`
-  &:before {
-    content: "";
-    display: block;
-    width: 66%;
-    border-bottom: 1px solid #757763;
-    margin: 1rem auto;
-  }
+const LoaderWrapper = styled.div`
+  width: ${iconFontSize};
+  height: ${iconFontSize};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default function TitleScreen({ num }) {
@@ -61,22 +63,30 @@ export default function TitleScreen({ num }) {
   const [contentVisible, setContentVisibility] = useState(enabled);
 
   useEffect(() => {
-    let timer
+    let timer;
     if (enabled) {
       timer = setTimeout(() => setContentVisibility(true), SPEED);
     } else {
       setContentVisibility(false);
     }
-    return () => clearTimeout(timer)
+    return () => clearTimeout(timer);
   }, [enabled]);
 
   if (!contentVisible) {
     return (
       <TitleScreenContainer visible={!enabled}>
         <TitleContent desktop={isDesktop}>
-          {isLoading && <Loader />}
           <ScreenHeader>{title}</ScreenHeader>
-          {!isLoading && <Subtitle>Какой-то текст</Subtitle>}
+          {isLoading ? (
+            <LoaderWrapper>
+              <Loader />
+            </LoaderWrapper>
+          ) : (
+            <>
+              {num === 2 && <Icon component={Beds} />}
+              {num === 3 && <Icon component={CreditCards} />}
+            </>
+          )}
         </TitleContent>
       </TitleScreenContainer>
     );
@@ -84,3 +94,7 @@ export default function TitleScreen({ num }) {
     return null;
   }
 }
+
+const Icon = ({ component }) => (
+  <SvgIcon component={component} style={{ fontSize: iconFontSize }} />
+);

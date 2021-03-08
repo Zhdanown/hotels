@@ -26,9 +26,15 @@ import Accordion, {
   Icon as AccordionIcon,
 } from "../components/Accordion";
 
-const SvgIcon = ({ component }) => (
-  <Icon component={component} style={{ fontSize: "1.5rem" }} />
+export const SvgIcon = ({ component, style }) => (
+  <Icon component={component} style={style} />
 );
+
+SvgIcon.defaultProps = {
+  style: {
+    fontSize: "1.5rem",
+  },
+};
 
 const Carpet = props => <SvgIcon component={Carpet_} {...props} />;
 const Chair = props => <SvgIcon component={Chair_} {...props} />;
