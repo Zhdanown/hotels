@@ -7,14 +7,16 @@ import RoomShowcase from "./RoomShowcase";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 
-import { getRooms } from "./roomsReducer";
+import { getRoomLoadError, getRooms } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { getPackages } from "../redux/hotelConfig";
+import { Error } from "../components/InputWithError";
 
 const StyledPackages = styled.div``;
 
 function Rooms({ onSelect, goBack }) {
   const rooms = useSelector(getRooms);
+  const roomsLoadError = useSelector(getRoomLoadError);
 
   return (
     <div style={{ position: "relative" }}>
@@ -26,6 +28,9 @@ function Rooms({ onSelect, goBack }) {
           onSelect={onSelect}
         ></RoomShowcase>
       ))}
+      {roomsLoadError && (
+        <Error discreet>{roomsLoadError.message}</Error>
+      )}
     </div>
   );
 }

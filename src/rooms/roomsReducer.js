@@ -1,14 +1,13 @@
-export const REQUEST_ROOMS = "REQUEST_ROOMS";
-export const FOUND_ROOMS = "FOUND_ROOMS";
-export const LOADING_ROOMS = "LOADING_ROOMS";
+export const REQUEST_ROOMS = "rooms/REQUEST_ROOMS";
+export const FOUND_ROOMS = "rooms/FOUND_ROOMS";
+export const LOADING_ROOMS = "rooms/LOADING_ROOMS";
+export const SET_FETCH_ROOM_ERROR = "rooms/SET_FETCH_ROOM_ERROR";
 
 const initialState = {
   rooms: [],
   isLoadingRooms: false,
+  loadRoomsError: null,
 };
-
-export const getRooms = state => state.rooms.rooms;
-export const getRoomsLoadState = state => state.rooms.isLoadingRooms;
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -17,6 +16,9 @@ export default function reducer(state = initialState, action) {
 
     case LOADING_ROOMS:
       return { ...state, isLoadingRooms: action.payload };
+
+    case SET_FETCH_ROOM_ERROR:
+      return { ...state, loadRoomsError: action.error };
 
     default:
       return state;
@@ -30,3 +32,11 @@ export function searchRooms() {
 export function isLoadingRooms(payload) {
   return { type: LOADING_ROOMS, payload };
 }
+
+export function setFetchRoomsError(error) {
+  return { type: SET_FETCH_ROOM_ERROR, error };
+}
+
+export const getRooms = state => state.rooms.rooms;
+export const getRoomsLoadState = state => state.rooms.isLoadingRooms;
+export const getRoomLoadError = state => state.rooms.loadRoomsError;

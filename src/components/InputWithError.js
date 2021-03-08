@@ -3,8 +3,13 @@ import styled from "styled-components";
 import Input from "./Input";
 
 export const Error = styled.p`
+  white-space: pre-line;
+  ${({ discreet = false }) =>
+    !discreet &&
+    `  
   font-size: 0.75rem;
   color: red;
+  `}
 `;
 
 function InputWithError({ error, ...props }) {

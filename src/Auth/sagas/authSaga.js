@@ -3,6 +3,7 @@ import history from "../../history";
 import { CookieUtils } from "../../redux/api";
 import {
   LOGIN,
+  logout,
   LOGOUT,
   REGISTER,
   SET_USER,
@@ -33,6 +34,7 @@ function* startSessionWatcher() {
   } else {
     if (userInfoError.response.status === 401) {
       yield call(redirectToLoginPage);
+      yield put(logout())
     }
   }
   yield put(loginPending(false));

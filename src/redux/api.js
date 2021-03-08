@@ -11,11 +11,7 @@ const api = axios.create({
 });
 
 function whitelisted(url) {
-  const list = [
-    "/users/info",
-    "/create-profile"
-  ]
-  
+  const list = ["/users/info", "/create-profile"];
   return list.some(listItem => url.includes(listItem));
 }
 
@@ -36,4 +32,11 @@ export const CookieUtils = {
   setToken: token => Cookies.set("nlb_token", token),
   getToken: () => Cookies.get("nlb_token"),
   clearToken: () => Cookies.remove("nlb_token"),
+};
+
+export const getAuthHeaderIfTokenPresent = () => {
+  const token = CookieUtils.getToken();
+
+  if (token) return { Authorization: `NLB ${token}` };
+  return {};
 };

@@ -1,12 +1,13 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import produce from "immer";
-import api from "./api";
+import api, { getAuthHeaderIfTokenPresent } from "./api";
 import { getConfigId, getHotelPms } from "./hotelConfig";
 
 const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
 const IS_BOOKING = "booking/IS_BOOKING";
 const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
+const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
 
 const initialState = {
   params: {
@@ -23,6 +24,7 @@ const initialState = {
   },
   isBooking: false,
   response: null,
+  error: null
 };
 
 const reducer = produce((draft, action) => {
@@ -37,6 +39,10 @@ const reducer = produce((draft, action) => {
 
     case SET_BOOKING_RESPONSE:
       draft.response = action.payload;
+      return;
+
+    case SET_BOOKING_ERROR:
+      draft.error = action.error;
       return;
 
     default:
@@ -62,15 +68,29 @@ export function setBookingResponse(payload) {
   return { type: SET_BOOKING_RESPONSE, payload };
 }
 
+export function setBookingError(error) {
+  return { type: SET_BOOKING_ERROR, error };
+}
+
 export function* bookingSaga() {
   yield takeEvery(SUBMIT_ORDER, bookRoom);
 }
 
 function* bookRoom(action) {
   yield put(isBooking(true));
-  const payload = yield call(getParamsAndRequestRoom, action);
+  const {payload, error} = yield call(getParamsAndRequestRoom, action);
+  if (payload) {
+    yield put(setBookingResponse(payload));
+  } else {
+    if (error.response.data) {
+      yield put(setBookingError(error.response.data));
+    } else {
+      yield put(setBookingError(error));
+
+    }
+  }
+
   yield put(isBooking(false));
-  yield put(setBookingResponse(payload));
 }
 
 function* getParamsAndRequestRoom(action) {
@@ -78,15 +98,14 @@ function* getParamsAndRequestRoom(action) {
   const hotel_id = yield select(getConfigId);
   const pms_type = yield select(getHotelPms);
 
-  const payload = yield call(requestRoom, {
+  const { payload, error } = yield call(requestRoom, {
     ...bookingInfo,
     payment: action.payload,
-
     hotel_id,
     pms_type,
   });
 
-  return payload;
+  return { payload, error };
 }
 
 async function requestRoom(bookingInfo) {
@@ -118,11 +137,27 @@ async function requestRoom(bookingInfo) {
     },
   };
 
-  const response = await api.post(url, bodyRequest, {
-    method: "post",
-  });
-
-  return response.data;
+  try {
+    const response = await api.post(url, bodyRequest, {
+      headers: {
+        ...getAuthHeaderIfTokenPresent(),
+      },
+    });
+    return { payload: response.data };
+  } catch (error) {
+    if (error.response.status === 401) {
+      return {
+        error: {
+          response: {
+            data: {
+              message: `Не удалось выполнить запрос\r\n Ошибка авторизации :(`,
+            },
+          },
+        },
+      };
+    }
+    return { error };
+  }
 }
 
 export const getParams = state => state.reservation.params;
