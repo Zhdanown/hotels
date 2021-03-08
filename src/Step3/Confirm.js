@@ -18,6 +18,7 @@ import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
+import { getUser } from "../Auth/authReducer";
 
 const forms = [
   {
@@ -40,6 +41,7 @@ function Confirm() {
   const dispatch = useDispatch();
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
+  const user = useSelector(getUser);
 
   const [modal, setModal] = useState(false);
   const [consent, setConsent] = useState(false);
@@ -93,13 +95,15 @@ function Confirm() {
       <div>
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
 
-        <Tabs
-          tabs={forms}
-          preSelected={0}
-          guest={guest}
-          onSubmit={onSubmit}
-          onGuestChange={onGuestChange}
-        />
+        {!user && (
+          <Tabs
+            tabs={forms}
+            preSelected={0}
+            guest={guest}
+            onSubmit={onSubmit}
+            onGuestChange={onGuestChange}
+          />
+        )}
 
         <Input
           type="text"
@@ -107,6 +111,7 @@ function Confirm() {
           name="comment"
           value={guest.comment}
           onChange={onGuestChange}
+          style={{marginTop: '2rem'}}
         />
 
         <OrderSummary />

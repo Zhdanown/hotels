@@ -8,14 +8,12 @@ import Loader from "../components/Loader";
 import {
   getIsRegistrationPending,
   getRegisterError,
-  getUser,
 } from "../Auth/authReducer";
 import { register } from "../Auth/authReducer";
 
 function FormNewGuest({ guest, onSubmit, onGuestChange }) {
   const dispatch = useDispatch();
 
-  const user = useSelector(getUser);
   const registerError = useSelector(getRegisterError);
   const isPending = useSelector(getIsRegistrationPending);
 
@@ -28,10 +26,6 @@ function FormNewGuest({ guest, onSubmit, onGuestChange }) {
 
     dispatch(register(bodyRequest));
   };
-
-  if (user) {
-    return <Greetings name={user.first_name} />;
-  }
 
   return (
     <form action="" onSubmit={onSubmit}>
@@ -60,10 +54,3 @@ function FormNewGuest({ guest, onSubmit, onGuestChange }) {
 }
 
 export default FormNewGuest;
-
-const Greetings = ({ name }) => (
-  <h3 className="has-text-centered is-size-4" style={{ margin: "7rem 0" }}>
-    Вы вошли как <br />
-    {name}
-  </h3>
-);
