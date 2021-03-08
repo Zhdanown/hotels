@@ -1,7 +1,6 @@
-import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import history from "../../history";
 import { CookieUtils } from "../../redux/api";
-import { getConfigId, SET_CONFIG } from "../../redux/hotelConfig";
 import {
   LOGIN,
   LOGOUT,
@@ -12,7 +11,7 @@ import {
 import { loginPending } from "../authReducer";
 import loginWatcher, { logoutWatcher } from "./loginSaga";
 import registerWatcher from "./registerSaga";
-import { findProfileId, getUserInfo } from "./authSagaHelpers";
+import { getUserInfo } from "./authSagaHelpers";
 
 export default function* authSaga() {
   yield takeEvery(START_SESSION, startSessionWatcher);
@@ -27,27 +26,16 @@ function* startSessionWatcher() {
 
   yield put(loginPending(true));
 
-  const [hotelId, { userInfo, userInfoError }] = yield all([
-    call(getHotelId),
-    call(getUserInfo),
-  ]);
+  const { userInfo, userInfoError } = yield call(getUserInfo);
 
   if (userInfo) {
-    const profileId = yield call(findProfileId, userInfo, hotelId);
-
-    yield put({ type: SET_USER, userInfo: { ...userInfo, profileId } });
+    yield put({ type: SET_USER, userInfo });
   } else {
     if (userInfoError.response.status === 401) {
       yield call(redirectToLoginPage);
     }
   }
   yield put(loginPending(false));
-}
-
-function* getHotelId() {
-  yield take(SET_CONFIG);
-  const hotelId = yield select(getConfigId);
-  return hotelId;
 }
 
 function* redirectToLoginPage() {

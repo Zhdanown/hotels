@@ -19,8 +19,3 @@ export async function signIn(bodyRequest) {
   }
 }
 
-export function findProfileId(userInfo, hotelId) {
-  const profileId = userInfo.hotel_users.find(x => x.hotel === hotelId)
-    .external_id;
-  return profileId;
-}

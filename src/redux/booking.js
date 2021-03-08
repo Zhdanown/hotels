@@ -1,7 +1,6 @@
 import { takeEvery, call, select, put } from "redux-saga/effects";
 import produce from "immer";
 import api from "./api";
-import { getProfileId } from "../Auth/authReducer";
 import { getConfigId, getHotelPms } from "./hotelConfig";
 
 const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
@@ -76,14 +75,13 @@ function* bookRoom(action) {
 
 function* getParamsAndRequestRoom(action) {
   const bookingInfo = yield select(getBookingInfo);
-  const profileId = yield select(getProfileId);
   const hotel_id = yield select(getConfigId);
   const pms_type = yield select(getHotelPms);
 
   const payload = yield call(requestRoom, {
     ...bookingInfo,
     payment: action.payload,
-    profileId,
+
     hotel_id,
     pms_type,
   });
@@ -92,7 +90,7 @@ function* getParamsAndRequestRoom(action) {
 }
 
 async function requestRoom(bookingInfo) {
-  const { guest, payment, profileId } = bookingInfo;
+  const { guest, payment } = bookingInfo;
   const { adults, childs } = bookingInfo;
   const { room_code, rate_code } = bookingInfo;
   const { arrival, departure } = bookingInfo;
@@ -103,7 +101,6 @@ async function requestRoom(bookingInfo) {
 
   const bodyRequest = {
     guest: {
-      profileId,
       first_name: guest.firstName,
       last_name: guest.lastName,
       email: guest.email,

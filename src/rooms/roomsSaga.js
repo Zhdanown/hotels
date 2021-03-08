@@ -3,7 +3,6 @@ import api from "../redux/api";
 import { REQUEST_ROOMS, FOUND_ROOMS } from "./roomsReducer";
 import { isLoadingRooms } from "./roomsReducer";
 import { getParams } from "../redux/booking";
-import { getProfileId } from "../Auth/authReducer";
 import { getConfigId, getHotelPms } from "../redux/hotelConfig";
 
 export default function* watcher() {
@@ -19,13 +18,11 @@ function* requestRooms() {
 
 function* getParamsAndFetch() {
   const searchParams = yield select(getParams);
-  const profileId = yield select(getProfileId);
   const hotel_id = yield select(getConfigId);
   const pms_type = yield select(getHotelPms);
 
   const payload = yield call(fetchRooms, {
     ...searchParams,
-    profileId,
     hotel_id,
     pms_type,
   });
@@ -37,7 +34,6 @@ async function fetchRooms(params) {
     arrival,
     departure,
     adults,
-    profileId,
     promo_code,
     childs,
     hotel_id,
@@ -57,7 +53,6 @@ async function fetchRooms(params) {
       adults,
       childs: serializeChilds(childs),
       promo_code,
-      profile_id: profileId,
     },
   });
 

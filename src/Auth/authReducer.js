@@ -46,7 +46,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         user: null,
-        profileId: null,
       };
 
     case SET_USER:
@@ -95,7 +94,5 @@ export function logout() {
 export const getIsLoginPending = state => state.auth.isLoginPending;
 export const getIsRegistrationPending = state => state.auth.isLoginPending;
 export const getUser = state => state.auth.user;
-export const getProfileId = state =>
-  state.auth.user && state.auth.user.profileId;
 export const getRegisterError = state => state.auth.registerError;
 export const getLoginError = state => state.auth.loginError;

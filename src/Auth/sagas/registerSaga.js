@@ -28,16 +28,12 @@ export default function* registerWatcher(action) {
   }
 
   const hotelId = yield select(getConfigId);
-  const { profileId, PMSError } = yield call(
-    registerPMSProfile,
-    action.payload,
-    hotelId
-  );
+  const { PMSError } = yield call(registerPMSProfile, action.payload, hotelId);
   if (PMSError) return;
 
   const { userInfo, userInfoError } = yield call(getUserInfo);
   if (userInfoError) return;
-  yield put({ type: SET_USER, userInfo: { ...userInfo, profileId } });
+  yield put({ type: SET_USER, userInfo });
 
   yield put(registrationPending(false));
 }
@@ -69,8 +65,8 @@ async function registerPMSProfile(payload, hotelId) {
       `/api/v1/fidelio/create-profile/${hotelId}/`,
       bodyRequest
     );
-    const profileId = response.data.profile;
-    return { profileId };
+
+    return response.data;
   } catch (error) {
     return { PMSError: error };
   }

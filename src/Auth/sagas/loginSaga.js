@@ -1,9 +1,8 @@
-import { call, put, select } from "redux-saga/effects";
+import { call, put } from "redux-saga/effects";
 import { CookieUtils } from "../../redux/api";
-import { getConfigId } from "../../redux/hotelConfig";
 import { SET_USER } from "../authReducer";
 import { loginPending, setLoginError } from "../authReducer";
-import { findProfileId, getUserInfo, signIn } from "./authSagaHelpers";
+import { getUserInfo, signIn } from "./authSagaHelpers";
 
 export default function* loginWatcher(action) {
   yield put(loginPending(true));
@@ -22,11 +21,7 @@ export default function* loginWatcher(action) {
   const { userInfo, userInfoError } = yield call(getUserInfo);
   if (userInfoError) return;
 
-  const hotelId = yield select(getConfigId);
-  const profileId = yield call(findProfileId, userInfo, hotelId);
-
-  yield put({ type: SET_USER, userInfo: { ...userInfo, profileId } });
-
+  yield put({ type: SET_USER, userInfo });
   yield put(loginPending(false));
 }
 
