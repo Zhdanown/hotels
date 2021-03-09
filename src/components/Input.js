@@ -8,7 +8,7 @@ const SPEED = 0.4; // in seconds
 
 const InputContainer = styled.div`
   position: relative;
-  height: 2rem;
+  height: ${p => (p.textarea ? "5rem" : "2rem")};
 `;
 
 const LabelContainer = styled.div`
@@ -24,6 +24,7 @@ const StyledInput = styled.input`
   height: 100%;
   border: 1px solid ${p => p.color};
   border-radius: 3px;
+  resize: none;
 
   &::placeholder {
     transition: transform ${SPEED}s;
@@ -62,9 +63,12 @@ function Input({ type, label, name, value, onChange, ...props }) {
     onChange({ target: { name, value: inputValue } });
   }, [name, inputValue, onChange]);
 
+  const isTextarea = type === "textarea";
+
   return (
-    <InputContainer color={color} style={props.style}>
+    <InputContainer color={color} style={props.style} textarea={isTextarea}>
       <StyledInput
+        {...(isTextarea ? { as: "textarea" } : {})}
         style={props.inputStyles}
         placeholder={label}
         color={color}

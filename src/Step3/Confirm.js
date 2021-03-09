@@ -106,12 +106,12 @@ function Confirm() {
         )}
 
         <Input
-          type="text"
-          label="Комментарий"
+          type="textarea"
+          label="Комментарий к заказу"
           name="comment"
           value={guest.comment}
           onChange={onGuestChange}
-          style={{marginTop: '2rem'}}
+          style={{ marginTop: "2rem" }}
         />
 
         <OrderSummary />
