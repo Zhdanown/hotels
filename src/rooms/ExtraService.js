@@ -1,17 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import Accordion, { Title, Icon } from "../components/Accordion";
+import Checkbox from "../components/Checkbox";
 
 function ExtraService(props) {
   const { id, name, short_description, long_description, img } = props;
   return (
     <StyledService>
       <HeaderSection>
-        <h5>{name}</h5>
-        <span>
-          <label htmlFor={`service_${id}`}>3800 Р</label>
-          <input type="checkbox" name="" id={`service_${id}`} />
-        </span>
+        <Checkbox
+          label={name}
+          value={false}
+          onChange={value => console.log(`${name}:`, value)}
+        />
+        <span>3800 Р</span>
       </HeaderSection>
       <BodySection>
         <Image src={img} alt={name} />
