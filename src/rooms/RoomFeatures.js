@@ -86,7 +86,7 @@ export default function RoomFeatures() {
       <Accordion
         renderTitleAfter={(toggle, open) => (
           <Title onClick={toggle} style={{ justifyContent: "center" }}>
-            <span>{open ? "Свернуть" : "Подробнее"}</span>
+            <span>{open ? "Скрыть" : "Подробнее"}</span>
             <AccordionIcon open={open} />
           </Title>
         )}

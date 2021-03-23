@@ -11,6 +11,7 @@ import { getRoomLoadError, getRooms } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { getPackages } from "../redux/hotelConfig";
 import { Error } from "../components/InputWithError";
+import ExtraService from "./ExtraService";
 
 const StyledPackages = styled.div``;
 
@@ -28,9 +29,7 @@ function Rooms({ onSelect, goBack }) {
           onSelect={onSelect}
         ></RoomShowcase>
       ))}
-      {roomsLoadError && (
-        <Error discreet>{roomsLoadError.message}</Error>
-      )}
+      {roomsLoadError && <Error discreet>{roomsLoadError.message}</Error>}
     </div>
   );
 }
@@ -69,18 +68,16 @@ function RoomsWithPackages() {
         <ColumnHeader goBack={cancelPackages}>
           Дополнительные услуги
         </ColumnHeader>
+        <StyledPackages>
+          {packages.map(packageItem => (
+            <ExtraService key={packageItem.id} {...packageItem} />
+          ))}
+        </StyledPackages>
         <div style={{ margin: "1rem 0" }}>
           <Button small onClick={continueBooking}>
             Продолжить бронирование
           </Button>
         </div>
-        <StyledPackages>
-          {packages.map(packageItem => (
-            <div key={packageItem.id}>
-              <p>{packageItem.name}</p>
-            </div>
-          ))}
-        </StyledPackages>
       </>
     );
   }
