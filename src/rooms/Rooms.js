@@ -7,12 +7,12 @@ import RoomShowcase from "./RoomShowcase";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 
-import { getRoomLoadError, getRooms, getPricedPackages } from "./roomsReducer";
+import { getRoomLoadError, getRooms, getPricedServices } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { Error } from "../components/InputWithError";
 import ExtraService from "./ExtraService";
 
-const StyledPackages = styled.div``;
+const StyledServices = styled.div``;
 
 function Rooms({ onSelect, goBack }) {
   const rooms = useSelector(getRooms);
@@ -33,8 +33,8 @@ function Rooms({ onSelect, goBack }) {
   );
 }
 
-function RoomsWithPackages() {
-  const packages = useSelector(getPricedPackages);
+function RoomsWithExtraServices() {
+  const extraServices = useSelector(getPricedServices);
   const [selectedRoomAndRate, setSelected] = useState(null);
 
   const { setStep } = useContext(LayoutContext);
@@ -47,13 +47,13 @@ function RoomsWithPackages() {
 
   const onSelect = data => {
     setSelected(data);
-    if (!packages.length) {
-      // skip packages
+    if (!extraServices.length) {
+      // skip extraServices
       continueBooking();
     }
   };
 
-  const cancelPackages = () => {
+  const cancelServices = () => {
     setSelected(null);
   };
 
@@ -61,17 +61,17 @@ function RoomsWithPackages() {
     setStep(step => --step);
   };
 
-  if (selectedRoomAndRate && packages.length) {
+  if (selectedRoomAndRate && extraServices.length) {
     return (
       <>
-        <ColumnHeader goBack={cancelPackages}>
+        <ColumnHeader goBack={cancelServices}>
           Дополнительные услуги
         </ColumnHeader>
-        <StyledPackages>
-          {packages.map(packageItem => (
-            <ExtraService key={packageItem.id} {...packageItem} />
+        <StyledServices>
+          {extraServices.map(service => (
+            <ExtraService key={service.id} {...service} />
           ))}
-        </StyledPackages>
+        </StyledServices>
         <div style={{ margin: "1rem 0" }}>
           <Button small onClick={continueBooking}>
             Продолжить бронирование
@@ -83,4 +83,4 @@ function RoomsWithPackages() {
   return <Rooms onSelect={onSelect} goBack={goStepBack} />;
 }
 
-export default RoomsWithPackages;
+export default RoomsWithExtraServices;

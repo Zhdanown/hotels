@@ -82,7 +82,7 @@ export const getChildCategories = state =>
   getConfig(state).hotel_child_categories;
 export const getAvailabilityColors = state =>
   getConfig(state).hotel_availability_colors;
-export const getPackages = state => getConfig(state).hotel_packages;
+export const getConfigServices = state => getConfig(state).hotel_packages;
 export const getPaymentOptions = state =>
   getConfig(state).hotel_payment_methods;
 export const getPaymentForm = state => getConfig(state).payment_form;

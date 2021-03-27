@@ -3,12 +3,16 @@ import api, { getAuthHeaderIfTokenPresent } from "../redux/api";
 import {
   REQUEST_ROOMS,
   SET_ROOMS,
-  SET_PACKAGES,
+  SET_SERVICES,
   setFetchRoomsError,
 } from "./roomsReducer";
 import { isLoadingRooms } from "./roomsReducer";
 import { getParams } from "../redux/booking";
-import { getConfigId, getHotelPms, getPackages } from "../redux/hotelConfig";
+import {
+  getConfigId,
+  getHotelPms,
+  getConfigServices,
+} from "../redux/hotelConfig";
 
 export default function* watcher() {
   yield takeEvery(REQUEST_ROOMS, roomsSaga);
@@ -18,17 +22,17 @@ function* roomsSaga() {
   yield put(isLoadingRooms(true));
   const params = yield call(getRequestParams);
 
-  const [[rooms, roomError], [packages, packageError]] = yield all([
+  const [[rooms, roomError], [services, serviceError]] = yield all([
     call(fetchRooms, params),
-    call(fetchPackages, params),
+    call(fetchServices, params),
   ]);
 
-  if (roomError || packageError) {
-    console.error(roomError || packageError);
+  if (roomError || serviceError) {
+    console.error(roomError || serviceError);
     yield put(setFetchRoomsError("Не удалось загрузить данные"));
   } else {
     yield put({ type: SET_ROOMS, payload: rooms });
-    yield call(setPricedPackages, packages);
+    yield call(setPricedServices, services);
   }
 
   yield put(isLoadingRooms(false));
@@ -47,19 +51,19 @@ function* fetchRooms({ pms_type, hotel_id, ...params }) {
   return [payload, error];
 }
 
-function* fetchPackages({ pms_type, hotel_id, ...params }) {
+function* fetchServices({ pms_type, hotel_id, ...params }) {
   const url = `/api/v1/${pms_type}/pakages/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }
 
-function* setPricedPackages(packages) {
-  let configPackages = yield select(getPackages);
-  const pricedPackages = configPackages.map(pkg => {
-    const found = packages.find(x => x.id === pkg.id);
-    return { ...pkg, price: found.package_price };
+function* setPricedServices(services) {
+  let configServices = yield select(getConfigServices);
+  const pricedServices = configServices.map(service => {
+    const found = services.find(x => x.id === service.id);
+    return { ...service, price: found.package_price };
   });
-  yield put({ type: SET_PACKAGES, payload: pricedPackages });
+  yield put({ type: SET_SERVICES, payload: pricedServices });
 }
 
 async function fetchWithParams(params, url) {
