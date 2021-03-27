@@ -1,18 +1,23 @@
 export const REQUEST_ROOMS = "rooms/REQUEST_ROOMS";
-export const FOUND_ROOMS = "rooms/FOUND_ROOMS";
+export const SET_ROOMS = "rooms/SET_ROOMS";
+export const SET_PACKAGES = "rooms/SET_PACKAGES";
 export const LOADING_ROOMS = "rooms/LOADING_ROOMS";
 export const SET_FETCH_ROOM_ERROR = "rooms/SET_FETCH_ROOM_ERROR";
 
 const initialState = {
   rooms: [],
+  packages: [],
   isLoadingRooms: false,
   loadRoomsError: null,
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case FOUND_ROOMS:
+    case SET_ROOMS:
       return { ...state, rooms: action.payload };
+
+    case SET_PACKAGES:
+      return { ...state, packages: action.payload };
 
     case LOADING_ROOMS:
       return { ...state, isLoadingRooms: action.payload };
@@ -38,5 +43,6 @@ export function setFetchRoomsError(error) {
 }
 
 export const getRooms = state => state.rooms.rooms;
+export const getPricedPackages = state => state.rooms.packages;
 export const getRoomsLoadState = state => state.rooms.isLoadingRooms;
 export const getRoomLoadError = state => state.rooms.loadRoomsError;

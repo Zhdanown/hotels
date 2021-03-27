@@ -7,9 +7,8 @@ import RoomShowcase from "./RoomShowcase";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 
-import { getRoomLoadError, getRooms } from "./roomsReducer";
+import { getRoomLoadError, getRooms, getPricedPackages } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
-import { getPackages } from "../redux/hotelConfig";
 import { Error } from "../components/InputWithError";
 import ExtraService from "./ExtraService";
 
@@ -35,15 +34,15 @@ function Rooms({ onSelect, goBack }) {
 }
 
 function RoomsWithPackages() {
-  const packages = useSelector(getPackages);
-  const [selected, setSelected] = useState(null);
+  const packages = useSelector(getPricedPackages);
+  const [selectedRoomAndRate, setSelected] = useState(null);
 
   const { setStep } = useContext(LayoutContext);
   const dispatch = useDispatch();
 
   const continueBooking = () => {
     setStep(step => ++step);
-    dispatch(changeParams(selected));
+    dispatch(changeParams(selectedRoomAndRate));
   };
 
   const onSelect = data => {
@@ -62,7 +61,7 @@ function RoomsWithPackages() {
     setStep(step => --step);
   };
 
-  if (selected && packages.length) {
+  if (selectedRoomAndRate && packages.length) {
     return (
       <>
         <ColumnHeader goBack={cancelPackages}>

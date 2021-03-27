@@ -2,6 +2,7 @@ import { takeEvery, call, select, put } from "redux-saga/effects";
 import produce from "immer";
 import api, { getAuthHeaderIfTokenPresent } from "./api";
 import { getConfigId, getHotelPms } from "./hotelConfig";
+import { stringToDate, calculateNightsCount } from "../utils";
 
 const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
@@ -24,7 +25,7 @@ const initialState = {
   },
   isBooking: false,
   response: null,
-  error: null
+  error: null,
 };
 
 const reducer = produce((draft, action) => {
@@ -78,7 +79,7 @@ export function* bookingSaga() {
 
 function* bookRoom(action) {
   yield put(isBooking(true));
-  const {payload, error} = yield call(getParamsAndRequestRoom, action);
+  const { payload, error } = yield call(getParamsAndRequestRoom, action);
   if (payload) {
     yield put(setBookingResponse(payload));
   } else {
@@ -86,7 +87,6 @@ function* bookRoom(action) {
       yield put(setBookingError(error.response.data));
     } else {
       yield put(setBookingError(error));
-
     }
   }
 
@@ -180,3 +180,10 @@ export const getBookingInfo = state => {
 };
 export const getBookingState = state => state.reservation.isBooking;
 export const getBookingResponse = state => state.reservation.response;
+export const getNightsCount = state => {
+  const { arrival, departure } = getParams(state);
+  const start = stringToDate(arrival);
+  const end = stringToDate(departure);
+  const nightsCount = calculateNightsCount(start, end);
+  return nightsCount;
+};

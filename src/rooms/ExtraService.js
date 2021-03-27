@@ -1,19 +1,33 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import plural from "plural-ru";
 import Accordion, { Title, Icon } from "../components/Accordion";
 import Checkbox from "../components/Checkbox";
+import { getNightsCount } from "../redux/booking";
+
+const getTotalCost = {
+  EVERY_NIGHT: (price, nightsCount) => price * nightsCount,
+  FIRST_NIGHT: price => price,
+};
 
 function ExtraService(props) {
-  const { id, name, short_description, long_description, img } = props;
+  const { name, short_description, long_description, img } = props;
+
+  const nightsCount = useSelector(getNightsCount);
+  const { price, time_period } = props;
+  const serviceCost = getTotalCost[time_period](price, nightsCount);
+  const nights = plural(nightsCount, "ночь", "ночи", "ночей");
+  const costString = ` / ${nightsCount} ${nights}`;
+
   return (
     <StyledService>
       <HeaderSection>
-        <Checkbox
-          label={name}
-          value={false}
-          onChange={value => console.log(`${name}:`, value)}
-        />
-        <span>3800 Р</span>
+        <Checkbox label={name} value={false} onChange={() => {}} />
+        <div>
+          <span>{serviceCost} &#8381;</span>
+          {time_period === "EVERY_NIGHT" ? <span>{costString}</span> : null}
+        </div>
       </HeaderSection>
       <BodySection>
         <Image src={img} alt={name} />
