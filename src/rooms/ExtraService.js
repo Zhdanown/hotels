@@ -7,6 +7,7 @@ import Accordion, { Title, Icon } from "../components/Accordion";
 import Checkbox from "../components/Checkbox";
 import { getNightsCount } from "../redux/booking";
 import { getServiceCost } from "./roomsReducer";
+import { urlWithHost } from "../redux/api";
 
 function ExtraService(props) {
   const { id, name, short_description, long_description, img } = props;
@@ -109,7 +110,7 @@ function Image({ src, alt }) {
   if (!src) return null;
   return (
     <ImageWrapper>
-      <img src={src} alt={alt} />
+      <img src={urlWithHost(src)} alt={alt} />
     </ImageWrapper>
   );
 }

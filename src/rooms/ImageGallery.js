@@ -2,15 +2,15 @@ import React from "react";
 import { useState } from "react";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
-import { urlWithHost } from "../Step3/urlWithHost";
+import { urlWithHost } from "../redux/api";
 
 function ImageGallery({ images, open, toggle }) {
   const [index, setIndex] = useState(0);
 
   images = images.map(url => urlWithHost(url));
-  
+
   if (!images.length) return null;
-  
+
   return open ? (
     <Lightbox
       mainSrc={images[index]}
@@ -18,7 +18,9 @@ function ImageGallery({ images, open, toggle }) {
       prevSrc={images[(index + images.length - 1) % images.length]}
       onCloseRequest={() => toggle(false)}
       onMoveNextRequest={() => setIndex(i => (i + 1) % images.length)}
-      onMovePrevRequest={() => setIndex(i => (i + images.length - 1) % images.length)}
+      onMovePrevRequest={() =>
+        setIndex(i => (i + images.length - 1) % images.length)
+      }
     />
   ) : null;
 }

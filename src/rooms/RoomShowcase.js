@@ -11,7 +11,7 @@ import Accordion, { Icon, Title } from "../components/Accordion";
 
 import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { getPrimaryColor } from "../redux/hotelConfig";
-import { urlWithHost } from "../Step3/urlWithHost";
+import { urlWithHost } from "../redux/api";
 
 const StyledRoomShowcase = styled.div`
   box-shadow: 0 0 10px 5px #ddd;

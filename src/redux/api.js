@@ -40,3 +40,8 @@ export const getAuthHeaderIfTokenPresent = () => {
   if (token) return { Authorization: `NLB ${token}` };
   return {};
 };
+
+export const urlWithHost = path =>
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_API + path
+    : path;
