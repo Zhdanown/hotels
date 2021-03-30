@@ -13,6 +13,10 @@ const Row = styled.div`
   margin: 0.25rem 0;
   color: ${props => props.color};
   font-weight: ${props => (props.bold ? "bold" : "unset")};
+
+  span {
+    text-align: left;
+  }
 `;
 
 const Value = styled.span`
@@ -42,8 +46,8 @@ function OrderSummary() {
     departure,
     adults,
     childs,
+    packages,
     rooms_count,
-    notes,
     room,
     rate,
   } = orderInfo;
@@ -90,35 +94,69 @@ function OrderSummary() {
           <span>Комнат</span>
           <Value>{rooms_count}</Value>
         </Row>
+        <RowTotal
+          label="Стоимость тарифа"
+          sum={ratePrice}
+          annotation={`${nights} ${nightsPluralised}`}
+        />
       </Section>
 
-      <Section>
-        <SectionHeader color={color}>Дополнительные услуги</SectionHeader>
-        <Row color="gray">
-          <span>Бассейн (вкл.)</span>
-          <span>Ежедневно</span>
-        </Row>
-        <Row color="gray">
-          <span>Завтрак (вкл.)</span>
-          <span>Ежедневно</span>
-        </Row>
-        <Row color="gray">
-          <span>Обед (вкл.)</span>
-          <span>Ежедневно</span>
-        </Row>
-      </Section>
+      {packages.length ? (
+        <Section>
+          <SelectedExtraServices services={packages} />
+        </Section>
+      ) : null}
 
       <Section>
         <SectionHeader color={color}>Стоимость</SectionHeader>
-        <Row bold>
-          <span>Всего</span>
-          <span>
-            {ratePrice} &#8381; / {nights} {nightsPluralised}
-          </span>
-        </Row>
+        <RowTotal label="Всего" sum={ratePrice + getSumOfServices(packages)} />
       </Section>
     </Container>
   );
 }
 
 export default OrderSummary;
+
+function SelectedExtraServices({ services }) {
+  const color = useSelector(getPrimaryColor);
+  const totalSumOfServices = getSumOfServices(services);
+
+  return (
+    <>
+      <SectionHeader color={color}>Дополнительные услуги</SectionHeader>
+      {services.map(service => (
+        <ExtraService key={service.id} {...service} />
+      ))}
+      <RowTotal label="Всего за услуги" sum={totalSumOfServices} />
+    </>
+  );
+}
+
+const RowTotal = ({ label, sum, annotation }) => {
+  return (
+    <Row bold>
+      <span>{label}</span>
+      <span>
+        {sum} &#8381; {annotation && ` / ${annotation}`}
+      </span>
+    </Row>
+  );
+};
+
+function ExtraService(props) {
+  const { name, totalCost, nights } = props;
+
+  return (
+    <Row color="gray">
+      <span>{name}</span>
+      <span>
+        <span>{totalCost} &#8381;</span>
+        {nights && <span>{nights}</span>}
+      </span>
+    </Row>
+  );
+}
+
+function getSumOfServices(services) {
+  return services.reduce((sum, service) => (sum += service.totalCost), 0);
+}

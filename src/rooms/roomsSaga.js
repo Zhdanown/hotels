@@ -8,11 +8,7 @@ import {
 } from "./roomsReducer";
 import { isLoadingRooms } from "./roomsReducer";
 import { getParams } from "../redux/booking";
-import {
-  getConfigId,
-  getHotelPms,
-  getConfigServices,
-} from "../redux/hotelConfig";
+import { getConfigId, getHotelPms } from "../redux/hotelConfig";
 
 export default function* watcher() {
   yield takeEvery(REQUEST_ROOMS, roomsSaga);
@@ -32,7 +28,7 @@ function* roomsSaga() {
     yield put(setFetchRoomsError("Не удалось загрузить данные"));
   } else {
     yield put({ type: SET_ROOMS, payload: rooms });
-    yield call(setPricedServices, services);
+    yield put({ type: SET_SERVICES, payload: services });
   }
 
   yield put(isLoadingRooms(false));
@@ -46,7 +42,7 @@ function* getRequestParams() {
 }
 
 function* fetchRooms({ pms_type, hotel_id, ...params }) {
-  const url = `/api/v1/${pms_type}/avilability/${hotel_id}/`;
+  const url = `/api/v1/${pms_type}/availability/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }
@@ -55,15 +51,6 @@ function* fetchServices({ pms_type, hotel_id, ...params }) {
   const url = `/api/v1/${pms_type}/pakages/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
-}
-
-function* setPricedServices(services) {
-  let configServices = yield select(getConfigServices);
-  const pricedServices = configServices.map(service => {
-    const found = services.find(x => x.id === service.id);
-    return { ...service, price: found.package_price };
-  });
-  yield put({ type: SET_SERVICES, payload: pricedServices });
 }
 
 async function fetchWithParams(params, url) {

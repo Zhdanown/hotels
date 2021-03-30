@@ -20,6 +20,7 @@ const initialState = {
     adults: 0,
     rooms_count: 0,
     childs: [],
+    packages: [],
     notes: [],
     promo_code: null,
   },
@@ -110,7 +111,7 @@ function* getParamsAndRequestRoom(action) {
 
 async function requestRoom(bookingInfo) {
   const { guest, payment } = bookingInfo;
-  const { adults, childs } = bookingInfo;
+  const { adults, childs, packages } = bookingInfo;
   const { room_code, rate_code } = bookingInfo;
   const { arrival, departure } = bookingInfo;
   const { rooms_count } = bookingInfo;
@@ -133,6 +134,7 @@ async function requestRoom(bookingInfo) {
       adults,
       rooms_count,
       childs,
+      packages,
       payment,
     },
   };
@@ -161,12 +163,10 @@ async function requestRoom(bookingInfo) {
 }
 
 export const getParams = state => state.reservation.params;
-export const getRoom = state => getParams(state).room;
-export const getRate = state => getParams(state).rate;
 export const getBookingInfo = state => {
   const { room, rate, rooms_count } = getParams(state);
   const { arrival, departure } = getParams(state);
-  const { guest, adults, childs } = getParams(state);
+  const { guest, adults, childs, packages } = getParams(state);
   return {
     guest,
     room_code: room.room_code,
@@ -174,6 +174,7 @@ export const getBookingInfo = state => {
     rooms_count,
     adults,
     childs: childs.filter(x => x.count),
+    packages,
     arrival,
     departure,
   };

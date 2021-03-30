@@ -1,30 +1,35 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import plural from "plural-ru";
+
 import Accordion, { Title, Icon } from "../components/Accordion";
 import Checkbox from "../components/Checkbox";
 import { getNightsCount } from "../redux/booking";
-import { handleExtraService } from "./roomsReducer";
-
-const getTotalCost = {
-  EVERY_NIGHT: (price, nightsCount) => price * nightsCount,
-  FIRST_NIGHT: price => price,
-};
+import { getServiceCost } from "./roomsReducer";
 
 function ExtraService(props) {
   const { id, name, short_description, long_description, img } = props;
 
   const nightsCount = useSelector(getNightsCount);
-  const { price, time_period } = props;
-  const serviceCost = getTotalCost[time_period](price, nightsCount);
-  const nights = plural(nightsCount, "ночь", "ночи", "ночей");
-  const costString = ` / ${nightsCount} ${nights}`;
-
-  const dispatch = useDispatch();
+  const { package_price: price, time_period } = props;
+  const totalCost = getServiceCost[time_period](price, nightsCount);
+  const nightsPluralized = plural(nightsCount, "ночь", "ночи", "ночей");
+  const nights =
+    time_period === "EVERY_NIGHT"
+      ? ` / ${nightsCount} ${nightsPluralized}`
+      : null;
 
   const onServiceSelect = selected => {
-    dispatch(handleExtraService({ id, name, selected, price, time_period }));
+    props.onSelect({
+      id,
+      name,
+      selected,
+      price,
+      time_period,
+      totalCost,
+      nights,
+    });
   };
 
   return (
@@ -32,8 +37,8 @@ function ExtraService(props) {
       <HeaderSection>
         <Checkbox label={name} value={false} onChange={onServiceSelect} />
         <div>
-          <span>{serviceCost} &#8381;</span>
-          {time_period === "EVERY_NIGHT" ? <span>{costString}</span> : null}
+          <span>{totalCost} &#8381;</span>
+          {nights && <span>{nights}</span>}
         </div>
       </HeaderSection>
       <BodySection>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -7,10 +7,11 @@ import RoomShowcase from "./RoomShowcase";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 
-import { getRoomLoadError, getRooms, getPricedServices } from "./roomsReducer";
+import { getRoomLoadError, getRooms, getExtraServices } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { Error } from "../components/InputWithError";
 import ExtraService from "./ExtraService";
+import produce from "immer";
 
 const StyledServices = styled.div``;
 
@@ -34,8 +35,9 @@ function Rooms({ onSelect, goBack }) {
 }
 
 function RoomsWithExtraServices() {
-  const extraServices = useSelector(getPricedServices);
+  const extraServices = useSelector(getExtraServices);
   const [selectedRoomAndRate, setSelected] = useState(null);
+  const [services, setServices] = useState([]);
 
   const { setStep } = useContext(LayoutContext);
   const dispatch = useDispatch();
@@ -61,6 +63,27 @@ function RoomsWithExtraServices() {
     setStep(step => --step);
   };
 
+  useEffect(() => {
+    const selectedServices = services.filter(x => x.selected);
+    dispatch(changeParams({ packages: selectedServices }));
+  }, [services, dispatch]);
+
+  const updateSelectedServices = useCallback(
+    service => {
+      if (services.find(x => x.id === service.id)) {
+        setServices(
+          produce(draft => {
+            const index = draft.findIndex(x => x.id === service.id);
+            if (index !== -1) draft[index].selected = service.selected;
+          })
+        );
+      } else {
+        setServices(prev => [...prev, service]);
+      }
+    },
+    [services]
+  );
+
   if (selectedRoomAndRate && extraServices.length) {
     return (
       <>
@@ -69,7 +92,11 @@ function RoomsWithExtraServices() {
         </ColumnHeader>
         <StyledServices>
           {extraServices.map(service => (
-            <ExtraService key={service.id} {...service} />
+            <ExtraService
+              key={service.id}
+              {...service}
+              onSelect={updateSelectedServices}
+            />
           ))}
         </StyledServices>
         <div style={{ margin: "1rem 0" }}>
