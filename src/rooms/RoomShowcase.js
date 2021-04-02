@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import RoomRate from "./RoomRate";
 import ImageGallery from "./ImageGallery";
+import Price from "./Price";
 import RoomFeatures from "./RoomFeatures";
 import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
@@ -20,7 +21,8 @@ export default function RoomShowcase({ room, onSelect }) {
     preview_img,
     images,
     name,
-    max_price,
+    min_price,
+    original_price,
     short_description,
     rates,
   } = room;
@@ -45,9 +47,7 @@ export default function RoomShowcase({ room, onSelect }) {
         </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
-          <span>
-            <b>{max_price} &#8381;</b>
-          </span>
+          <Price price={min_price} oldPrice={original_price} />
         </TitleSection>
       </ImagePreview>
 

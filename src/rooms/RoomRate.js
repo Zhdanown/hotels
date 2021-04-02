@@ -7,6 +7,8 @@ import HTMLParser from "../components/HTMLParser";
 import Accordion, { Icon, Title } from "../components/Accordion";
 
 import { getPrimaryColor } from "../redux/hotelConfig";
+import Price from "./Price";
+import { Justified } from "../components/Centered";
 
 const StyledRoomRate = styled.div`
   border-bottom: 1px solid ${props => props.bg};
@@ -18,22 +20,14 @@ const StyledRoomRate = styled.div`
   }
 `;
 
-const Justified = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 export default function RoomRate({ rate, onClick }) {
   const primaryColor = useSelector(getPrimaryColor);
   const {
-    rate_code,
     short_description,
     long_description,
     total_price,
-    nights,
+    original_total_price,
   } = rate;
-
-  const totalCost = nights.reduce((sum, night) => sum + night.price, 0);
 
   return (
     <StyledRoomRate bg={primaryColor}>
@@ -69,9 +63,9 @@ export default function RoomRate({ rate, onClick }) {
           <p>Нет описания</p>
         )}
       </Accordion>
-      <Justified>
+      <Justified alignV="center">
         <span>Стоимость</span>
-        <b>{totalCost} &#8381;</b>
+        <Price price={total_price} oldPrice={original_total_price} />
       </Justified>
     </StyledRoomRate>
   );
