@@ -70,6 +70,9 @@ export default function RoomShowcase({ room, onSelect }) {
 }
 
 function Rates({ rates, onRateSelect }) {
+  //sort rates by price from most expensive to cheapest
+  rates.sort((a, b) => b.total_price - a.total_price);
+
   return rates.length > 1 ? (
     <Accordion
       renderTitle={(toggle, open) => (
