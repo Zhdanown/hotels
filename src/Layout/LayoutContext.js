@@ -94,23 +94,6 @@ export function LayoutContextProvider({ children }) {
   const [steps, setSteps] = useLoadedSteps(currentStep);
 
   useEffect(() => {
-    const onKeyDown = event => {
-      if (event.key === "n") {
-        setStep(step => ++step);
-      }
-      if (event.key === "p") {
-        setStep(step => --step);
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
-
-  useEffect(() => {
     if (currentStep < 1) {
       setStep(1);
     }

@@ -90,5 +90,5 @@ function Input({ type, label, name, value, onChange, ...props }) {
 export default Input;
 
 Input.defaultProps = {
-  onChange: value => console.log(value),
+  onChange: value => {},
 };

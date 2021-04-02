@@ -16,7 +16,6 @@ function Modal({ children, open, toggle }) {
     body.appendChild(modal);
     const handleEsc = e => {
       if (e.code === "Escape") {
-        console.log("escape");
         toggle(false);
       }
     };
@@ -25,7 +24,7 @@ function Modal({ children, open, toggle }) {
       body.removeChild(modal);
       document.removeEventListener("keydown", handleEsc);
     };
-  }, []);
+  }, [toggle]);
 
   return createPortal(
     <Modal1 open={open} toggle={toggle}>
