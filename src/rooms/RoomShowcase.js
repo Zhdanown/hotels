@@ -13,16 +13,86 @@ import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import { urlWithHost } from "../redux/api";
 
+export default function RoomShowcase({ room, onSelect }) {
+  const primaryColor = useSelector(getPrimaryColor);
+
+  const {
+    preview_img,
+    images,
+    name,
+    max_price,
+    short_description,
+    rates,
+  } = room;
+
+  const onRateSelect = rate => {
+    onSelect({ room, rate });
+  };
+
+  const [isGalleryOpen, toggleGallery] = useState(false);
+
+  return (
+    <StyledRoomShowcase bgColor={primaryColor}>
+      <ImageGallery
+        images={images}
+        open={isGalleryOpen}
+        toggle={toggleGallery}
+      />
+
+      <ImagePreview onClick={() => toggleGallery(true)}>
+        <ImageContainer>
+          <img src={urlWithHost(preview_img)} alt="room preview" />
+        </ImageContainer>
+        <TitleSection>
+          <RoomName>{name}</RoomName>
+          <span>
+            <b>{max_price} &#8381;</b>
+          </span>
+        </TitleSection>
+      </ImagePreview>
+
+      <Content>
+        <Accordion
+          renderTitle={(toggle, open) => (
+            <Title onClick={toggle} style={{ justifyContent: "center" }}>
+              Информация о номере <Icon open={open} />
+            </Title>
+          )}
+        >
+          <HTMLParser html={short_description} />
+          <RoomFeatures />
+        </Accordion>
+
+        <Rates rates={rates} onRateSelect={onRateSelect} />
+      </Content>
+    </StyledRoomShowcase>
+  );
+}
+
+function Rates({ rates, onRateSelect }) {
+  return rates.length > 1 ? (
+    <Accordion
+      renderTitle={(toggle, open) => (
+        <Button small onClick={toggle} style={{ margin: ".5rem" }}>
+          {open ? "Скрыть тарифы" : "Смотреть тарифы"}
+          <Icon open={open} />
+        </Button>
+      )}
+    >
+      {rates.map(rate => (
+        <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
+      ))}
+    </Accordion>
+  ) : (
+    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
+  );
+}
+
 const StyledRoomShowcase = styled.div`
   box-shadow: 0 0 10px 5px #ddd;
   border-radius: 0.5rem;
   margin: 1rem 0;
   overflow: hidden;
-`;
-
-const s1 = `
-text-align: center;
-
 `;
 
 const titleColor = "#333333";
@@ -34,7 +104,6 @@ const TitleSection = styled.div`
   width: 100%;
   padding: 2rem;
   background: linear-gradient(0deg, white, transparent);
-  ${s1}
 `;
 
 const RoomName = styled.h4`
@@ -82,79 +151,3 @@ const ImageContainer = styled.div`
 
   ${ImagePreviewContainerQueries}
 `;
-
-export default function RoomShowcase({ room, onSelect }) {
-  const primaryColor = useSelector(getPrimaryColor);
-
-  const {
-    preview_img,
-    images,
-    name,
-    max_price,
-    short_description,
-    rates,
-  } = room;
-
-  const onRateSelect = rate => {
-    onSelect({ room, rate });
-  };
-
-  const [isGalleryOpen, toggleGallery] = useState(false);
-
-  return (
-    <StyledRoomShowcase bgColor={primaryColor}>
-      <ImageGallery
-        images={images}
-        open={isGalleryOpen}
-        toggle={toggleGallery}
-      />
-
-      <ImagePreview onClick={() => toggleGallery(true)}>
-        <ImageContainer>
-          <img src={urlWithHost(preview_img)} alt="room preview" />
-        </ImageContainer>
-        <TitleSection>
-          <RoomName>{name}</RoomName>
-          <span>
-            <b>{max_price} &#8381;</b>
-          </span>
-        </TitleSection>
-      </ImagePreview>
-
-      <Content>
-        <Accordion
-          opened
-          renderTitle={(toggle, open) => (
-            <Title onClick={toggle} style={{ justifyContent: "center" }}>
-              Информация о номере <Icon open={open} />
-            </Title>
-          )}
-        >
-          <HTMLParser html={short_description} />
-          <RoomFeatures />
-        </Accordion>
-
-        <Rates rates={rates} onRateSelect={onRateSelect} />
-      </Content>
-    </StyledRoomShowcase>
-  );
-}
-
-function Rates({ rates, onRateSelect }) {
-  return rates.length > 1 ? (
-    <Accordion
-      renderTitle={(toggle, open) => (
-        <Button small onClick={toggle} style={{ margin: ".5rem" }}>
-          {open ? "Скрыть тарифы" : "Смотреть тарифы"}
-          <Icon open={open} />
-        </Button>
-      )}
-    >
-      {rates.map(rate => (
-        <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
-      ))}
-    </Accordion>
-  ) : (
-    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
-  );
-}
