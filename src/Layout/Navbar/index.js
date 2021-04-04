@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import { useSelector } from "react-redux";
+import styled, { css } from "styled-components";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 
 import SPEED from "./MENU_SPEED";
 import FullScreenMenu from "./FullScreenMenu";
 import { getHotelName, getPrimaryColor } from "../../redux/hotelConfig";
-import { useRouteMatch } from "react-router-dom";
-import AuthNavButton from "../../Auth/AuthNavButton";
+import AuthNavButton, { NavbarLink } from "../../Auth/AuthNavButton";
 
 const NavbarWrapper = styled.div`
   transform: translateY(0);
@@ -26,57 +25,58 @@ const NavbarContainer = styled.div`
   box-shadow: 0 0 7px 0 #dddddd;
   z-index: 1;
   justify-content: space-between;
-  font-size 1.4rem;
+  font-size: 1.4rem;
+`;
+
+const MenuIconStyles = css`
+  font-size: 1.8rem;
+  padding: 0.15rem;
+  transition: opacity ${SPEED}s, transform ${SPEED}s;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const StyledMenuOutlined = styled(MenuOutlined)`
+  ${MenuIconStyles}
+
+  color: ${props => props.color};
   opacity: 1;
   transform: rotate(0);
+
   &:hover {
     color: ${p => p.color};
-  }
-`;
-const StyledCloseOutlined = styled(CloseOutlined)`
-  color: white;
-  opacity: 0;
-  transform: rotate(-135deg) scale(0);
-  &:hover {
-    color: #363636;
-  }
-`;
-
-const MenuIcon = styled.span`
-  z-index: 11;
-  position: relative;
-  width: 3rem;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  ${StyledMenuOutlined}, ${StyledCloseOutlined} {
-    position: absolute;
-    right: 0;
-    top: -10px;
-    transition: opacity ${SPEED}s, transform ${SPEED}s;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   ${p =>
     p.open &&
     `
-    ${StyledMenuOutlined} {
-      opacity: 0;
-      transform: rotate(135deg);
-    }
-    ${StyledCloseOutlined} {
-      opacity: 1;
-      transform: rotate(0) scale(1);
-    }
-    `}
+    opacity: 0;
+    transform: rotate(135deg);
+  `}
+`;
+const StyledCloseOutlined = styled(CloseOutlined)`
+  ${MenuIconStyles}
+
+  color: white;
+  opacity: 0;
+  transform: rotate(-135deg) scale(0);
+  position: absolute;
+  z-index: 11;
+  top: 11px;
+  left: 15px;
+
+  &:hover {
+    color: #363636;
+  }
+
+  ${p =>
+    p.open &&
+    `
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  `}
 `;
 
 const LogoTitle = styled.div`
@@ -100,21 +100,22 @@ export default function Navbar() {
           <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
           <div style={{ display: "flex", alignItems: "center" }}>
             <AuthNavButton />
-            <MenuIcon open={isMenuOpen}>
+
+            <NavbarLink as="button">
               <StyledMenuOutlined
+                open={isMenuOpen}
                 onClick={() => toggleMenu(true)}
                 color={color}
               />
-              <StyledCloseOutlined onClick={() => toggleMenu(false)} />
-            </MenuIcon>
+              <StyledCloseOutlined
+                open={isMenuOpen}
+                onClick={() => toggleMenu(false)}
+              />
+            </NavbarLink>
           </div>
         </NavbarContainer>
         <FullScreenMenu isOpen={isMenuOpen} close={() => toggleMenu(false)} />
       </NavbarWrapper>
-
-      {/* <Modal open={modal} toggle={setModal}> */}
-      {/* <LoginForm /> */}
-      {/* </Modal> */}
     </>
   );
 }

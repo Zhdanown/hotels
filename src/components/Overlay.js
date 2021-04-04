@@ -23,7 +23,8 @@ const CloseIcon = styled(CloseOutlined)`
   top: 0;
   right: 0;
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  margin-right: 0.75rem;
   cursor: pointer;
 
   &:hover {
