@@ -12,7 +12,6 @@ import Accordion, { Icon, Title } from "../components/Accordion";
 
 import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
 import { getPrimaryColor } from "../redux/hotelConfig";
-import { urlWithHost } from "../redux/api";
 
 export default function RoomShowcase({ room, onSelect }) {
   const primaryColor = useSelector(getPrimaryColor);
@@ -43,7 +42,7 @@ export default function RoomShowcase({ room, onSelect }) {
 
       <ImagePreview onClick={() => toggleGallery(true)}>
         <ImageContainer>
-          <img src={urlWithHost(preview_img)} alt="room preview" />
+          <img src={preview_img} alt="room preview" />
         </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
@@ -107,6 +106,7 @@ const TitleSection = styled.div`
   width: 100%;
   padding: 2rem;
   background: linear-gradient(0deg, white, transparent);
+  text-align: center;
 `;
 
 const RoomName = styled.h4`

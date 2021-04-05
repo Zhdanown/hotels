@@ -2,12 +2,9 @@ import React from "react";
 import { useState } from "react";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
-import { urlWithHost } from "../redux/api";
 
 function ImageGallery({ images, open, toggle }) {
   const [index, setIndex] = useState(0);
-
-  images = images.map(url => urlWithHost(url));
 
   if (!images.length) return null;
 
