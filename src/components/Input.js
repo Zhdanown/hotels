@@ -1,8 +1,71 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { useField } from "formik";
 
 import { getPrimaryColor } from "../redux/hotelConfig";
+
+function Input({ type, label, name, value, onChange, onBlur, ...props }) {
+  const color = useSelector(getPrimaryColor);
+
+  const [inputValue, setInputValue] = useState(value);
+
+  useEffect(() => {
+    onChange({ target: { name, value: inputValue } });
+  }, [name, inputValue, onChange]);
+
+  const isTextarea = type === "textarea";
+
+  return (
+    <InputContainer color={color} style={props.style} textarea={isTextarea}>
+      <StyledInput
+        {...(isTextarea ? { as: "textarea" } : {})}
+        style={props.inputStyles}
+        placeholder={label}
+        color={color}
+        type={type}
+        name={name}
+        id={name}
+        value={inputValue}
+        onBlur={onBlur}
+        onChange={e => setInputValue(e.target.value)}
+      />
+      <LabelContainer>
+        <Label color={color} hasValue={value}>
+          {label}
+        </Label>
+      </LabelContainer>
+    </InputContainer>
+  );
+}
+
+export default Input;
+
+Input.defaultProps = {
+  onChange: value => {},
+};
+
+export const FormikInput = props => {
+  const [field, meta] = useField(props);
+  const { error, touched } = meta;
+
+  return (
+    <div style={{ margin: "1.5rem 0" }}>
+      <Input {...field} {...props} />
+      {touched && error ? <Error>{error}</Error> : null}
+    </div>
+  );
+};
+
+export const Error = styled.p`
+  white-space: pre-line;
+  ${({ discreet = false }) =>
+    !discreet &&
+    `  
+  font-size: 0.75rem;
+  color: red;
+  `}
+`;
 
 const SPEED = 0.4; // in seconds
 
@@ -53,42 +116,3 @@ const Label = styled.label`
   }
   ${p => p.hasValue && `top: -2px;`}
 `;
-
-function Input({ type, label, name, value, onChange, ...props }) {
-  const color = useSelector(getPrimaryColor);
-
-  const [inputValue, setInputValue] = useState(value);
-
-  useEffect(() => {
-    onChange({ target: { name, value: inputValue } });
-  }, [name, inputValue, onChange]);
-
-  const isTextarea = type === "textarea";
-
-  return (
-    <InputContainer color={color} style={props.style} textarea={isTextarea}>
-      <StyledInput
-        {...(isTextarea ? { as: "textarea" } : {})}
-        style={props.inputStyles}
-        placeholder={label}
-        color={color}
-        type={type}
-        name={name}
-        id={name}
-        value={inputValue}
-        onChange={e => setInputValue(e.target.value)}
-      />
-      <LabelContainer>
-        <Label color={color} hasValue={value}>
-          {label}
-        </Label>
-      </LabelContainer>
-    </InputContainer>
-  );
-}
-
-export default Input;
-
-Input.defaultProps = {
-  onChange: value => {},
-};

@@ -1,16 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-import Input from "./Input";
-
-export const Error = styled.p`
-  white-space: pre-line;
-  ${({ discreet = false }) =>
-    !discreet &&
-    `  
-  font-size: 0.75rem;
-  color: red;
-  `}
-`;
+import Input, { Error } from "./Input";
 
 function InputWithError({ error, ...props }) {
   return (

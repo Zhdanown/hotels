@@ -9,7 +9,7 @@ import ColumnHeader from "../components/ColumnHeader";
 
 import { getRoomLoadError, getRooms, getExtraServices } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
-import { Error } from "../components/InputWithError";
+import { Error } from "../components/Input";
 import ExtraService from "./ExtraService";
 import produce from "immer";
 
