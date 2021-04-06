@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Guests from "./Guests";
 import DateRangePicker from "./DateRangePicker";
@@ -10,14 +10,17 @@ import FloatingButton from "../components/FloatingButton";
 import { searchRooms } from "../rooms/roomsReducer";
 import LayoutContext from "../Layout/LayoutContext";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
+import { getIsShowPromoCode } from "../redux/hotelConfig";
 
 function Step1() {
+  const IsShowPromoCode = useSelector(getIsShowPromoCode);
+
   return (
     <>
       <ColumnHeader>Параметры бронирования</ColumnHeader>
       <Guests />
       <DateRangePicker />
-      <Promocode />
+      {IsShowPromoCode ? <Promocode /> : null}
       <SearchRoomButton />
     </>
   );
