@@ -52,6 +52,7 @@ export const getConfigId = state => getConfig(state).id;
 export const getHotelPms = state => getConfig(state).pms_type;
 export const getConfigLoading = state => state.configLoading;
 export const getConfigError = state => state.configError;
+export const getIsShowPromoCode = state => getConfig(state).promo_code;
 export const getIsShowNavbar = state =>
   getConfig(state).hotel_style_config.show_header;
 export const getHotelName = state => getConfig(state).name;
