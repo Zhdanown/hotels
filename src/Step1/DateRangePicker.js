@@ -4,9 +4,9 @@ import Litepicker from "litepicker";
 import styled, { createGlobalStyle } from "styled-components";
 import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
 import { changeParams, getParams } from "../redux/booking";
-import { hexToRgb, withOpacity } from "../hexToRgb";
+import { hexToRgb, withOpacity } from "../utils/colorHelpers";
 import Input from "../components/Input";
-import { stringToDate } from "../utils";
+import { stringToDate } from "../utils/dateHelpers";
 
 const CalendarTheme = createGlobalStyle`
   :root {

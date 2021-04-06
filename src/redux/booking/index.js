@@ -4,7 +4,7 @@ import {
   calculateNightsCount,
   persistDateStringFormat,
   isNotLater,
-} from "../../utils";
+} from "../../utils/dateHelpers";
 
 export const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 export const SUBMIT_ORDER = "booking/SUBMIT_ORDER";

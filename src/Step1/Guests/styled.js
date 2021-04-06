@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { hexToRgb, withOpacity } from "../../hexToRgb";
+import { hexToRgb, withOpacity } from "../../utils/colorHelpers";
 import { Centered } from "../../components/Centered";
 
 export const StyledRoom = styled.section`
@@ -50,6 +50,8 @@ export const CounterButton = styled.button`
   align-items: center;
 
   &:hover {
-    background: rgba(${props => withOpacity(hexToRgb(props.primaryColor), 0.3)});
+    background: rgba(
+      ${props => withOpacity(hexToRgb(props.primaryColor), 0.3)}
+    );
   }
 `;
