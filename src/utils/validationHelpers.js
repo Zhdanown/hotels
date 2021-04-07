@@ -32,3 +32,9 @@ export function mapServerErrors(serverErrors) {
     return acc;
   }, {});
 }
+
+export function filterFalsyObjectKeys(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value)
+  );
+}
