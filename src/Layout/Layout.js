@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import LayoutDesktop from "./Desktop";
@@ -9,8 +9,14 @@ import { getIsShowNavbar, getHotelName } from "../redux/hotelConfig";
 
 function Layout({ children }) {
   const isShowNavbar = useSelector(getIsShowNavbar);
-  document.title = useSelector(getHotelName);
+  const hotelName = useSelector(getHotelName);
   const [, , isDesktop] = useWindowWidth();
+
+  useEffect(()=> {
+    if (hotelName) {
+      document.title = hotelName;
+    }      
+  }, [hotelName]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
