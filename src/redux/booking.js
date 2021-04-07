@@ -21,7 +21,7 @@ const initialState = {
     rooms_count: 0,
     childs: [],
     packages: [],
-    notes: [],
+    comment: "",
     promo_code: null,
   },
   isBooking: false,
@@ -111,11 +111,11 @@ function* getParamsAndRequestRoom(action) {
 
 async function requestRoom(bookingInfo) {
   const { guest, payment } = bookingInfo;
-  const { adults, childs, packages } = bookingInfo;
+  const { adults, childs, rooms_count } = bookingInfo;
+  const { hotel_id, pms_type } = bookingInfo;
   const { room_code, rate_code } = bookingInfo;
   const { arrival, departure } = bookingInfo;
-  const { rooms_count } = bookingInfo;
-  const { hotel_id, pms_type } = bookingInfo;
+  const { packages, notes } = bookingInfo;
 
   const url = `api/v1/${pms_type}/reservation/${hotel_id}/`;
 
@@ -136,6 +136,7 @@ async function requestRoom(bookingInfo) {
       childs,
       packages,
       payment,
+      notes,
     },
   };
 
@@ -164,19 +165,15 @@ async function requestRoom(bookingInfo) {
 
 export const getParams = state => state.reservation.params;
 export const getBookingInfo = state => {
-  const { room, rate, rooms_count } = getParams(state);
-  const { arrival, departure } = getParams(state);
-  const { guest, adults, childs, packages } = getParams(state);
+  const params = getParams(state);
+  const { room, rate, childs, notes, packages } = params;
   return {
-    guest,
+    ...params,
     room_code: room.room_code,
     rate_code: rate.rate_code,
-    rooms_count,
-    adults,
     childs: childs.filter(x => x.count),
-    packages,
-    arrival,
-    departure,
+    notes: [{ code: "RES", text: notes }],
+    packages: packages.map(x => ({ code: x.code, price: x.price })),
   };
 };
 export const getBookingState = state => state.reservation.isBooking;

@@ -9,7 +9,7 @@ import { getNightsCount } from "../redux/booking";
 import { getServiceCost } from "./roomsReducer";
 
 function ExtraService(props) {
-  const { id, name, short_description, long_description, img } = props;
+  const { id, name, short_description, long_description, img, code } = props;
 
   const nightsCount = useSelector(getNightsCount);
   const { package_price: price, time_period } = props;
@@ -23,6 +23,7 @@ function ExtraService(props) {
   const onServiceSelect = selected => {
     props.onSelect({
       id,
+      code,
       name,
       selected,
       price,
