@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Input from "../components/Input";
-import { changeParams } from "../redux/booking";
+import { changeParams, getParams } from "../redux/booking";
 
 export default function Promocode() {
+  const params = useSelector(getParams);
   const dispatch = useDispatch();
-  const [promo_code, setPromocode] = useState("");
+  const [promo_code, setPromocode] = useState(params.promo_code.toUpperCase());
 
   useEffect(() => {
     dispatch(changeParams({ promo_code }));
@@ -17,7 +18,7 @@ export default function Promocode() {
       label="Промокод"
       name="promocode"
       value={promo_code}
-      onChange={({ target }) => setPromocode(target.value)}
+      onChange={({ target }) => setPromocode(target.value.toUpperCase())}
       style={{ marginBottom: "1rem" }}
     />
   );

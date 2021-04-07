@@ -1,7 +1,18 @@
 export const stringToDate = string => {
-  // expects a string in the next format: "dd.mm.yyyy"
-  let [date, month, year] = string.split(".");
+  const [date, month, year] = parseString(string);
   return new Date(year, month - 1, date);
+
+  function parseString(string) {
+    if (/^\d{2}\.\d{2}\.\d{4}$/.test(string)) {
+      // dd.mm.yyyy
+      return string.split(".");
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(string)) {
+      // yyyy-mm-dd
+      return string.split("-").reverse();
+    } else {
+      throw Error("unknown dateString format");
+    }
+  }
 };
 
 export const calculateNightsCount = (date1, date2) => {

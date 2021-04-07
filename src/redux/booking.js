@@ -10,15 +10,21 @@ const IS_BOOKING = "booking/IS_BOOKING";
 const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
 const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
 
+const [arrival, departure] = (function () {
+  const arrival = new Date();
+  const departure = new Date(new Date().setDate(arrival.getDate() + 1));
+  return [arrival.toLocaleDateString(), departure.toLocaleDateString()];
+})();
+
 const initialState = {
   params: {
     guest: {},
     room: null,
     rate: null,
-    arrival: null,
-    departure: null,
+    arrival,
+    departure,
     adults: 0,
-    rooms_count: 0,
+    rooms_count: 1,
     childs: [],
     packages: [],
     comment: "",
