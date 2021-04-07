@@ -5,10 +5,11 @@ import LayoutDesktop from "./Desktop";
 import LayoutMobile from "./Mobile";
 import Navbar from "./Navbar/index";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { getIsShowNavbar } from "../redux/hotelConfig";
+import { getIsShowNavbar, getHotelName } from "../redux/hotelConfig";
 
 function Layout({ children }) {
   const isShowNavbar = useSelector(getIsShowNavbar);
+  document.title = useSelector(getHotelName);
   const [, , isDesktop] = useWindowWidth();
 
   return (
