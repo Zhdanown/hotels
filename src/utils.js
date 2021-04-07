@@ -20,3 +20,18 @@ export const calculateNightsCount = (date1, date2) => {
   const nightsCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
   return nightsCount;
 };
+
+export const persistDateStringFormat = dateString => {
+  const date = stringToDate(dateString);
+  return date.toLocaleDateString();
+};
+
+export const isNotLater = (dateString1, dateString2) =>
+  +stringToDate(dateString1) <= +stringToDate(dateString2);
+
+/*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
+Date.prototype.addDays = function (days = 1) {
+  let date = new Date(this);
+  date.setDate(date.getDate() + days);
+  return date;
+};

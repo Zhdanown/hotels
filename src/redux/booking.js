@@ -2,7 +2,12 @@ import { takeEvery, call, select, put } from "redux-saga/effects";
 import produce from "immer";
 import api, { getAuthHeaderIfTokenPresent } from "./api";
 import { getConfigId, getHotelPms } from "./hotelConfig";
-import { stringToDate, calculateNightsCount } from "../utils";
+import {
+  stringToDate,
+  calculateNightsCount,
+  persistDateStringFormat,
+  isNotLater,
+} from "../utils";
 
 const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
@@ -12,7 +17,7 @@ const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
 
 const [arrival, departure] = (function () {
   const arrival = new Date();
-  const departure = new Date(new Date().setDate(arrival.getDate() + 1));
+  const departure = new Date().addDays(1);
   return [arrival.toLocaleDateString(), departure.toLocaleDateString()];
 })();
 
@@ -38,7 +43,7 @@ const initialState = {
 const reducer = produce((draft, action) => {
   switch (action.type) {
     case CHANGE_PARAMS:
-      draft.params = { ...draft.params, ...action.payload };
+      handleChangeOfParams(draft, action);
       return;
 
     case IS_BOOKING:
@@ -59,6 +64,41 @@ const reducer = produce((draft, action) => {
 }, initialState);
 
 export default reducer;
+
+function handleChangeOfParams(draft, action) {
+  for (let key in action.payload) {
+    if (key === "arrival" || key === "departure") {
+      action.payload[key] = persistDateStringFormat(action.payload[key]);
+    }
+    if (key === "arrival") {
+      action.payload[key] = checkIfArrivalIsExpired(action.payload[key]);
+    }
+    if (key === "departure") {
+      action.payload[key] = checkDeparture(
+        action.payload[key],
+        draft.params.arrival
+      );
+    }
+  }
+  draft.params = { ...draft.params, ...action.payload };
+}
+
+function checkIfArrivalIsExpired(dateString) {
+  const date = stringToDate(dateString);
+  if (+date < +new Date()) {
+    return new Date().toLocaleDateString();
+  } else {
+    return date.toLocaleDateString();
+  }
+}
+
+function checkDeparture(departure, arrival) {
+  if (isNotLater(departure, arrival)) {
+    return new Date().addDays(1).toLocaleDateString();
+  } else {
+    return departure;
+  }
+}
 
 export function changeParams(payload) {
   return { type: CHANGE_PARAMS, payload };
