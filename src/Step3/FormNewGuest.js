@@ -54,12 +54,7 @@ function Form() {
   return (
     <FormikForm>
       {userFields.map(field => (
-        <FormikInput
-          key={field.name}
-          label={field.label}
-          name={field.name}
-          type={field.type}
-        />
+        <FormikInput key={field.name} {...field} />
       ))}
 
       {isPending ? (

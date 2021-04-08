@@ -4,8 +4,9 @@ import styled from "styled-components";
 import { useField } from "formik";
 
 import { getPrimaryColor } from "../redux/hotelConfig";
+import ReactInputMask from "react-input-mask";
 
-function Input({ type, label, name, value, onChange, onBlur, ...props }) {
+function Input({ type, label, name, value, onChange, onBlur, mask, ...props }) {
   const color = useSelector(getPrimaryColor);
 
   const [inputValue, setInputValue] = useState(value);
@@ -29,6 +30,7 @@ function Input({ type, label, name, value, onChange, onBlur, ...props }) {
         value={inputValue}
         onBlur={onBlur}
         onChange={e => setInputValue(e.target.value)}
+        {...(mask ? { mask } : {})}
       />
       <LabelContainer>
         <Label color={color} hasValue={value}>
@@ -43,6 +45,7 @@ export default Input;
 
 Input.defaultProps = {
   onChange: value => {},
+  mask: null,
 };
 
 export const FormikInput = props => {
@@ -82,7 +85,7 @@ const LabelContainer = styled.div`
   height: 1rem;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(ReactInputMask)`
   width: 100%;
   height: 100%;
   border: 1px solid ${p => p.color};

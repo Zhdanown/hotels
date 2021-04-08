@@ -64,12 +64,7 @@ function FormShowingServerErrors({ onValuesChange }) {
   return (
     <FormikForm>
       {fields.map(field => (
-        <FormikInput
-          key={field.name}
-          type={field.type}
-          label={field.label}
-          name={field.name}
-        />
+        <FormikInput key={field.name} {...field} />
       ))}
     </FormikForm>
   );
