@@ -18,6 +18,8 @@ import { LayoutContextProvider } from "./Layout/LayoutContext";
 import history from "./history";
 import AuthRoutes from "./Auth/AuthRoutes";
 import { startSession } from "./Auth/authReducer";
+import { useQueryParams } from "./useQueryParams";
+import { changeParams } from "./redux/booking";
 
 function ConfigLoader({ children }) {
   let { slug } = useParams();
@@ -62,6 +64,11 @@ export default App;
 
 function App() {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
+
+  useEffect(() => {
+    dispatch(changeParams(queryParams));
+  }, [queryParams, dispatch]);
 
   useEffect(() => {
     dispatch(startSession());
