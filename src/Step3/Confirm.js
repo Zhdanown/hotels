@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import { getBookingState, getBookingResponse } from "../redux/booking";
-import { getServicesAndRulesFileReference } from "../redux/hotelConfig";
+import { getRulesAndServicesFileReference } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
 import FormNewGuest from "./FormNewGuest";
 import FormNoRegistration from "./FormNoRegistration";
@@ -42,7 +42,7 @@ function Confirm() {
   const dispatch = useDispatch();
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
-  const rulesAndServiceFile = useSelector(getServicesAndRulesFileReference);
+  const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
   const user = useSelector(getUser);
 
   const [modal, setModal] = useState(false);
@@ -119,7 +119,7 @@ function Confirm() {
         <OrderSummary />
 
         <Conditions column>
-          <Link href={rulesAndServiceFile} target="_blank" underlined>
+          <Link href={rulesAndServicesFile} target="_blank" underlined>
             Правила и услуги
           </Link>
         </Conditions>
