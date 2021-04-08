@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Switch, Redirect, useRouteMatch, Route } from "react-router-dom";
+import { Switch, useRouteMatch, Route } from "react-router-dom";
 import { getBookingResponse } from "../redux/booking";
 import Confirm from "./Confirm";
 import Success from "./Success";
@@ -8,7 +8,7 @@ import Success from "./Success";
 function Step3() {
   const bookingResponse = useSelector(getBookingResponse);
 
-  let { path, url } = useRouteMatch();
+  let { path } = useRouteMatch();
 
   return (
     <>
