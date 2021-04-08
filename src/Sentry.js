@@ -2,8 +2,8 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
 Sentry.init({
-  dsn:
-    "https://9824a8145e724ab582eb2947fbc96d29@o474413.ingest.sentry.io/5515565",
+  dsn: "https://93a43fdf79184bd4bb45f648a7112f90@o507234.ingest.sentry.io/5710625",
   integrations: [new Integrations.BrowserTracing()],
+  
   tracesSampleRate: 1.0,
 });

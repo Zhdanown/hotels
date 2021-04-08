@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Litepicker from "litepicker";
 import styled, { createGlobalStyle } from "styled-components";
 import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
-import { changeParams } from "../redux/booking";
+import { changeParams, getParams } from "../redux/booking";
 import { hexToRgb, withOpacity } from "../hexToRgb";
 import Input from "../components/Input";
+import { stringToDate } from "../utils";
 
 const CalendarTheme = createGlobalStyle`
   :root {
@@ -33,9 +34,11 @@ const DatePickerContainer = styled.div`
 `;
 
 function DateRangePicker() {
-  const start = new Date();
-  const end = new Date(new Date().setDate(start.getDate() + 1));
-  const [range, setRange] = useState({ start, end });
+  const { arrival, departure } = useSelector(getParams);
+  const [range, setRange] = useState({
+    start: stringToDate(arrival),
+    end: stringToDate(departure),
+  });
 
   const dispatch = useDispatch();
   const primaryColor = useSelector(getPrimaryColor);

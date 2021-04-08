@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
-import { getBookingState, getBookingResponse } from "../redux/booking";
+import {
+  getBookingState,
+  getBookingResponse,
+  getParams,
+} from "../redux/booking";
 import { getRulesAndServicesFileReference } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
 import FormNewGuest from "./FormNewGuest";
@@ -50,16 +54,15 @@ function Confirm() {
 
   const [guest, setGuest] = useState({
     username: "",
-    first_name: "John",
-    last_name: "McClane",
+    first_name: "",
+    last_name: "",
     middle_name: "",
-    email: "die@hard.com",
-    phone: "555-911",
+    email: "",
+    phone: "",
     date_of_birth: null,
     is_hotel_guest: true,
     password: "",
     password_confirm: "",
-    comment: "",
   });
 
   const onGuestChange = useCallback(({ target }) => {
@@ -107,15 +110,7 @@ function Confirm() {
           />
         )}
 
-        <Input
-          type="textarea"
-          label="Комментарий к заказу"
-          name="comment"
-          value={guest.comment}
-          onChange={onGuestChange}
-          style={{ marginTop: "2rem" }}
-        />
-
+        <CommentField />
         <OrderSummary />
 
         <Conditions column>
@@ -156,3 +151,24 @@ function Confirm() {
 }
 
 export default Confirm;
+
+function CommentField() {
+  const params = useSelector(getParams);
+  const [comment, setComment] = useState(params.comment);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(changeParams({ comment }));
+  }, [comment, dispatch]);
+
+  return (
+    <Input
+      type="textarea"
+      label="Комментарий к заказу"
+      name="comment"
+      value={comment}
+      onChange={({ target }) => setComment(target.value)}
+      style={{ marginTop: "2rem" }}
+    />
+  );
+}
