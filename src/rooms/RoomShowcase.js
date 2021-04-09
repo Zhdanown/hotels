@@ -32,6 +32,8 @@ export default function RoomShowcase({ room, onSelect }) {
 
   const [isGalleryOpen, toggleGallery] = useState(false);
 
+  const pricePrefix = rates.length > 1 ? "от" : null;
+
   return (
     <StyledRoomShowcase bgColor={primaryColor}>
       <ImageGallery
@@ -46,7 +48,12 @@ export default function RoomShowcase({ room, onSelect }) {
         </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
-          <Price price={min_price} oldPrice={original_price} />
+
+          <Price
+            price={min_price}
+            oldPrice={original_price}
+            prefix={pricePrefix}
+          />
         </TitleSection>
       </ImagePreview>
 
@@ -70,9 +77,9 @@ export default function RoomShowcase({ room, onSelect }) {
 
 function Rates({ rates, onRateSelect }) {
   //sort rates by price from most expensive to cheapest
-  rates.sort((a, b) => b.total_price - a.total_price);
+  const sortedRates = [...rates].sort((a, b) => b.total_price - a.total_price);
 
-  return rates.length > 1 ? (
+  return sortedRates.length > 1 ? (
     <Accordion
       renderTitle={(toggle, open) => (
         <Button small onClick={toggle} style={{ margin: ".5rem" }}>
@@ -81,12 +88,16 @@ function Rates({ rates, onRateSelect }) {
         </Button>
       )}
     >
-      {rates.map(rate => (
+      {sortedRates.map(rate => (
         <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
       ))}
     </Accordion>
   ) : (
-    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
+    <RoomRate
+      key={sortedRates[0].rate_code}
+      rate={rates[0]}
+      onClick={onRateSelect}
+    />
   );
 }
 
