@@ -32,6 +32,8 @@ export default function RoomShowcase({ room, onSelect }) {
 
   const [isGalleryOpen, toggleGallery] = useState(false);
 
+  const pricePrefix = rates.length > 1 ? "от" : null;
+
   return (
     <StyledRoomShowcase bgColor={primaryColor}>
       <ImageGallery
@@ -46,7 +48,12 @@ export default function RoomShowcase({ room, onSelect }) {
         </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
-          <Price price={min_price} oldPrice={original_price} />
+
+          <Price
+            price={min_price}
+            oldPrice={original_price}
+            prefix={pricePrefix}
+          />
         </TitleSection>
       </ImagePreview>
 
