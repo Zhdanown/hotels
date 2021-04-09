@@ -70,9 +70,9 @@ export default function RoomShowcase({ room, onSelect }) {
 
 function Rates({ rates, onRateSelect }) {
   //sort rates by price from most expensive to cheapest
-  rates.sort((a, b) => b.total_price - a.total_price);
+  const sortedRates = [...rates].sort((a, b) => b.total_price - a.total_price);
 
-  return rates.length > 1 ? (
+  return sortedRates.length > 1 ? (
     <Accordion
       renderTitle={(toggle, open) => (
         <Button small onClick={toggle} style={{ margin: ".5rem" }}>
@@ -81,12 +81,16 @@ function Rates({ rates, onRateSelect }) {
         </Button>
       )}
     >
-      {rates.map(rate => (
+      {sortedRates.map(rate => (
         <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
       ))}
     </Accordion>
   ) : (
-    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
+    <RoomRate
+      key={sortedRates[0].rate_code}
+      rate={rates[0]}
+      onClick={onRateSelect}
+    />
   );
 }
 
