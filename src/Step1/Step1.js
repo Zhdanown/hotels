@@ -7,7 +7,7 @@ import Promocode from "./Promocode";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 import FloatingButton from "../components/FloatingButton";
-import { searchRooms } from "../rooms/roomsReducer";
+import { searchRooms } from "../Step2/roomsReducer";
 import LayoutContext from "../Layout/LayoutContext";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { getIsShowPromoCode } from "../redux/hotelConfig";

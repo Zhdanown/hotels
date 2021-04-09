@@ -1,5 +1,5 @@
 import { all } from "redux-saga/effects";
-import roomsSaga from "../rooms/roomsSaga";
+import roomsSaga from "../Step2/roomsSaga";
 import { bookingSaga } from "./booking/bookingSaga";
 import authSaga from "../Auth/sagas/authSaga";
 

@@ -2,7 +2,7 @@ import React, { createContext } from "react";
 import { useState, useEffect, useCallback, useReducer } from "react";
 import { useSelector } from "react-redux";
 
-import { getRoomsLoadState } from "../rooms/roomsReducer";
+import { getRoomsLoadState } from "../Step2/roomsReducer";
 import store from "../redux/store";
 
 const LayoutContext = createContext();
