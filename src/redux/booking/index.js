@@ -121,18 +121,6 @@ export function setBookingError(error) {
 }
 
 export const getParams = state => state.reservation.params;
-export const getBookingInfo = state => {
-  const params = getParams(state);
-  const { room, rate, childs, notes, packages } = params;
-  return {
-    ...params,
-    room_code: room.room_code,
-    rate_code: rate.rate_code,
-    childs: childs.filter(x => x.count),
-    notes: [{ code: "RES", text: notes }],
-    packages: packages.map(x => ({ code: x.code, price: x.price })),
-  };
-};
 export const getBookingState = state => state.reservation.isBooking;
 export const getBookingResponse = state => state.reservation.response;
 export const getNightsCount = state => {
