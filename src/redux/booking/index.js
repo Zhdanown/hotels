@@ -25,7 +25,7 @@ const initialState = {
     rate: null,
     arrival,
     departure,
-    adults: 0,
+    adults: 2,
     rooms_count: 1,
     childs: [],
     packages: [],
