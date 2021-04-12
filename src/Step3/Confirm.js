@@ -17,9 +17,7 @@ import Link from "../components/Link";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
-import FloatingButton from "../components/FloatingButton";
 import LayoutContext from "../Layout/LayoutContext";
-import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
@@ -89,7 +87,6 @@ function Confirm() {
   const goBack = () => {
     setStep(step => --step);
   };
-  const [, , isDesktop] = useWindowWidth();
 
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
@@ -132,15 +129,9 @@ function Confirm() {
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
-        {isDesktop ? (
-          <Button block onClick={onSubmit} disabled={!consent}>
-            Продолжить
-          </Button>
-        ) : (
-          <FloatingButton onClick={onSubmit} disabled={!consent}>
-            {consent ? "Продолжить" : "Необходимо согласие"}
-          </FloatingButton>
-        )}
+        <Button block onClick={onSubmit} disabled={!consent}>
+          {consent ? "Продолжить" : "Необходимо согласие"}
+        </Button>
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
