@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, Form } from "formik";
+import { Formik, Form as FormikForm } from "formik";
+import { Link } from "react-router-dom";
 
+import { Form, FormTitle, Greetings } from "./components";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
 import { Error } from "../components/Input";
 import { FormikInput } from "../components/Input";
+import CustomLink from "../components/Link";
+import { Centered } from "../components/Centered";
 import { getIsLoginPending, getLoginError, getUser } from "./authReducer";
 import { login } from "./authReducer";
 
@@ -37,7 +41,12 @@ export default function LoginForm({ close }) {
   }, [user, close]);
 
   if (user) {
-    return <Greetings name={user.first_name} />;
+    return (
+      <Greetings>
+        C Возвращением, <br />
+        {user.first_name}!
+      </Greetings>
+    );
   }
 
   return (
@@ -52,8 +61,8 @@ export default function LoginForm({ close }) {
         setSubmitting(false);
       }}
     >
-      <Form style={{ width: 250 }}>
-        <h3 className="is-size-4 has-text-centered">Авторизация</h3>
+      <Form as={FormikForm}>
+        <FormTitle>Авторизация</FormTitle>
 
         <FormikInput label="Логин" name="username" type="text" />
         <FormikInput label="Пароль" name="password" type="password" />
@@ -73,14 +82,12 @@ export default function LoginForm({ close }) {
             Войти
           </Button>
         )}
+        <Centered style={{ marginTop: "1rem" }}>
+          <CustomLink as={Link} to={`/welna_kaluga/register`}>
+            зарегистрироваться
+          </CustomLink>
+        </Centered>
       </Form>
     </Formik>
   );
 }
-
-const Greetings = ({ name }) => (
-  <h3 className="has-text-centered is-size-4">
-    Добро пожаловать, <br />
-    {name}!
-  </h3>
-);

@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Form, FormTitle, Greetings } from "./components";
 import Button from "../components/Button";
-import userFields from "./userFields";
+import userFields from "../Step3/userFields";
 import { Formik, Form as FormikForm, useFormikContext } from "formik";
 import Loader from "../components/Loader";
 import {
   getIsRegistrationPending,
   getRegisterError,
-} from "../Auth/authReducer";
-import { register } from "../Auth/authReducer";
+  getUser,
+} from "./authReducer";
+import { register } from "./authReducer";
 import { FormikInput } from "../components/Input";
 import {
   usernameIsValid,
@@ -18,9 +20,30 @@ import {
   passwordIsInvalid,
   mapServerErrors,
 } from "../utils/validationHelpers";
+import { Centered } from "../components/Centered";
+import { Link } from "react-router-dom";
+import CustomLink from "../components/Link";
 
-function FormNewGuest({ guest }) {
+function RegisterForm({ guest, close }) {
   const dispatch = useDispatch();
+  const user = useSelector(getUser);
+
+  useEffect(() => {
+    let timeout;
+    if (user) {
+      timeout = setTimeout(close, 1500);
+    }
+    return () => clearTimeout(timeout);
+  }, [user, close]);
+
+  if (user) {
+    return (
+      <Greetings>
+        Добро пожаловать, <br />
+        {user.first_name}!
+      </Greetings>
+    );
+  }
 
   return (
     <Formik
@@ -33,14 +56,14 @@ function FormNewGuest({ guest }) {
         setSubmitting(false);
       }}
     >
-      <Form />
+      <FormWithServerErrors />
     </Formik>
   );
 }
 
-export default FormNewGuest;
+export default RegisterForm;
 
-function Form() {
+function FormWithServerErrors() {
   const registerError = useSelector(getRegisterError);
   const isPending = useSelector(getIsRegistrationPending);
   const { setErrors } = useFormikContext();
@@ -52,7 +75,9 @@ function Form() {
   }, [registerError, setErrors]);
 
   return (
-    <FormikForm>
+    <Form as={FormikForm}>
+      <FormTitle>Регистрация</FormTitle>
+
       {userFields.map(field => (
         <FormikInput key={field.name} {...field} />
       ))}
@@ -65,7 +90,12 @@ function Form() {
       <Button block type="submit">
         Зарегистрироваться
       </Button>
-    </FormikForm>
+      <Centered style={{ marginTop: "1rem" }}>
+        <CustomLink as={Link} to={`/welna_kaluga/login`}>
+          Войти
+        </CustomLink>
+      </Centered>
+    </Form>
   );
 }
 

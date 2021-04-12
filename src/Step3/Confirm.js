@@ -9,10 +9,8 @@ import {
 } from "../redux/booking";
 import { getRulesAndServicesFileReference } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
-import FormNewGuest from "./FormNewGuest";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
-import Tabs from "../components/Tabs";
 import Link from "../components/Link";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
@@ -23,25 +21,11 @@ import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
 import { getUser } from "../Auth/authReducer";
 
-const forms = [
-  {
-    id: "new-guest",
-    label: "Новый гость",
-    render: props => <FormNewGuest {...props} />,
-  },
-  {
-    id: "no-registration",
-    label: "Без регистрации",
-    render: props => <FormNoRegistration {...props} />,
-  },
-];
-
 const Conditions = styled(Centered)`
   margin: 1rem 0;
 `;
 
 function Confirm() {
-  const dispatch = useDispatch();
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
   const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
@@ -70,9 +54,7 @@ function Confirm() {
     }));
   }, []);
 
-  const onSubmit = e => {
-    e.preventDefault();
-    dispatch(changeParams({ guest }));
+  const onSubmit = () => {
     setModal(true);
   };
 
@@ -98,13 +80,18 @@ function Confirm() {
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
 
         {!user && (
-          <Tabs
-            tabs={forms}
-            preSelected={0}
-            guest={guest}
-            onSubmit={onSubmit}
-            onGuestChange={onGuestChange}
-          />
+          <>
+            <label htmlFor="">Забронировать без регистрации</label>
+            <FormNoRegistration
+              guest={guest}
+              onSubmit={onSubmit}
+              onGuestChange={onGuestChange}
+            />
+            <div>
+              <label htmlFor="">Или</label>
+              <Button block>Зарегистрироваться</Button>
+            </div>
+          </>
         )}
 
         <CommentField />
@@ -129,7 +116,13 @@ function Confirm() {
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
-        <Button block onClick={onSubmit} disabled={!consent}>
+        <Button
+          block
+          onClick={onSubmit}
+          disabled={!consent}
+          type="submit"
+          form="no-registration"
+        >
           {consent ? "Продолжить" : "Необходимо согласие"}
         </Button>
 
