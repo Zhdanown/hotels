@@ -17,44 +17,8 @@ import { Error } from "../components/Input";
 import ExtraService from "./ExtraService";
 import produce from "immer";
 import { Centered, Justified } from "../components/Centered";
-
-function Rooms({ onSelect, goBack }) {
-  const rooms = useSelector(getRooms);
-  const isLoadingRooms = useSelector(getRoomsLoadState);
-  const roomsLoadError = useSelector(getRoomLoadError);
-
-  if (roomsLoadError) {
-    return (
-      <FallbackMessage goBack={goBack}>
-        <Error>{roomsLoadError}</Error>
-      </FallbackMessage>
-    );
-  }
-  if (!rooms.length && !isLoadingRooms) {
-    return (
-      <FallbackMessage goBack={goBack}>
-        По заданным параметрам ничего не найдено
-      </FallbackMessage>
-    );
-  }
-
-  if (rooms.length) {
-    return (
-      <div style={{ position: "relative" }}>
-        <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
-        {rooms.map(room => (
-          <RoomShowcase
-            key={room.id}
-            room={room}
-            onSelect={onSelect}
-          ></RoomShowcase>
-        ))}
-      </div>
-    );
-  }
-
-  return null;
-}
+import Loader, { LoaderWrapper } from "../components/Loader";
+import styled from "styled-components";
 
 function RoomsWithExtraServices() {
   const extraServices = useSelector(getExtraServices);
@@ -148,6 +112,45 @@ function RoomsWithExtraServices() {
 
 export default RoomsWithExtraServices;
 
+function Rooms({ onSelect, goBack }) {
+  const rooms = useSelector(getRooms);
+  const isLoadingRooms = useSelector(getRoomsLoadState);
+  const roomsLoadError = useSelector(getRoomLoadError);
+
+  if (isLoadingRooms) {
+    return <LoadScreen />;
+  } else if (roomsLoadError) {
+    return (
+      <FallbackMessage goBack={goBack}>
+        <Error>{roomsLoadError}</Error>
+      </FallbackMessage>
+    );
+  } else if (!rooms.length && !isLoadingRooms) {
+    return (
+      <FallbackMessage goBack={goBack}>
+        По заданным параметрам ничего не найдено
+      </FallbackMessage>
+    );
+  }
+
+  if (rooms.length) {
+    return (
+      <div style={{ position: "relative" }}>
+        <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
+        {rooms.map(room => (
+          <RoomShowcase
+            key={room.id}
+            room={room}
+            onSelect={onSelect}
+          ></RoomShowcase>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+}
+
 function FallbackMessage({ goBack, children }) {
   return (
     <Centered column alignV="center">
@@ -158,3 +161,20 @@ function FallbackMessage({ goBack, children }) {
     </Centered>
   );
 }
+
+function LoadScreen() {
+  return (
+    <Centered column alignV="center">
+      <FallbackTitle>Загрузка номеров</FallbackTitle>
+      <LoaderWrapper>
+        <Loader />
+      </LoaderWrapper>
+    </Centered>
+  );
+}
+
+const FallbackTitle = styled(Justified)`
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+`;
