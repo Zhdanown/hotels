@@ -17,14 +17,13 @@ const Container = styled.div`
     top: 0;
   }
 `;
-
-function ColumnHeader({ children, goBack }) {
+const ColumnHeader = React.forwardRef(({ children, goBack }, ref) => {
   return (
-    <Container>
+    <Container ref={ref}>
       {goBack && <BackButton onClick={goBack}></BackButton>}
       {children}
     </Container>
   );
-}
+});
 
 export default ColumnHeader;

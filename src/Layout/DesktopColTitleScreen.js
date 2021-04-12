@@ -5,7 +5,7 @@ import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
 import Loader from "../components/Loader";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { SvgIcon } from "../rooms/RoomFeatures";
+import { SvgIcon } from "../Step2/RoomFeatures";
 import { ReactComponent as Beds } from "../assets/select_beds.svg";
 import { ReactComponent as CreditCards } from "../assets/credit_cards.svg";
 

@@ -42,10 +42,23 @@ function RoomsWithExtraServices() {
   const { setStep } = useContext(LayoutContext);
   const dispatch = useDispatch();
 
+  const headerRef = React.createRef();
+  const [scrolled, setScrolled] = useState(false);
+
   const continueBooking = () => {
     setStep(step => ++step);
     dispatch(changeParams(selectedRoomAndRate));
   };
+
+  useEffect(() => {
+    if (headerRef.current && !scrolled) {
+      headerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setScrolled(true);
+    }
+  }, [headerRef, scrolled]);
 
   const onSelect = data => {
     setSelected(data);
@@ -57,6 +70,7 @@ function RoomsWithExtraServices() {
 
   const cancelServices = () => {
     setSelected(null);
+    setScrolled(false);
   };
 
   const goStepBack = () => {
@@ -87,7 +101,7 @@ function RoomsWithExtraServices() {
   if (selectedRoomAndRate && extraServices.length) {
     return (
       <>
-        <ColumnHeader goBack={cancelServices}>
+        <ColumnHeader goBack={cancelServices} ref={headerRef}>
           Дополнительные услуги
         </ColumnHeader>
         <StyledServices>

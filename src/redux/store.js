@@ -5,7 +5,7 @@ import thunk from "redux-thunk";
 
 import reservationReducer from "./booking";
 import configReducer from "./hotelConfig";
-import roomsReducer from "../rooms/roomsReducer";
+import roomsReducer from "../Step2/roomsReducer";
 import authReducer from "../Auth/authReducer";
 import rootSaga from "./rootSaga";
 

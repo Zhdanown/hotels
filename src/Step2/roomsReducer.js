@@ -1,8 +1,8 @@
-export const REQUEST_ROOMS = "rooms/REQUEST_ROOMS";
-export const SET_ROOMS = "rooms/SET_ROOMS";
-export const SET_SERVICES = "rooms/SET_SERVICES";
-export const LOADING_ROOMS = "rooms/LOADING_ROOMS";
-export const SET_FETCH_ROOM_ERROR = "rooms/SET_FETCH_ROOM_ERROR";
+export const REQUEST_ROOMS = "Step2/REQUEST_ROOMS";
+export const SET_ROOMS = "Step2/SET_ROOMS";
+export const SET_SERVICES = "Step2/SET_SERVICES";
+export const LOADING_ROOMS = "Step2/LOADING_ROOMS";
+export const SET_FETCH_ROOM_ERROR = "Step2/SET_FETCH_ROOM_ERROR";
 
 const initialState = {
   rooms: [],
