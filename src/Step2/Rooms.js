@@ -19,11 +19,31 @@ import produce from "immer";
 import { Centered, Justified } from "../components/Centered";
 import Loader, { LoaderWrapper } from "../components/Loader";
 import styled from "styled-components";
+import Accordion, { Icon, Title } from "../components/Accordion";
+import { getPrimaryColor } from "../redux/hotelConfig";
 
 function RoomsWithExtraServices() {
   const extraServices = useSelector(getExtraServices);
   const [selectedRoomAndRate, setSelected] = useState(null);
   const [services, setServices] = useState([]);
+
+  const serivicesByCategories = [...extraServices]
+    .sort((a, b) => {
+      if (!a.category) {
+        return 1;
+      }
+      return -1;
+    })
+    .reduce((acc, service) => {
+      const { category } = service;
+
+      const newCategory = acc[category]
+        ? [...acc[category], service]
+        : [service];
+      acc = { ...acc, [category]: newCategory };
+
+      return acc;
+    }, {});
 
   const { setStep } = useContext(LayoutContext);
   const dispatch = useDispatch();
@@ -91,13 +111,21 @@ function RoomsWithExtraServices() {
           Дополнительные услуги
         </ColumnHeader>
         <div>
-          {extraServices.map(service => (
+          {Object.keys(serivicesByCategories).map((categoryName, i) => (
+            <ServiceCategory
+              key={i}
+              services={serivicesByCategories[categoryName]}
+              categoryName={categoryName}
+              updateSelectedServices={updateSelectedServices}
+            />
+          ))}
+          {/* {extraServices.map(service => (
             <ExtraService
               key={service.id}
               {...service}
               onSelect={updateSelectedServices}
             />
-          ))}
+          ))} */}
         </div>
         <div style={{ margin: "1rem 0" }}>
           <Button small onClick={continueBooking}>
@@ -111,6 +139,39 @@ function RoomsWithExtraServices() {
 }
 
 export default RoomsWithExtraServices;
+
+function ServiceCategory({ services, categoryName, updateSelectedServices }) {
+  const color = useSelector(getPrimaryColor);
+
+  if (!services) {
+    return null;
+  } else if (categoryName === "null") {
+    return services.map(service => (
+      <ExtraService
+        key={service.id}
+        {...service}
+        onSelect={updateSelectedServices}
+      />
+    ));
+  } else
+    return (
+      <Accordion
+        renderTitle={(toggle, open) => (
+          <Title onClick={toggle} color={color}>
+            {categoryName} <Icon open={open} />
+          </Title>
+        )}
+      >
+        {services.map(service => (
+          <ExtraService
+            key={service.id}
+            {...service}
+            onSelect={updateSelectedServices}
+          />
+        ))}
+      </Accordion>
+    );
+}
 
 function Rooms({ onSelect, goBack }) {
   const rooms = useSelector(getRooms);
