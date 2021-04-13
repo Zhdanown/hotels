@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Formik, Form as FormikForm, useFormikContext } from "formik";
 
-import { Form, FormTitle, Greetings } from "./components";
+import { AuthLink, Form, FormTitle, Greetings } from "./components";
 import Button from "../components/Button";
 import userFields from "../Step3/userFields";
-import { Formik, Form as FormikForm, useFormikContext } from "formik";
 import Loader from "../components/Loader";
+import { FormikInput } from "../components/Input";
 import {
   getIsRegistrationPending,
   getRegisterError,
   getUser,
 } from "./authReducer";
 import { register } from "./authReducer";
-import { FormikInput } from "../components/Input";
 import {
   usernameIsValid,
   emailIsValid,
@@ -20,9 +20,6 @@ import {
   passwordIsInvalid,
   mapServerErrors,
 } from "../utils/validationHelpers";
-import { Centered } from "../components/Centered";
-import { Link } from "react-router-dom";
-import CustomLink from "../components/Link";
 
 function RegisterForm({ guest, close }) {
   const dispatch = useDispatch();
@@ -90,11 +87,8 @@ function FormWithServerErrors() {
       <Button block type="submit">
         Зарегистрироваться
       </Button>
-      <Centered style={{ marginTop: "1rem" }}>
-        <CustomLink as={Link} to={`/welna_kaluga/login`}>
-          Войти
-        </CustomLink>
-      </Centered>
+
+      <AuthLink to="/login">Войти</AuthLink>
     </Form>
   );
 }

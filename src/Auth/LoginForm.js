@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form as FormikForm } from "formik";
-import { Link } from "react-router-dom";
 
-import { Form, FormTitle, Greetings } from "./components";
+import { AuthLink, Form, FormTitle, Greetings } from "./components";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
 import { Error } from "../components/Input";
 import { FormikInput } from "../components/Input";
-import CustomLink from "../components/Link";
-import { Centered } from "../components/Centered";
 import { getIsLoginPending, getLoginError, getUser } from "./authReducer";
 import { login } from "./authReducer";
 
@@ -82,11 +79,7 @@ export default function LoginForm({ close }) {
             Войти
           </Button>
         )}
-        <Centered style={{ marginTop: "1rem" }}>
-          <CustomLink as={Link} to={`/welna_kaluga/register`}>
-            зарегистрироваться
-          </CustomLink>
-        </Centered>
+        <AuthLink to="/register">зарегистрироваться</AuthLink>
       </Form>
     </Formik>
   );
