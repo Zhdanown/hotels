@@ -10,7 +10,6 @@ import {
   filterFalsyObjectKeys,
   mapServerErrors,
   phoneIsValid,
-  usernameIsValid,
 } from "../utils/validationHelpers";
 import { changeParams } from "../redux/booking";
 
@@ -21,7 +20,7 @@ function filterByFieldName(fields) {
 const fieldNames = ["first_name", "last_name", "email", "phone"];
 const fields = filterByFieldName(userFields);
 
-function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
+function FormNoRegistration({ guest, onSubmit }) {
   const dispatch = useDispatch();
 
   const onValuesChange = values => {
@@ -37,6 +36,11 @@ function FormNoRegistration({ guest, onSubmit, onGuestChange }) {
       validate={validate}
       handleChange={e => {
         console.log(e);
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        dispatch(changeParams({ values }));
+        onSubmit(values);
+        setSubmitting(false);
       }}
     >
       <FormShowingServerErrors onValuesChange={onValuesChange} />
@@ -62,7 +66,7 @@ function FormShowingServerErrors({ onValuesChange }) {
   }, [registerError, setErrors]);
 
   return (
-    <FormikForm>
+    <FormikForm id="no-registration">
       {fields.map(field => (
         <FormikInput key={field.name} {...field} />
       ))}
@@ -73,18 +77,12 @@ function FormShowingServerErrors({ onValuesChange }) {
 function validate(values) {
   const errors = {};
 
-  if (!values.username) {
-    errors.username = "Это поле не должно быть пустым";
-  } else if (!usernameIsValid(values.username)) {
-    errors.username = "Недопустимые символы";
-  }
   if (!values.first_name) {
     errors.first_name = "Это поле не должно быть пустым";
   }
   if (!values.last_name) {
     errors.last_name = "Это поле не должно быть пустым";
   }
-
   if (!values.email) {
     errors.email = "Это поле не должно быть пустым";
   } else if (!emailIsValid(values.email)) {

@@ -5,6 +5,8 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import Overlay from "../components/Overlay";
 
+import RegisterForm from "./RegisterForm";
+
 function AuthRoutes() {
   let { path } = useRouteMatch();
   const history = useHistory();
@@ -21,6 +23,12 @@ function AuthRoutes() {
       <Route path={`${path}/login`}>
         <Overlay close={closeOverlay}>
           <LoginForm close={closeOverlay} />
+        </Overlay>
+      </Route>
+
+      <Route path={`${path}/register`}>
+        <Overlay close={closeOverlay}>
+          <RegisterForm close={closeOverlay} />
         </Overlay>
       </Route>
     </Switch>

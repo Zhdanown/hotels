@@ -20,6 +20,7 @@ import AuthRoutes from "./Auth/AuthRoutes";
 import { startSession } from "./Auth/authReducer";
 import { useQueryParams } from "./useQueryParams";
 import { changeParams } from "./redux/booking";
+import { Toast } from "./components/Toast";
 
 function ConfigLoader({ children }) {
   let { slug } = useParams();
@@ -88,6 +89,7 @@ function App() {
             <AuthRoutes />
           </LayoutContextProvider>
         </ConfigLoader>
+        <Toast />
       </Route>
     </Router>
   );

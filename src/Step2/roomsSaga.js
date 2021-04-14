@@ -25,7 +25,7 @@ function* roomsSaga() {
 
   if (roomError || serviceError) {
     console.error(roomError || serviceError);
-    yield put(setFetchRoomsError("Не удалось загрузить данные"));
+    yield put(setFetchRoomsError("При загрузке данных произошла ошибка"));
   } else {
     yield put({ type: SET_ROOMS, payload: rooms });
     yield put({ type: SET_SERVICES, payload: services });

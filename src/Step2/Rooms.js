@@ -1,38 +1,24 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components";
 
 import LayoutContext from "../Layout/LayoutContext";
 import RoomShowcase from "./RoomShowcase";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
 
-import { getRoomLoadError, getRooms, getExtraServices } from "./roomsReducer";
+import {
+  getRoomLoadError,
+  getRooms,
+  getExtraServices,
+  getRoomsLoadState,
+} from "./roomsReducer";
 import { changeParams } from "../redux/booking";
 import { Error } from "../components/Input";
 import ExtraService from "./ExtraService";
 import produce from "immer";
-
-const StyledServices = styled.div``;
-
-function Rooms({ onSelect, goBack }) {
-  const rooms = useSelector(getRooms);
-  const roomsLoadError = useSelector(getRoomLoadError);
-
-  return (
-    <div style={{ position: "relative" }}>
-      <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
-      {rooms.map(room => (
-        <RoomShowcase
-          key={room.id}
-          room={room}
-          onSelect={onSelect}
-        ></RoomShowcase>
-      ))}
-      {roomsLoadError && <Error discreet>{roomsLoadError.message}</Error>}
-    </div>
-  );
-}
+import { Centered, Justified } from "../components/Centered";
+import Loader, { LoaderWrapper } from "../components/Loader";
+import styled from "styled-components";
 
 function RoomsWithExtraServices() {
   const extraServices = useSelector(getExtraServices);
@@ -104,7 +90,7 @@ function RoomsWithExtraServices() {
         <ColumnHeader goBack={cancelServices} ref={headerRef}>
           Дополнительные услуги
         </ColumnHeader>
-        <StyledServices>
+        <div>
           {extraServices.map(service => (
             <ExtraService
               key={service.id}
@@ -112,7 +98,7 @@ function RoomsWithExtraServices() {
               onSelect={updateSelectedServices}
             />
           ))}
-        </StyledServices>
+        </div>
         <div style={{ margin: "1rem 0" }}>
           <Button small onClick={continueBooking}>
             Продолжить бронирование
@@ -125,3 +111,70 @@ function RoomsWithExtraServices() {
 }
 
 export default RoomsWithExtraServices;
+
+function Rooms({ onSelect, goBack }) {
+  const rooms = useSelector(getRooms);
+  const isLoadingRooms = useSelector(getRoomsLoadState);
+  const roomsLoadError = useSelector(getRoomLoadError);
+
+  if (isLoadingRooms) {
+    return <LoadScreen />;
+  } else if (roomsLoadError) {
+    return (
+      <FallbackMessage goBack={goBack}>
+        <Error>{roomsLoadError}</Error>
+      </FallbackMessage>
+    );
+  } else if (!rooms.length && !isLoadingRooms) {
+    return (
+      <FallbackMessage goBack={goBack}>
+        По заданным параметрам ничего не найдено
+      </FallbackMessage>
+    );
+  }
+
+  if (rooms.length) {
+    return (
+      <div style={{ position: "relative" }}>
+        <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
+        {rooms.map(room => (
+          <RoomShowcase
+            key={room.id}
+            room={room}
+            onSelect={onSelect}
+          ></RoomShowcase>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+}
+
+function FallbackMessage({ goBack, children }) {
+  return (
+    <Centered column alignV="center">
+      <Justified style={{ textAlign: "center", marginBottom: "1rem" }}>
+        {children}
+      </Justified>
+      <Button onClick={goBack}>Изменить параметры поиска</Button>
+    </Centered>
+  );
+}
+
+function LoadScreen() {
+  return (
+    <Centered column alignV="center">
+      <FallbackTitle>Загрузка номеров</FallbackTitle>
+      <LoaderWrapper>
+        <Loader />
+      </LoaderWrapper>
+    </Centered>
+  );
+}
+
+const FallbackTitle = styled(Justified)`
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+`;
