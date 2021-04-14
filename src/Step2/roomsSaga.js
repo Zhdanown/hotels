@@ -54,7 +54,9 @@ function* fetchServices({ pms_type, hotel_id, ...params }) {
 }
 
 async function fetchWithParams(params, url) {
-  const { arrival, departure, adults, promo_code, childs } = params;
+  const { arrival, departure, adults, childs } = params;
+
+  const { promo_code, rooms_count: rooms } = params;
 
   if (!(arrival && departure && adults)) {
     throw Error("Unexpected search parameters");
@@ -70,6 +72,7 @@ async function fetchWithParams(params, url) {
       adults,
       childs: serializeChilds(childs),
       promo_code,
+      rooms,
     },
   };
 
