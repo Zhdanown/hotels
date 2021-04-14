@@ -5,6 +5,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { CaretDownFilled } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { getPrimaryColor } from "../redux/hotelConfig";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 const SPEED = 500;
 
@@ -43,6 +44,10 @@ const StyledTitle = styled.div`
   display: flex;
   align-items: center;
   transition: transform 0.2s;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
+  }
 
   &:hover {
     color: ${p => p.color};

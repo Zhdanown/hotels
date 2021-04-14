@@ -7,6 +7,7 @@ import Accordion, { Title, Icon } from "../components/Accordion";
 import Checkbox from "../components/Checkbox";
 import { getNightsCount } from "../redux/booking";
 import { getServiceCost } from "./roomsReducer";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 function ExtraService(props) {
   const { id, name, short_description, long_description, img, code } = props;
@@ -60,6 +61,11 @@ const PriceTag = styled.div`
 const PriceValue = styled.span`
   font-size: 1.2rem;
   line-height: 1.2rem;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 1rem;
+    line-height: 1rem;
+  }
 `;
 const NightsCount = styled.span`
   color: #aaa;
@@ -67,8 +73,12 @@ const NightsCount = styled.span`
 `;
 
 const StyledService = styled.article`
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   border-bottom: 1px solid #ccc;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    padding: 1rem 0.75rem;
+  }
 `;
 
 const HeaderSection = styled.section`
@@ -95,7 +105,7 @@ const ImageWrapper = styled.div`
   width: 100px;
   img {
     width: 100%;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
   }
 `;
 
@@ -108,8 +118,9 @@ const ShortDescription = styled.div`
 const BodySection = styled.section`
   display: flex;
 
-  @media screen and (max-width: 375px) {
+  @media (max-width: ${mediumMobileWidth}) {
     flex-direction: column;
+    font-size: 0.8rem;
 
     ${ImageWrapper} {
       width: 100%;
@@ -147,4 +158,8 @@ function LongDescription({ description }) {
 
 const Description = styled.p`
   text-align: justify;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 1rem;
+  }
 `;

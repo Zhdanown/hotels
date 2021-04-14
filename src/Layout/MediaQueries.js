@@ -57,3 +57,5 @@ export const ImagePreviewContainerQueries = `
     }
   }
 `;
+
+export const mediumMobileWidth = `375px`;

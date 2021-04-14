@@ -2,6 +2,7 @@ import { LeftOutlined } from "@ant-design/icons";
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 import { getPrimaryColor, getHoverColor } from "../redux/hotelConfig";
 
 const ColoredButton = styled.button`
@@ -37,6 +38,10 @@ const ColoredButton = styled.button`
   &:hover {
     color: white;
   }`}
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
+  }
 `;
 
 function Button({ children, onClick, disabled, ...props }) {

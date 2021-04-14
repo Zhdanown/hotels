@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import checkmark from "../assets/checkmark.svg";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 function Checkbox({ value, onChange, label }) {
   const color = useSelector(getPrimaryColor);
@@ -60,6 +61,7 @@ const ToggleLabel = styled.span`
 const CheckboxInput = styled.label`
   display: inline-flex;
   position: relative;
+  overflow: hidden;
 
   ${Input}:not(:disabled) ~ ${ToggleLabel} {
     cursor: pointer;
@@ -79,7 +81,6 @@ const CheckboxInput = styled.label`
     top: 50%;
     transform: translateY(-50%);
     left: 0;
-    z-index: 2;
   }
 
   ${Input}:checked ~ ${ToggleLabel}::after {
@@ -129,5 +130,9 @@ const CheckboxInput = styled.label`
   ${Input}:not(:disabled) ~ ${ToggleLabel}::after {
     will-change: background-color;
     transition: background-color 0.2s ease-out;
+  }
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
   }
 `;

@@ -10,8 +10,10 @@ import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import { Card } from "../components/styled";
 import Accordion, { Icon, Title } from "../components/Accordion";
-
-import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
+import {
+  ImagePreviewContainerQueries,
+  mediumMobileWidth,
+} from "../Layout/MediaQueries";
 import { getPrimaryColor } from "../redux/hotelConfig";
 
 export default function RoomShowcase({ room, onSelect }) {
@@ -66,8 +68,10 @@ export default function RoomShowcase({ room, onSelect }) {
             </Title>
           )}
         >
-          <HTMLParser html={short_description} />
-          <RoomFeatures />
+          <RoomDetails>
+            <HTMLParser html={short_description} />
+            <RoomFeatures />
+          </RoomDetails>
         </Accordion>
 
         <Rates rates={rates} onRateSelect={onRateSelect} />
@@ -83,7 +87,7 @@ function Rates({ rates, onRateSelect }) {
   return sortedRates.length > 1 ? (
     <Accordion
       renderTitle={(toggle, open) => (
-        <Button small onClick={toggle} style={{ margin: ".5rem" }}>
+        <Button small block onClick={toggle} style={{ margin: ".5rem 0" }}>
           {open ? "Скрыть тарифы" : "Смотреть тарифы"}
           <Icon open={open} />
         </Button>
@@ -162,4 +166,12 @@ const ImageContainer = styled.div`
   }
 
   ${ImagePreviewContainerQueries}
+`;
+
+const RoomDetails = styled.div`
+  text-align: center;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
+  }
 `;
