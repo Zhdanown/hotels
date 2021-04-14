@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getPrimaryColor } from "../redux/hotelConfig";
+import checkmark from "../assets/checkmark.svg";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 function Checkbox({ value, onChange, label }) {
   const color = useSelector(getPrimaryColor);
@@ -30,7 +32,7 @@ Checkbox.defaultProps = {
 
 export default Checkbox;
 
-const toggleSize = "1.25rem";
+const toggleSize = "1.5rem";
 const toggleBorderWidth = "1px";
 
 const Input = styled.input`
@@ -39,7 +41,8 @@ const Input = styled.input`
   opacity: 0;
 
   position: absolute;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   left: 0;
   margin: 0;
 `;
@@ -58,6 +61,7 @@ const ToggleLabel = styled.span`
 const CheckboxInput = styled.label`
   display: inline-flex;
   position: relative;
+  overflow: hidden;
 
   ${Input}:not(:disabled) ~ ${ToggleLabel} {
     cursor: pointer;
@@ -74,9 +78,9 @@ const CheckboxInput = styled.label`
     border: ${toggleBorderWidth} solid ${p => p.color};
 
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     left: 0;
-    top: 0;
-    z-index: 2;
   }
 
   ${Input}:checked ~ ${ToggleLabel}::after {
@@ -84,33 +88,22 @@ const CheckboxInput = styled.label`
   }
 
   ${ToggleLabel}::before {
+    background-image: url(${checkmark});
+    background-repeat: no-repeat;
+    background-position: center;
+
     content: "";
-    width: 0;
+    width: ${toggleSize};
     height: 0;
-    font-size: ${toggleSize}; /* 1 */
-
-    border-left-width: 0;
-    border-bottom-width: 0;
-    border-left-style: solid;
-    border-bottom-style: solid;
-    border-color: #fff;
-
     position: absolute;
-    top: 0.5428em;
-    left: 0.25em;
-    z-index: 3;
-
-    transform-origin: left top;
-    transform: rotate(-40deg) skew(10deg);
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
   }
 
   ${Input}:checked ~ ${ToggleLabel}::before {
-    --uiToggleArrowWidth: 2px;
-
-    width: 0.4em;
-    height: 0.2em;
-    border-left-width: var(--uiToggleArrowWidth);
-    border-bottom-width: var(--uiToggleArrowWidth);
+    height: ${toggleSize};
   }
 
   ${Input}:disabled ~ ${ToggleLabel} {
@@ -120,7 +113,7 @@ const CheckboxInput = styled.label`
   }
 
   ${ToggleLabel}::after {
-    border-radius: 2px;
+    border-radius: 0.25rem;
   }
 
   ${Input}:not(:disabled) ~ ${ToggleLabel}::before {
@@ -137,5 +130,9 @@ const CheckboxInput = styled.label`
   ${Input}:not(:disabled) ~ ${ToggleLabel}::after {
     will-change: background-color;
     transition: background-color 0.2s ease-out;
+  }
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
   }
 `;
