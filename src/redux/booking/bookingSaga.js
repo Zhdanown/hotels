@@ -64,12 +64,7 @@ async function requestRoom(bookingParams) {
   const url = `api/v1/${pms_type}/reservation/${hotel_id}/`;
 
   const bodyRequest = {
-    guest: {
-      first_name: guest.firstName,
-      last_name: guest.lastName,
-      email: guest.email,
-      tel: guest.tel,
-    },
+    guest,
     reservation: {
       room_code: room.room_code,
       rate_code: rate.rate_code,

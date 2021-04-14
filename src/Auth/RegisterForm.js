@@ -21,9 +21,13 @@ import {
   mapServerErrors,
 } from "../utils/validationHelpers";
 
-function RegisterForm({ guest, close }) {
+function RegisterForm({ close }) {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
+
+  const initialValues = Object.fromEntries(
+    userFields.map(field => [field.name, ""])
+  );
 
   useEffect(() => {
     let timeout;
@@ -44,9 +48,7 @@ function RegisterForm({ guest, close }) {
 
   return (
     <Formik
-      initialValues={{
-        ...guest,
-      }}
+      initialValues={initialValues}
       validate={validate}
       onSubmit={(values, { setSubmitting }) => {
         dispatch(register(values));

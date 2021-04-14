@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Switch, useRouteMatch, Route } from "react-router-dom";
 import { getBookingResponse } from "../redux/booking";
-import Confirm from "./Confirm";
+import ConfirmScreen from "./ConfirmScreen";
 import Success from "./Success";
 
 function Step3() {
@@ -22,7 +22,7 @@ function Step3() {
       )}
       <Switch>
         <Route exact path={path}>
-          <Confirm></Confirm>
+          <ConfirmScreen></ConfirmScreen>
         </Route>
         <Route path={`${path}/success`}>
           <Success></Success>

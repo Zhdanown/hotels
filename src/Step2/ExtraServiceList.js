@@ -1,7 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import ColumnHeader from "../components/ColumnHeader";
-import { getPrimaryColor } from "../redux/hotelConfig";
 import ExtraService from "./ExtraService";
 import Accordion, { Icon, Title } from "../components/Accordion";
 import Button from "../components/Button";

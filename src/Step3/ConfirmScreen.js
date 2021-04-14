@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -20,12 +20,13 @@ import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
 import { getUser } from "../Auth/authReducer";
+import { AuthLink } from "../Auth/components";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
 `;
 
-function Confirm() {
+function ConfirmScreen() {
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
   const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
@@ -34,7 +35,7 @@ function Confirm() {
   const [modal, setModal] = useState(false);
   const [consent, setConsent] = useState(false);
 
-  const [guest, setGuest] = useState({
+  const [guest] = useState({
     username: "",
     first_name: "",
     last_name: "",
@@ -46,13 +47,6 @@ function Confirm() {
     password: "",
     password_confirm: "",
   });
-
-  const onGuestChange = useCallback(({ target }) => {
-    setGuest(user => ({
-      ...user,
-      [target.name]: target.value,
-    }));
-  }, []);
 
   const onSubmit = () => {
     setModal(true);
@@ -82,18 +76,13 @@ function Confirm() {
         {!user && (
           <>
             <label htmlFor="">Забронировать без регистрации</label>
-            <FormNoRegistration
-              guest={guest}
-              onSubmit={onSubmit}
-              onGuestChange={onGuestChange}
-            />
+            <FormNoRegistration guest={guest} onSubmit={onSubmit} />
             <div>
               <label htmlFor="">Или</label>
-              <Button block>Зарегистрироваться</Button>
+              <AuthLink to="/register">зарегистрироваться</AuthLink>
             </div>
           </>
         )}
-
         <CommentField />
         <OrderSummary />
 
@@ -115,16 +104,9 @@ function Confirm() {
           Я подтверждаю своё согласие с{" "}
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
-
-        <Button
-          block
-          onClick={onSubmit}
-          disabled={!consent}
-          type="submit"
-          form="no-registration"
-        >
+        <SubmitButton user={user} consent={consent} onSubmit={onSubmit}>
           {consent ? "Продолжить" : "Необходимо согласие"}
-        </Button>
+        </SubmitButton>
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
@@ -134,7 +116,7 @@ function Confirm() {
   }
 }
 
-export default Confirm;
+export default ConfirmScreen;
 
 function CommentField() {
   const params = useSelector(getParams);
@@ -154,5 +136,17 @@ function CommentField() {
       onChange={({ target }) => setComment(target.value)}
       style={{ marginTop: "2rem" }}
     />
+  );
+}
+
+function SubmitButton({ user, children, onSubmit, consent }) {
+  return !user ? (
+    <Button block disabled={!consent} type="submit" form="no-registration">
+      {children}
+    </Button>
+  ) : (
+    <Button block disabled={!consent} onClick={onSubmit}>
+      {children}
+    </Button>
   );
 }
