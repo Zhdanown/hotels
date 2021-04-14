@@ -16,9 +16,7 @@ function ExtraService(props) {
   const totalCost = getServiceCost[time_period](price, nightsCount);
   const nightsPluralized = plural(nightsCount, "ночь", "ночи", "ночей");
   const nights =
-    time_period === "EVERY_NIGHT"
-      ? ` / ${nightsCount} ${nightsPluralized}`
-      : null;
+    time_period === "EVERY_NIGHT" ? `${nightsCount} ${nightsPluralized}` : null;
 
   const onServiceSelect = selected => {
     props.onSelect({
@@ -37,10 +35,10 @@ function ExtraService(props) {
     <StyledService>
       <HeaderSection>
         <Checkbox label={name} value={false} onChange={onServiceSelect} />
-        <div>
-          <span>{totalCost} &#8381;</span>
-          {nights && <span>{nights}</span>}
-        </div>
+        <PriceTag>
+          <PriceValue>{totalCost} &#8381;</PriceValue>
+          {nights && <NightsCount>{nights}</NightsCount>}
+        </PriceTag>
       </HeaderSection>
       <BodySection>
         <Image src={img} alt={name} />
@@ -53,14 +51,30 @@ function ExtraService(props) {
 
 export default ExtraService;
 
+const PriceTag = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const PriceValue = styled.span`
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+`;
+const NightsCount = styled.span`
+  color: #aaa;
+  font-size: 0.8rem;
+`;
+
 const StyledService = styled.article`
-  padding: 1rem 0;
+  padding: 1rem;
   border-bottom: 1px solid #ccc;
 `;
 
 const HeaderSection = styled.section`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   font-weight: bold;
   margin-bottom: 0.5rem;
 
@@ -81,6 +95,7 @@ const ImageWrapper = styled.div`
   width: 100px;
   img {
     width: 100%;
+    border-radius: .25rem;
   }
 `;
 

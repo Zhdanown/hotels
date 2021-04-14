@@ -151,7 +151,7 @@ function ExtraService(props) {
       <span>{name}</span>
       <span>
         <span>{totalCost} &#8381;</span>
-        {nights && <span>{nights}</span>}
+        {nights && <span> / {nights}</span>}
       </span>
     </Row>
   );

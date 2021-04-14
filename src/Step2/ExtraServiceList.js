@@ -5,6 +5,8 @@ import { getPrimaryColor } from "../redux/hotelConfig";
 import ExtraService from "./ExtraService";
 import Accordion, { Icon, Title } from "../components/Accordion";
 import Button from "../components/Button";
+import { Card } from "../components/styled";
+import styled from "styled-components";
 
 function ExtraServicesList({
   extraServices,
@@ -45,13 +47,6 @@ function ExtraServicesList({
             updateSelectedServices={updateSelectedServices}
           />
         ))}
-        {/* {extraServices.map(service => (
-              <ExtraService
-                key={service.id}
-                {...service}
-                onSelect={updateSelectedServices}
-              />
-            ))} */}
       </div>
       <div style={{ margin: "1rem 0" }}>
         <Button small onClick={continueBooking}>
@@ -65,34 +60,46 @@ function ExtraServicesList({
 export default ExtraServicesList;
 
 function ServiceCategory({ services, categoryName, updateSelectedServices }) {
-  const color = useSelector(getPrimaryColor);
-
   if (!services) {
     return null;
   } else if (categoryName === "null") {
-    return services.map(service => (
-      <ExtraService
-        key={service.id}
-        {...service}
-        onSelect={updateSelectedServices}
-      />
-    ));
+    return (
+      <div style={{ padding: "0.75rem" }}>
+        <GroupCard>
+          {services.map(service => (
+            <ExtraService
+              key={service.id}
+              {...service}
+              onSelect={updateSelectedServices}
+            />
+          ))}
+        </GroupCard>
+      </div>
+    );
   } else
     return (
       <Accordion
         renderTitle={(toggle, open) => (
-          <Title onClick={toggle} color={color}>
+          <Title onClick={toggle} style={{ padding: "0.75rem" }}>
             {categoryName} <Icon open={open} />
           </Title>
         )}
       >
-        {services.map(service => (
-          <ExtraService
-            key={service.id}
-            {...service}
-            onSelect={updateSelectedServices}
-          />
-        ))}
+        <div style={{ padding: "0.75rem" }}>
+          <GroupCard>
+            {services.map(service => (
+              <ExtraService
+                key={service.id}
+                {...service}
+                onSelect={updateSelectedServices}
+              />
+            ))}
+          </GroupCard>
+        </div>
       </Accordion>
     );
 }
+
+const GroupCard = styled(Card)`
+  margin: 0;
+`;
