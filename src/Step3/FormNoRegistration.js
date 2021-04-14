@@ -23,11 +23,6 @@ const fields = filterByFieldName(userFields);
 function FormNoRegistration({ guest, onSubmit }) {
   const dispatch = useDispatch();
 
-  const onValuesChange = values => {
-    console.log(values);
-    dispatch(changeParams({ guest: values }));
-  };
-
   return (
     <Formik
       initialValues={{
@@ -38,26 +33,22 @@ function FormNoRegistration({ guest, onSubmit }) {
         console.log(e);
       }}
       onSubmit={(values, { setSubmitting }) => {
-        dispatch(changeParams({ values }));
-        onSubmit(values);
+        dispatch(changeParams({ guest: values }));
+        const filledInValues = filterFalsyObjectKeys(values);
+        onSubmit(filledInValues);
         setSubmitting(false);
       }}
     >
-      <FormShowingServerErrors onValuesChange={onValuesChange} />
+      <FormShowingServerErrors />
     </Formik>
   );
 }
 
 export default FormNoRegistration;
 
-function FormShowingServerErrors({ onValuesChange }) {
+function FormShowingServerErrors() {
   const registerError = useSelector(getRegisterError);
-  const { setErrors, values } = useFormikContext();
-
-  useEffect(() => {
-    const filledValues = filterFalsyObjectKeys(values);
-    onValuesChange(filledValues);
-  }, [values, onValuesChange]);
+  const { setErrors } = useFormikContext();
 
   useEffect(() => {
     if (registerError) {

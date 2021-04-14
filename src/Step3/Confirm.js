@@ -20,6 +20,7 @@ import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
 import { getUser } from "../Auth/authReducer";
+import { AuthLink } from "../Auth/components";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
@@ -89,7 +90,7 @@ function Confirm() {
             />
             <div>
               <label htmlFor="">Или</label>
-              <Button block>Зарегистрироваться</Button>
+              <AuthLink to="/register">зарегистрироваться</AuthLink>
             </div>
           </>
         )}
@@ -116,15 +117,20 @@ function Confirm() {
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
-        <Button
-          block
-          onClick={onSubmit}
-          disabled={!consent}
-          type="submit"
-          form="no-registration"
-        >
-          {consent ? "Продолжить" : "Необходимо согласие"}
-        </Button>
+        {!user ? (
+          <Button
+            block
+            disabled={!consent}
+            type="submit"
+            form="no-registration"
+          >
+            {consent ? "Продолжить" : "Необходимо согласие"}
+          </Button>
+        ) : (
+          <Button block disabled={!consent} onClick={onSubmit}>
+            {consent ? "Продолжить" : "Необходимо согласие"}
+          </Button>
+        )}
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
