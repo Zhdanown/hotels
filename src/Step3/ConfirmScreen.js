@@ -108,7 +108,12 @@ function ConfirmScreen() {
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
-        <SubmitButton user={user} consent={consent} onSubmit={onSubmit}>
+        <SubmitButton
+          user={user}
+          consent={consent}
+          onSubmit={onSubmit}
+          style={{ marginBottom: "1rem" }}
+        >
           {consent ? "Продолжить" : "Необходимо согласие"}
         </SubmitButton>
 
@@ -143,13 +148,19 @@ function CommentField() {
   );
 }
 
-function SubmitButton({ user, children, onSubmit, consent }) {
+function SubmitButton({ user, children, onSubmit, consent, style }) {
   return !user ? (
-    <Button block disabled={!consent} type="submit" form="no-registration">
+    <Button
+      block
+      disabled={!consent}
+      style={style}
+      type="submit"
+      form="no-registration"
+    >
       {children}
     </Button>
   ) : (
-    <Button block disabled={!consent} onClick={onSubmit}>
+    <Button block disabled={!consent} onClick={onSubmit} style={style}>
       {children}
     </Button>
   );

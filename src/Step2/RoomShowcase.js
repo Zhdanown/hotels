@@ -108,6 +108,7 @@ function Rates({ rates, onRateSelect }) {
 
 const StyledRoomShowcase = styled(Card)`
   overflow: hidden;
+  display: inline-block;
 `;
 
 const titleColor = "#333333";

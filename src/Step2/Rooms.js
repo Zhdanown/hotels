@@ -33,7 +33,7 @@ function Rooms({ onSelect, goBack }) {
 
   if (rooms.length) {
     return (
-      <div style={{ position: "relative" }}>
+      <div>
         <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
         {rooms.map(room => (
           <RoomShowcase

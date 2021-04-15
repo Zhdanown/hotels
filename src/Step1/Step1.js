@@ -26,7 +26,7 @@ function Step1() {
       <Guests />
       <DateRangePicker />
       {IsShowPromoCode ? <Promocode /> : null}
-      <Button block onClick={onClick}>
+      <Button block onClick={onClick} style={{ marginBottom: "1rem" }}>
         Подобрать номера
       </Button>
     </>
