@@ -72,6 +72,7 @@ function ConfirmScreen() {
     return (
       <div>
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
+        <OrderSummary />
 
         {!user && (
           <>
@@ -79,12 +80,14 @@ function ConfirmScreen() {
             <FormNoRegistration guest={guest} onSubmit={onSubmit} />
             <div>
               <label htmlFor="">Или</label>
-              <AuthLink to="/register">зарегистрироваться</AuthLink>
+              <AuthLink style={{ marginTop: 0 }} to="/register">
+                зарегистрироваться
+              </AuthLink>
             </div>
           </>
         )}
+
         <CommentField />
-        <OrderSummary />
 
         <Conditions column>
           <Link href={rulesAndServicesFile} target="_blank" underlined>
@@ -104,7 +107,13 @@ function ConfirmScreen() {
           Я подтверждаю своё согласие с{" "}
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
-        <SubmitButton user={user} consent={consent} onSubmit={onSubmit}>
+
+        <SubmitButton
+          user={user}
+          consent={consent}
+          onSubmit={onSubmit}
+          style={{ marginBottom: "1rem" }}
+        >
           {consent ? "Продолжить" : "Необходимо согласие"}
         </SubmitButton>
 
@@ -139,13 +148,19 @@ function CommentField() {
   );
 }
 
-function SubmitButton({ user, children, onSubmit, consent }) {
+function SubmitButton({ user, children, onSubmit, consent, style }) {
   return !user ? (
-    <Button block disabled={!consent} type="submit" form="no-registration">
+    <Button
+      block
+      disabled={!consent}
+      style={style}
+      type="submit"
+      form="no-registration"
+    >
       {children}
     </Button>
   ) : (
-    <Button block disabled={!consent} onClick={onSubmit}>
+    <Button block disabled={!consent} onClick={onSubmit} style={style}>
       {children}
     </Button>
   );
