@@ -5,15 +5,7 @@ import LayoutContext from "./LayoutContext";
 import TitleScreen from "./DesktopColTitleScreen";
 import { scrollbarWidth } from "./scrollbarWidth";
 import useNavbarHeight from "./hooks/useNavbarHeight";
-
-const HTMLOverflowHidden = createGlobalStyle`
-  html {
-    overflow: hidden;
-  }
-  body {
-    margin: 0;
-  }
-`;
+import { HTMLOverflowHidden } from "../components/styled";
 
 const DesktopLayoutContainer = styled.div`
   display: flex;
