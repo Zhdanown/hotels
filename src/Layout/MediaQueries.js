@@ -19,7 +19,6 @@ export const ColumnMobileQueries = `
     & {
       width: 100%;
       min-width: 300px;
-      padding: 0.5rem;
     }
   }
 `;
@@ -57,3 +56,5 @@ export const ImagePreviewContainerQueries = `
     }
   }
 `;
+
+export const mediumMobileWidth = `375px`;

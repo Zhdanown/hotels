@@ -5,7 +5,7 @@ import plural from "plural-ru";
 
 import { getParams } from "../redux/booking";
 import { getPrimaryColor } from "../redux/hotelConfig";
-import { hexToRgb, withOpacity } from "../hexToRgb";
+import { hexToRgb, withOpacity } from "../utils/colorHelpers";
 
 const Row = styled.div`
   display: flex;
@@ -32,8 +32,8 @@ const Container = styled.div`
 `;
 
 const SectionHeader = styled.h5`
-  background: rgba(${p => withOpacity(hexToRgb(p.color), 0.1)})};
-  border-radius: .25rem;
+  background: rgba(${p => withOpacity(hexToRgb(p.color), 0.1)});
+  border-radius: 0.25rem;
 `;
 
 function OrderSummary() {
@@ -151,7 +151,7 @@ function ExtraService(props) {
       <span>{name}</span>
       <span>
         <span>{totalCost} &#8381;</span>
-        {nights && <span>{nights}</span>}
+        {nights && <span> / {nights}</span>}
       </span>
     </Row>
   );

@@ -26,3 +26,11 @@ export default function Loader() {
   const color = useSelector(getPrimaryColor);
   return <StyledLoader color={color} />;
 }
+
+export const LoaderWrapper = styled.div`
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

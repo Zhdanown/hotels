@@ -11,7 +11,7 @@ import { loadConfig } from "./redux/hotelConfig";
 import SplashScreen from "./Splash";
 import Layout, { Navbar } from "./Layout/Layout";
 import Step1 from "./Step1/Step1";
-import Rooms from "./rooms/Rooms";
+import Rooms from "./Step2";
 import Step3 from "./Step3/Step3";
 import { Centered } from "./components/Centered";
 import { LayoutContextProvider } from "./Layout/LayoutContext";
@@ -20,6 +20,7 @@ import AuthRoutes from "./Auth/AuthRoutes";
 import { startSession } from "./Auth/authReducer";
 import { useQueryParams } from "./useQueryParams";
 import { changeParams } from "./redux/booking";
+import { Toast } from "./components/Toast";
 
 function ConfigLoader({ children }) {
   let { slug } = useParams();
@@ -88,6 +89,7 @@ function App() {
             <AuthRoutes />
           </LayoutContextProvider>
         </ConfigLoader>
+        <Toast />
       </Route>
     </Router>
   );

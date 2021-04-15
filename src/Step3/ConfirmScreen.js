@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -9,41 +9,24 @@ import {
 } from "../redux/booking";
 import { getRulesAndServicesFileReference } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
-import FormNewGuest from "./FormNewGuest";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
-import Tabs from "../components/Tabs";
 import Link from "../components/Link";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
 import ColumnHeader from "../components/ColumnHeader";
-import FloatingButton from "../components/FloatingButton";
 import LayoutContext from "../Layout/LayoutContext";
-import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
 import { getUser } from "../Auth/authReducer";
-
-const forms = [
-  {
-    id: "new-guest",
-    label: "Новый гость",
-    render: props => <FormNewGuest {...props} />,
-  },
-  {
-    id: "no-registration",
-    label: "Без регистрации",
-    render: props => <FormNoRegistration {...props} />,
-  },
-];
+import { AuthLink } from "../Auth/components";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
 `;
 
-function Confirm() {
-  const dispatch = useDispatch();
+function ConfirmScreen() {
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
   const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
@@ -52,7 +35,7 @@ function Confirm() {
   const [modal, setModal] = useState(false);
   const [consent, setConsent] = useState(false);
 
-  const [guest, setGuest] = useState({
+  const [guest] = useState({
     username: "",
     first_name: "",
     last_name: "",
@@ -65,16 +48,7 @@ function Confirm() {
     password_confirm: "",
   });
 
-  const onGuestChange = useCallback(({ target }) => {
-    setGuest(user => ({
-      ...user,
-      [target.name]: target.value,
-    }));
-  }, []);
-
-  const onSubmit = e => {
-    e.preventDefault();
-    dispatch(changeParams({ guest }));
+  const onSubmit = () => {
     setModal(true);
   };
 
@@ -89,7 +63,6 @@ function Confirm() {
   const goBack = () => {
     setStep(step => --step);
   };
-  const [, , isDesktop] = useWindowWidth();
 
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
@@ -99,19 +72,22 @@ function Confirm() {
     return (
       <div>
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
+        <OrderSummary />
 
         {!user && (
-          <Tabs
-            tabs={forms}
-            preSelected={0}
-            guest={guest}
-            onSubmit={onSubmit}
-            onGuestChange={onGuestChange}
-          />
+          <>
+            <label htmlFor="">Забронировать без регистрации</label>
+            <FormNoRegistration guest={guest} onSubmit={onSubmit} />
+            <div>
+              <label htmlFor="">Или</label>
+              <AuthLink style={{ marginTop: 0 }} to="/register">
+                зарегистрироваться
+              </AuthLink>
+            </div>
+          </>
         )}
 
         <CommentField />
-        <OrderSummary />
 
         <Conditions column>
           <Link href={rulesAndServicesFile} target="_blank" underlined>
@@ -132,15 +108,14 @@ function Confirm() {
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
 
-        {isDesktop ? (
-          <Button block onClick={onSubmit} disabled={!consent}>
-            Продолжить
-          </Button>
-        ) : (
-          <FloatingButton onClick={onSubmit} disabled={!consent}>
-            {consent ? "Продолжить" : "Необходимо согласие"}
-          </FloatingButton>
-        )}
+        <SubmitButton
+          user={user}
+          consent={consent}
+          onSubmit={onSubmit}
+          style={{ marginBottom: "1rem" }}
+        >
+          {consent ? "Продолжить" : "Необходимо согласие"}
+        </SubmitButton>
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
@@ -150,7 +125,7 @@ function Confirm() {
   }
 }
 
-export default Confirm;
+export default ConfirmScreen;
 
 function CommentField() {
   const params = useSelector(getParams);
@@ -170,5 +145,23 @@ function CommentField() {
       onChange={({ target }) => setComment(target.value)}
       style={{ marginTop: "2rem" }}
     />
+  );
+}
+
+function SubmitButton({ user, children, onSubmit, consent, style }) {
+  return !user ? (
+    <Button
+      block
+      disabled={!consent}
+      style={style}
+      type="submit"
+      form="no-registration"
+    >
+      {children}
+    </Button>
+  ) : (
+    <Button block disabled={!consent} onClick={onSubmit} style={style}>
+      {children}
+    </Button>
   );
 }

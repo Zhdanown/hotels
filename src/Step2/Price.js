@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function Price({ price, oldPrice }) {
+export default function Price({ price, oldPrice, prefix = "" }) {
   const percent = Math.floor(((price - oldPrice) / oldPrice) * 100);
 
   return (
@@ -12,7 +12,9 @@ export default function Price({ price, oldPrice }) {
           <Percent>{percent}%</Percent>
         </OldPrice>
       ) : null}
-      <b>{price} &#8381;</b>
+      <b>
+        {prefix} {price} &#8381;
+      </b>
     </div>
   );
 }

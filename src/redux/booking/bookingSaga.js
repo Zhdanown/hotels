@@ -2,7 +2,7 @@ import { takeEvery, call, select, put } from "redux-saga/effects";
 
 import api, { getAuthHeaderIfTokenPresent } from "../api";
 import {
-  getBookingInfo,
+  getParams,
   isBooking,
   setBookingError,
   setBookingResponse,
@@ -31,12 +31,12 @@ function* bookRoom(action) {
 }
 
 function* getParamsAndRequestRoom(action) {
-  const bookingInfo = yield select(getBookingInfo);
+  const bookingParams = yield select(getParams);
   const hotel_id = yield select(getConfigId);
   const pms_type = yield select(getHotelPms);
 
   const { payload, error } = yield call(requestRoom, {
-    ...bookingInfo,
+    ...bookingParams,
     payment: action.payload,
     hotel_id,
     pms_type,
@@ -45,34 +45,37 @@ function* getParamsAndRequestRoom(action) {
   return { payload, error };
 }
 
-async function requestRoom(bookingInfo) {
-  const { guest, payment } = bookingInfo;
-  const { adults, childs, rooms_count } = bookingInfo;
-  const { hotel_id, pms_type } = bookingInfo;
-  const { room_code, rate_code } = bookingInfo;
-  const { arrival, departure } = bookingInfo;
-  const { packages, notes } = bookingInfo;
+async function requestRoom(bookingParams) {
+  const { hotel_id, pms_type } = bookingParams;
+  const {
+    guest,
+    payment,
+    adults,
+    childs,
+    rooms_count,
+    arrival,
+    departure,
+    room,
+    rate,
+    packages,
+    comment,
+  } = bookingParams;
 
   const url = `api/v1/${pms_type}/reservation/${hotel_id}/`;
 
   const bodyRequest = {
-    guest: {
-      first_name: guest.firstName,
-      last_name: guest.lastName,
-      email: guest.email,
-      tel: guest.tel,
-    },
+    guest,
     reservation: {
-      rate_code,
-      room_code,
+      room_code: room.room_code,
+      rate_code: rate.rate_code,
       arrival,
       departure,
       adults,
       rooms_count,
-      childs,
-      packages,
       payment,
-      notes,
+      childs: childs.filter(x => x.count),
+      packages: packages.map(x => ({ code: x.code, price: x.price })),
+      notes: [{ code: "RES", text: comment }],
     },
   };
 

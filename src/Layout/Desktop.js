@@ -51,6 +51,7 @@ const StyledColumn = styled.div`
 
   ${ColumnContainer} {
     max-width: 360px;
+    height: 100%;
   }
 
   &:nth-child(2) {

@@ -8,9 +8,12 @@ import Price from "./Price";
 import RoomFeatures from "./RoomFeatures";
 import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
+import { Card } from "../components/styled";
 import Accordion, { Icon, Title } from "../components/Accordion";
-
-import { ImagePreviewContainerQueries } from "../Layout/MediaQueries";
+import {
+  ImagePreviewContainerQueries,
+  mediumMobileWidth,
+} from "../Layout/MediaQueries";
 import { getPrimaryColor } from "../redux/hotelConfig";
 
 export default function RoomShowcase({ room, onSelect }) {
@@ -32,6 +35,8 @@ export default function RoomShowcase({ room, onSelect }) {
 
   const [isGalleryOpen, toggleGallery] = useState(false);
 
+  const pricePrefix = rates.length > 1 ? "от" : null;
+
   return (
     <StyledRoomShowcase bgColor={primaryColor}>
       <ImageGallery
@@ -46,7 +51,12 @@ export default function RoomShowcase({ room, onSelect }) {
         </ImageContainer>
         <TitleSection>
           <RoomName>{name}</RoomName>
-          <Price price={min_price} oldPrice={original_price} />
+
+          <Price
+            price={min_price}
+            oldPrice={original_price}
+            prefix={pricePrefix}
+          />
         </TitleSection>
       </ImagePreview>
 
@@ -58,8 +68,10 @@ export default function RoomShowcase({ room, onSelect }) {
             </Title>
           )}
         >
-          <HTMLParser html={short_description} />
-          <RoomFeatures />
+          <RoomDetails>
+            <HTMLParser html={short_description} />
+            <RoomFeatures />
+          </RoomDetails>
         </Accordion>
 
         <Rates rates={rates} onRateSelect={onRateSelect} />
@@ -70,31 +82,33 @@ export default function RoomShowcase({ room, onSelect }) {
 
 function Rates({ rates, onRateSelect }) {
   //sort rates by price from most expensive to cheapest
-  rates.sort((a, b) => b.total_price - a.total_price);
+  const sortedRates = [...rates].sort((a, b) => b.total_price - a.total_price);
 
-  return rates.length > 1 ? (
+  return sortedRates.length > 1 ? (
     <Accordion
       renderTitle={(toggle, open) => (
-        <Button small onClick={toggle} style={{ margin: ".5rem" }}>
+        <Button small block onClick={toggle} style={{ margin: ".5rem 0" }}>
           {open ? "Скрыть тарифы" : "Смотреть тарифы"}
           <Icon open={open} />
         </Button>
       )}
     >
-      {rates.map(rate => (
+      {sortedRates.map(rate => (
         <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
       ))}
     </Accordion>
   ) : (
-    <RoomRate key={rates[0].rate_code} rate={rates[0]} onClick={onRateSelect} />
+    <RoomRate
+      key={sortedRates[0].rate_code}
+      rate={rates[0]}
+      onClick={onRateSelect}
+    />
   );
 }
 
-const StyledRoomShowcase = styled.div`
-  box-shadow: 0 0 10px 5px #ddd;
-  border-radius: 0.5rem;
-  margin: 1rem 0;
+const StyledRoomShowcase = styled(Card)`
   overflow: hidden;
+  display: inline-block;
 `;
 
 const titleColor = "#333333";
@@ -153,4 +167,12 @@ const ImageContainer = styled.div`
   }
 
   ${ImagePreviewContainerQueries}
+`;
+
+const RoomDetails = styled.div`
+  text-align: center;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
+  }
 `;

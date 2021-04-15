@@ -3,11 +3,8 @@ import styled, { keyframes } from "styled-components";
 
 import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
-import Loader from "../components/Loader";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { SvgIcon } from "../rooms/RoomFeatures";
-import { ReactComponent as Beds } from "../assets/select_beds.svg";
-import { ReactComponent as CreditCards } from "../assets/credit_cards.svg";
+import { SvgIcon } from "../Step2/RoomFeatures";
 
 const fadeIn = keyframes`
   from {
@@ -46,20 +43,12 @@ const ScreenHeader = styled.span`
   font-size: 2rem;
 `;
 
-const LoaderWrapper = styled.div`
-  width: ${iconFontSize};
-  height: ${iconFontSize};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 export default function TitleScreen({ num }) {
   const { steps } = useContext(LayoutContext);
   const [, , isDesktop] = useWindowWidth();
 
   const stepData = steps[num];
-  const { enabled, title, isLoading } = stepData;
+  const { enabled, title, icon } = stepData;
   const [contentVisible, setContentVisibility] = useState(enabled);
 
   useEffect(() => {
@@ -77,16 +66,7 @@ export default function TitleScreen({ num }) {
       <TitleScreenContainer visible={!enabled}>
         <TitleContent desktop={isDesktop}>
           <ScreenHeader>{title}</ScreenHeader>
-          {isLoading ? (
-            <LoaderWrapper>
-              <Loader />
-            </LoaderWrapper>
-          ) : (
-            <>
-              {num === 2 && <Icon component={Beds} />}
-              {num === 3 && <Icon component={CreditCards} />}
-            </>
-          )}
+          {icon && <Icon component={icon} />}
         </TitleContent>
       </TitleScreenContainer>
     );

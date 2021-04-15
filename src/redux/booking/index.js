@@ -4,7 +4,7 @@ import {
   calculateNightsCount,
   persistDateStringFormat,
   isNotLater,
-} from "../../utils";
+} from "../../utils/dateHelpers";
 
 export const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
 export const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
@@ -25,7 +25,7 @@ const initialState = {
     rate: null,
     arrival,
     departure,
-    adults: 0,
+    adults: 2,
     rooms_count: 1,
     childs: [],
     packages: [],
@@ -121,18 +121,6 @@ export function setBookingError(error) {
 }
 
 export const getParams = state => state.reservation.params;
-export const getBookingInfo = state => {
-  const params = getParams(state);
-  const { room, rate, childs, notes, packages } = params;
-  return {
-    ...params,
-    room_code: room.room_code,
-    rate_code: rate.rate_code,
-    childs: childs.filter(x => x.count),
-    notes: [{ code: "RES", text: notes }],
-    packages: packages.map(x => ({ code: x.code, price: x.price })),
-  };
-};
 export const getBookingState = state => state.reservation.isBooking;
 export const getBookingResponse = state => state.reservation.response;
 export const getNightsCount = state => {

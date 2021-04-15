@@ -1,38 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components";
 
 import LayoutContext from "../Layout/LayoutContext";
-import RoomShowcase from "./RoomShowcase";
-import Button from "../components/Button";
-import ColumnHeader from "../components/ColumnHeader";
-
-import { getRoomLoadError, getRooms, getExtraServices } from "./roomsReducer";
+import { getExtraServices } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
-import { Error } from "../components/InputWithError";
-import ExtraService from "./ExtraService";
 import produce from "immer";
-
-const StyledServices = styled.div``;
-
-function Rooms({ onSelect, goBack }) {
-  const rooms = useSelector(getRooms);
-  const roomsLoadError = useSelector(getRoomLoadError);
-
-  return (
-    <div style={{ position: "relative" }}>
-      <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
-      {rooms.map(room => (
-        <RoomShowcase
-          key={room.id}
-          room={room}
-          onSelect={onSelect}
-        ></RoomShowcase>
-      ))}
-      {roomsLoadError && <Error discreet>{roomsLoadError.message}</Error>}
-    </div>
-  );
-}
+import ExtraServicesList from "./ExtraServiceList";
+import Rooms from "./Rooms";
 
 function RoomsWithExtraServices() {
   const extraServices = useSelector(getExtraServices);
@@ -42,10 +16,23 @@ function RoomsWithExtraServices() {
   const { setStep } = useContext(LayoutContext);
   const dispatch = useDispatch();
 
+  const headerRef = React.createRef();
+  const [scrolled, setScrolled] = useState(false);
+
   const continueBooking = () => {
     setStep(step => ++step);
     dispatch(changeParams(selectedRoomAndRate));
   };
+
+  useEffect(() => {
+    if (headerRef.current && !scrolled) {
+      headerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setScrolled(true);
+    }
+  }, [headerRef, scrolled]);
 
   const onSelect = data => {
     setSelected(data);
@@ -57,6 +44,7 @@ function RoomsWithExtraServices() {
 
   const cancelServices = () => {
     setSelected(null);
+    setScrolled(false);
   };
 
   const goStepBack = () => {
@@ -86,25 +74,13 @@ function RoomsWithExtraServices() {
 
   if (selectedRoomAndRate && extraServices.length) {
     return (
-      <>
-        <ColumnHeader goBack={cancelServices}>
-          Дополнительные услуги
-        </ColumnHeader>
-        <StyledServices>
-          {extraServices.map(service => (
-            <ExtraService
-              key={service.id}
-              {...service}
-              onSelect={updateSelectedServices}
-            />
-          ))}
-        </StyledServices>
-        <div style={{ margin: "1rem 0" }}>
-          <Button small onClick={continueBooking}>
-            Продолжить бронирование
-          </Button>
-        </div>
-      </>
+      <ExtraServicesList
+        extraServices={extraServices}
+        continueBooking={continueBooking}
+        cancelServices={cancelServices}
+        updateSelectedServices={updateSelectedServices}
+        headerRef={headerRef}
+      />
     );
   }
   return <Rooms onSelect={onSelect} goBack={goStepBack} />;

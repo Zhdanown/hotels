@@ -9,6 +9,7 @@ import Accordion, { Icon, Title } from "../components/Accordion";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import Price from "./Price";
 import { Justified } from "../components/Centered";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 const StyledRoomRate = styled.div`
   border-bottom: 1px solid ${props => props.bg};
@@ -46,7 +47,11 @@ export default function RoomRate({ rate, onClick }) {
                 )}{" "}
                 <Icon active={active ? 1 : 0} />
               </Title>
-              <Button small onClick={() => onClick(rate)}>
+              <Button
+                small
+                onClick={() => onClick(rate)}
+                style={{ alignSelf: "center" }}
+              >
                 Выбрать
               </Button>
             </Justified>
@@ -55,12 +60,11 @@ export default function RoomRate({ rate, onClick }) {
         style={{ marginBottom: "2rem" }}
       >
         {long_description ? (
-          <HTMLParser
-            html={long_description}
-            style={{ textAlign: "justify" }}
-          />
+          <LongDescription>
+            <HTMLParser html={long_description} />
+          </LongDescription>
         ) : (
-          <p>Нет описания</p>
+          <LongDescription>Нет описания</LongDescription>
         )}
       </Accordion>
       <Justified alignV="center">
@@ -70,3 +74,11 @@ export default function RoomRate({ rate, onClick }) {
     </StyledRoomRate>
   );
 }
+
+const LongDescription = styled.div`
+  text-align: justify;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 0.8rem;
+  }
+`;

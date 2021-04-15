@@ -7,6 +7,7 @@ import Accordion, { Title, Icon } from "../components/Accordion";
 import Checkbox from "../components/Checkbox";
 import { getNightsCount } from "../redux/booking";
 import { getServiceCost } from "./roomsReducer";
+import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 function ExtraService(props) {
   const { id, name, short_description, long_description, img, code } = props;
@@ -16,9 +17,7 @@ function ExtraService(props) {
   const totalCost = getServiceCost[time_period](price, nightsCount);
   const nightsPluralized = plural(nightsCount, "ночь", "ночи", "ночей");
   const nights =
-    time_period === "EVERY_NIGHT"
-      ? ` / ${nightsCount} ${nightsPluralized}`
-      : null;
+    time_period === "EVERY_NIGHT" ? `${nightsCount} ${nightsPluralized}` : null;
 
   const onServiceSelect = selected => {
     props.onSelect({
@@ -37,10 +36,10 @@ function ExtraService(props) {
     <StyledService>
       <HeaderSection>
         <Checkbox label={name} value={false} onChange={onServiceSelect} />
-        <div>
-          <span>{totalCost} &#8381;</span>
-          {nights && <span>{nights}</span>}
-        </div>
+        <PriceTag>
+          <PriceValue>{totalCost} &#8381;</PriceValue>
+          {nights && <NightsCount>{nights}</NightsCount>}
+        </PriceTag>
       </HeaderSection>
       <BodySection>
         <Image src={img} alt={name} />
@@ -53,14 +52,39 @@ function ExtraService(props) {
 
 export default ExtraService;
 
+const PriceTag = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const PriceValue = styled.span`
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 1rem;
+    line-height: 1rem;
+  }
+`;
+const NightsCount = styled.span`
+  color: #aaa;
+  font-size: 0.8rem;
+`;
+
 const StyledService = styled.article`
-  padding: 1rem 0;
+  padding: 1.5rem 1rem;
   border-bottom: 1px solid #ccc;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    padding: 1rem 0.75rem;
+  }
 `;
 
 const HeaderSection = styled.section`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   font-weight: bold;
   margin-bottom: 0.5rem;
 
@@ -81,6 +105,7 @@ const ImageWrapper = styled.div`
   width: 100px;
   img {
     width: 100%;
+    border-radius: 0.25rem;
   }
 `;
 
@@ -93,8 +118,9 @@ const ShortDescription = styled.div`
 const BodySection = styled.section`
   display: flex;
 
-  @media screen and (max-width: 375px) {
+  @media (max-width: ${mediumMobileWidth}) {
     flex-direction: column;
+    font-size: 0.8rem;
 
     ${ImageWrapper} {
       width: 100%;
@@ -132,4 +158,8 @@ function LongDescription({ description }) {
 
 const Description = styled.p`
   text-align: justify;
+
+  @media (max-width: ${mediumMobileWidth}) {
+    font-size: 1rem;
+  }
 `;

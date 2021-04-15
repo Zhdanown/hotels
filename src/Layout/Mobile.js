@@ -75,6 +75,7 @@ const ColumnContainer = styled.div`
   padding: 1rem;
   width: 550px;
   margin: 0 auto;
+  height: 100%;
 
   ${ColumnMobileQueries}
 `;
