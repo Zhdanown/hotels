@@ -48,7 +48,7 @@ function* fetchRooms({ pms_type, hotel_id, ...params }) {
 }
 
 function* fetchServices({ pms_type, hotel_id, ...params }) {
-  const url = `/api/v1/${pms_type}/pakages/${hotel_id}/`;
+  const url = `/api/v1/${pms_type}/packages/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }
