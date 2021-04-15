@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { Centered } from "../components/Centered";
 import CustomLink from "../components/Link";
 
-
 export const Greetings = ({ children }) => (
   <h3 className="has-text-centered is-size-4">{children}</h3>
 );
@@ -20,16 +19,18 @@ export const FormTitle = ({ children }) => (
   <h3 className="is-size-4 has-text-centered">{children}</h3>
 );
 
-export const AuthLink = ({ to, children }) => {
+export const AuthLink = ({ to, children, style }) => {
   let {
     params: { slug },
   } = useRouteMatch();
 
   return (
-    <Centered style={{ marginTop: "1rem" }}>
+    <Centered style={{ marginTop: "1rem", ...style }}>
       <CustomLink as={Link} to={`/${slug}${to}`}>
         {children}
       </CustomLink>
     </Centered>
   );
 };
+
+AuthLink.defaultProps = { style: {} };

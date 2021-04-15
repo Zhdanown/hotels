@@ -72,6 +72,7 @@ function ConfirmScreen() {
     return (
       <div>
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
+        <OrderSummary />
 
         {!user && (
           <>
@@ -79,12 +80,14 @@ function ConfirmScreen() {
             <FormNoRegistration guest={guest} onSubmit={onSubmit} />
             <div>
               <label htmlFor="">Или</label>
-              <AuthLink to="/register">зарегистрироваться</AuthLink>
+              <AuthLink style={{ marginTop: 0 }} to="/register">
+                зарегистрироваться
+              </AuthLink>
             </div>
           </>
         )}
+
         <CommentField />
-        <OrderSummary />
 
         <Conditions column>
           <Link href={rulesAndServicesFile} target="_blank" underlined>
@@ -104,6 +107,7 @@ function ConfirmScreen() {
           Я подтверждаю своё согласие с{" "}
           <Link>Политикой в отношении обработки персональных данныx</Link>
         </label>
+
         <SubmitButton user={user} consent={consent} onSubmit={onSubmit}>
           {consent ? "Продолжить" : "Необходимо согласие"}
         </SubmitButton>

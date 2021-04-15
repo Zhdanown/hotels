@@ -47,7 +47,7 @@ function ExtraServicesList({
         ))}
       </div>
       <div style={{ margin: "1rem 0" }}>
-        <Button small onClick={continueBooking}>
+        <Button block onClick={continueBooking}>
           Продолжить бронирование
         </Button>
       </div>
