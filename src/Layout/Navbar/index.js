@@ -7,6 +7,7 @@ import SPEED from "./MENU_SPEED";
 import FullScreenMenu from "./FullScreenMenu";
 import { getHotelName, getPrimaryColor } from "../../redux/hotelConfig";
 import AuthNavButton, { NavbarLink } from "../../Auth/AuthNavButton";
+import { Link, useRouteMatch } from "react-router-dom";
 
 const NavbarWrapper = styled.div`
   transform: translateY(0);
@@ -92,12 +93,17 @@ export default function Navbar() {
   const [isMenuOpen, toggleMenu] = useState(false);
   const hotelName = useSelector(getHotelName);
   const color = useSelector(getPrimaryColor);
+  const {
+    params: { slug },
+  } = useRouteMatch();
 
   return (
     <>
       <NavbarWrapper>
         <NavbarContainer id="navbar">
-          <LogoTitle open={isMenuOpen}>{hotelName}</LogoTitle>
+          <LogoTitle as={Link} to={`/${slug}`} open={isMenuOpen}>
+            {hotelName}
+          </LogoTitle>
           <div style={{ display: "flex", alignItems: "center" }}>
             <AuthNavButton />
 

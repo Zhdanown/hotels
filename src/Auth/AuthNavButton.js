@@ -34,13 +34,19 @@ export default AuthNavButton;
 const SignOutBtn = ({ signOut, name }) => {
   const color = useSelector(getPrimaryColor);
 
+  const {
+    params: { slug },
+  } = useRouteMatch();
+
   return (
     <Dropdown color={color}>
       <NavbarLink as="button" witharrow color={color}>
         {name}
       </NavbarLink>
       <DropdownMenu color={color}>
-        <DropdownItem>Личный кабинет</DropdownItem>
+        <DropdownItem as={Link} to={`/${slug}/profile`}>
+          Личный кабинет
+        </DropdownItem>
         <DropdownItem as="button" onClick={signOut}>
           Выйти
         </DropdownItem>
