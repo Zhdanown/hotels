@@ -33,8 +33,8 @@ const ColoredButton = styled.button`
     p.outline &&
     `
   background: none;
-  color: green;
-  border: 1px solid green;
+  color: ${p.bgColor};
+  border: 1px solid  ${p.bgColor};
   &:hover {
     color: white;
   }`}
