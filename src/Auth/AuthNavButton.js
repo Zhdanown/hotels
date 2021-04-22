@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useRouteMatch, matchPath } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 import Loader from "../components/Loader";
@@ -9,8 +9,11 @@ import { getIsLoginPending, getUser, logout } from "./authReducer";
 
 function AuthNavButton() {
   let location = useLocation();
-  const hideButton = location.pathname.match(/\/[login|register]/);
   let { url } = useRouteMatch();
+
+  const hideButton = matchPath(location.pathname, {
+    path: ["/:slug/login", "/:slug/register"],
+  });
 
   const isLoginPending = useSelector(getIsLoginPending);
   const user = useSelector(getUser);
