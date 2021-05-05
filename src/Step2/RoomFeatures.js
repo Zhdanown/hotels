@@ -25,6 +25,8 @@ import Accordion, {
   Title,
   Icon as AccordionIcon,
 } from "../components/Accordion";
+import { useSelector } from "react-redux";
+import { getRoomIcons } from "./roomsReducer";
 
 export const SvgIcon = ({ component, style }) => (
   <Icon component={component} style={style} />
@@ -56,6 +58,27 @@ const Wardrobe = props => <SvgIcon component={Wardrobe_} {...props} />;
 const Water = props => <SvgIcon component={Water_} {...props} />;
 const Wifi = props => <SvgIcon component={Wifi_} {...props} />;
 
+const iconsMap = {
+  wifi: Wifi,
+  tv: TV,
+  shower: Shower,
+  toilet: Toilet,
+  flipFlops: FlipFlops,
+  carpet: Carpet,
+  chair: Chair,
+  coffee: Coffee,
+  iron: Iron,
+  miniBar: MiniBar,
+  hairdryer: Hairdryer,
+  ironing: Ironing,
+  kettle: Kettle,
+  ac: AC,
+  table: Table,
+  twoBeds: TwoBeds,
+  view: View,
+  wardrobe: Wardrobe,
+  water: Water
+}
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -76,6 +99,8 @@ const Container = styled.div`
 `;
 
 export default function RoomFeatures() {
+  const icons = useSelector(getRoomIcons)
+
   return (
     <div style={{ margin: "1rem 0" }}>
       <Container>
@@ -91,52 +116,25 @@ export default function RoomFeatures() {
           </Title>
         )}
       >
-        <Container>
-          <FeatureItem title="Душ" icon={Shower} />
-          <FeatureItem title="Туалет" icon={Toilet} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Гардероб" icon={Wardrobe} />
-          <FeatureItem title="Тапочки" icon={FlipFlops} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Ковровое покрытие" icon={Carpet} />
-          <FeatureItem title="Кресло" icon={Chair} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Кофе" icon={Coffee} />
-          <FeatureItem title="Утюг" icon={Iron} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Фен" icon={Hairdryer} />
-          <FeatureItem title="Вода" icon={Water} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Гладильная доска" icon={Ironing} />
-          <FeatureItem title="Чайная станция" icon={Kettle} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Мини-бар" icon={MiniBar} />
-          <FeatureItem title="Стол" icon={Table} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Раздельные кровати" icon={TwoBeds} />
-          <FeatureItem title="Шикарный вид" icon={View} />
-        </Container>
-
-        <Container>
-          <FeatureItem title="Кондиционер" icon={AC} />
-        </Container>
+        {Object.entries(icons).reduce(splitByChunksOfTwo, []).map(chunk => (
+          <Container>
+            {chunk.map(([icon, iconLabel]) => (
+              <FeatureItem title={iconLabel} icon={iconsMap[icon]} />
+            ))}
+          </Container>
+        ))}
       </Accordion>
     </div>
   );
+}
+
+function splitByChunksOfTwo(resultArray, item, index) {
+  const chunkIndex = Math.floor(index / 2)
+  if (!resultArray[chunkIndex]) {
+    resultArray[chunkIndex] = [];
+  }
+  resultArray[chunkIndex].push(item)
+  return resultArray
 }
 
 const StyledFeatureItem = styled.div`

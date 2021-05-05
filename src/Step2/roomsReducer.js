@@ -42,10 +42,18 @@ export function setFetchRoomsError(error) {
   return { type: SET_FETCH_ROOM_ERROR, error };
 }
 
+// example icons
+const icons = {
+  carpet: "Ковер",
+  chair: "Кресло",
+  coffee: "Кофе"
+}
+
 export const getRooms = state => state.rooms.rooms;
 export const getExtraServices = state => state.rooms.services;
 export const getRoomsLoadState = state => state.rooms.isLoadingRooms;
 export const getRoomLoadError = state => state.rooms.loadRoomsError;
+export const getRoomIcons = () => icons;
 
 export const getServiceCost = {
   EVERY_NIGHT: (price, nightsCount) => price * nightsCount,
