@@ -42,13 +42,13 @@ function* getRequestParams() {
 }
 
 function* fetchRooms({ pms_type, hotel_id, ...params }) {
-  const url = `/api/v1/${pms_type}/availability/${hotel_id}/`;
+  const url = `/api/v1/availability/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }
 
 function* fetchServices({ pms_type, hotel_id, ...params }) {
-  const url = `/api/v1/${pms_type}/packages/${hotel_id}/`;
+  const url = `/api/v1/packages/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }

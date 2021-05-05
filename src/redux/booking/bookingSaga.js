@@ -61,7 +61,7 @@ async function requestRoom(bookingParams) {
     comment,
   } = bookingParams;
 
-  const url = `api/v1/${pms_type}/reservation/${hotel_id}/`;
+  const url = `api/v1/reservation/${hotel_id}/`;
 
   const bodyRequest = {
     guest,
