@@ -5,7 +5,7 @@ import styled from "styled-components";
 import RoomRate from "./RoomRate";
 import ImageGallery from "./ImageGallery";
 import Price from "./Price";
-import RoomFeatures from "./RoomFeatures";
+import { RoomFeatures } from "./roomFeatures";
 import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import { Card } from "../components/styled";
@@ -27,6 +27,7 @@ export default function RoomShowcase({ room, onSelect }) {
     original_price,
     short_description,
     rates,
+    room_options,
   } = room;
 
   const onRateSelect = rate => {
@@ -63,14 +64,19 @@ export default function RoomShowcase({ room, onSelect }) {
       <Content>
         <Accordion
           renderTitle={(toggle, open) => (
-            <Title onClick={toggle} style={{ justifyContent: "center" }}>
+            <Title
+              onClick={toggle}
+              style={{ justifyContent: "center", marginBottom: "1rem" }}
+            >
               Информация о номере <Icon open={open} />
             </Title>
           )}
         >
-          <RoomDetails>
+          <RoomDetails style={{ paddingBottom: "1rem" }}>
             <HTMLParser html={short_description} />
-            <RoomFeatures />
+            {room_options.length ? (
+              <RoomFeatures features={room_options} />
+            ) : null}
           </RoomDetails>
         </Accordion>
 
