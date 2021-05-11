@@ -68,6 +68,9 @@ async function requestRoom(bookingParams) {
     reservation: {
       room_code: room.room_code,
       rate_code: rate.rate_code,
+      price:
+        rate.total_price +
+        packages.reduce((sum, service) => (sum += service.totalCost), 0),
       arrival,
       departure,
       adults,
