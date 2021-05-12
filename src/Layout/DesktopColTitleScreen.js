@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { SvgIcon } from "../Step2/RoomFeatures";
+import { SvgIcon } from "../components/SvgIcon";
 
 const fadeIn = keyframes`
   from {
