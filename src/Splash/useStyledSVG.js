@@ -13,11 +13,9 @@ export default function useStyledSvg(cssUrl, svgUrl) {
         setSvg(response);
         setLoading(false);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         setLoading(false);
       });
-    return () => {};
   }, [cssUrl, svgUrl]);
 
   return [svg, loading];

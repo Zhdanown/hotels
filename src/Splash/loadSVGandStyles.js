@@ -4,7 +4,8 @@ export default async function loadSVGandStyles({ cssUrl, svgUrl }) {
   function getUrl(url) {
     if (process.env.NODE_ENV === "development") {
       return new URL(url).pathname;
-    } else return url;
+    }
+    return url;
   }
 
   const [{ data: styles }, { data: svgTxt }] = await Promise.all([
@@ -12,8 +13,8 @@ export default async function loadSVGandStyles({ cssUrl, svgUrl }) {
     api.get(getUrl(svgUrl)),
   ]);
 
-  var head = document.head;
-  var style = document.createElement("style");
+  const { head } = document;
+  const style = document.createElement("style");
 
   head.appendChild(style);
 

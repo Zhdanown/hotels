@@ -15,24 +15,22 @@ function whitelisted(url) {
   return list.some(listItem => url.includes(listItem));
 }
 
-api.interceptors.request.use(request => {
-  const token = CookieUtils.getToken();
-
-  if (token && whitelisted(request.url)) {
-    request.headers.common["Authorization"] = `NLB ${token}`;
-  }
-  return request;
-});
-
-export default api;
-
-window.api = api;
-
 export const CookieUtils = {
   setToken: token => Cookies.set("nlb_token", token),
   getToken: () => Cookies.get("nlb_token"),
   clearToken: () => Cookies.remove("nlb_token"),
 };
+
+api.interceptors.request.use(request => {
+  const token = CookieUtils.getToken();
+
+  if (token && whitelisted(request.url)) {
+    request.headers.common.Authorization = `NLB ${token}`;
+  }
+  return request;
+});
+
+export default api;
 
 export const getAuthHeaderIfTokenPresent = () => {
   const token = CookieUtils.getToken();

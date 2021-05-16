@@ -12,10 +12,9 @@ export async function getUserInfo() {
 export async function signIn(bodyRequest) {
   try {
     const response = await api.post("/api/v1/users/jwt-token/", bodyRequest);
-    const token = response.data.token;
+    const { token } = response.data;
     return { token };
   } catch (error) {
     return { signInError: error };
   }
 }
-

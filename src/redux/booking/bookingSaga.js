@@ -19,12 +19,10 @@ function* bookRoom(action) {
   const { payload, error } = yield call(getParamsAndRequestRoom, action);
   if (payload) {
     yield put(setBookingResponse(payload));
+  } else if (error.response.data) {
+    yield put(setBookingError(error.response.data));
   } else {
-    if (error.response.data) {
-      yield put(setBookingError(error.response.data));
-    } else {
-      yield put(setBookingError(error));
-    }
+    yield put(setBookingError(error));
   }
 
   yield put(isBooking(false));
@@ -46,7 +44,7 @@ function* getParamsAndRequestRoom(action) {
 }
 
 async function requestRoom(bookingParams) {
-  const { hotel_id, pms_type } = bookingParams;
+  const { hotel_id } = bookingParams;
   const {
     guest,
     payment,

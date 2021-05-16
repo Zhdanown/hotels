@@ -8,6 +8,7 @@ export function emailIsValid(email) {
 }
 
 export function phoneIsValid(phone) {
+  // eslint-disable-next-line no-useless-escape
   const re = /^[+]?[1-9][(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
   return re.test(String(phone).toLowerCase());
 }
@@ -15,11 +16,14 @@ export function phoneIsValid(phone) {
 export function passwordIsInvalid(password) {
   if (!/^(?=.*\d)/.test(password)) {
     return "Пароль должен содержать хотя бы 1 цифру";
-  } else if (!/^(?=.*[a-z])/.test(password)) {
+  }
+  if (!/^(?=.*[a-z])/.test(password)) {
     return "Пароль должен содержать буквы в нижнем регистре";
-  } else if (!/^(?=.*[A-Z])/.test(password)) {
+  }
+  if (!/^(?=.*[A-Z])/.test(password)) {
     return "Пароль должен содержать буквы в верхнем регистре";
-  } else if (!/^(.{8,})/.test(password)) {
+  }
+  if (!/^(.{8,})/.test(password)) {
     return "Длина пароля должны быть не менее 8 символов";
   }
 
@@ -27,14 +31,12 @@ export function passwordIsInvalid(password) {
 }
 
 export function mapServerErrors(serverErrors) {
-  return Object.keys(serverErrors).reduce((acc, current) => {
-    acc = { ...acc, [current]: serverErrors[current].join("; ") };
-    return acc;
-  }, {});
+  return Object.keys(serverErrors).reduce(
+    (acc, current) => ({ ...acc, [current]: serverErrors[current].join("; ") }),
+    {}
+  );
 }
 
 export function filterFalsyObjectKeys(obj) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value)
-  );
+  return Object.fromEntries(Object.entries(obj).filter(([, value]) => value));
 }

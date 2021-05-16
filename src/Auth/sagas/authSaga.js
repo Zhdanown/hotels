@@ -8,8 +8,8 @@ import {
   REGISTER,
   SET_USER,
   START_SESSION,
+  loginPending,
 } from "../authReducer";
-import { loginPending } from "../authReducer";
 import loginWatcher, { logoutWatcher } from "./loginSaga";
 import registerWatcher from "./registerSaga";
 import { getUserInfo } from "./authSagaHelpers";
@@ -31,17 +31,15 @@ function* startSessionWatcher() {
 
   if (userInfo) {
     yield put({ type: SET_USER, userInfo });
-  } else {
-    if (userInfoError.response.status === 401) {
-      yield call(redirectToLoginPage);
-      yield put(logout())
-    }
+  } else if (userInfoError.response.status === 401) {
+    yield call(redirectToLoginPage);
+    yield put(logout());
   }
   yield put(loginPending(false));
 }
 
 function* redirectToLoginPage() {
-  let { pathname } = window.location;
+  const { pathname } = window.location;
 
   const match = pathname.match(/^(?<path>\/\w*)(\/login\/?)?/);
   if (match) {

@@ -1,8 +1,11 @@
 import { call, put, select } from "redux-saga/effects";
 import api, { CookieUtils } from "../../redux/api";
 import { getConfigId } from "../../redux/hotelConfig";
-import { SET_USER } from "../authReducer";
-import { registrationPending, setRegisterError } from "../authReducer";
+import {
+  SET_USER,
+  registrationPending,
+  setRegisterError,
+} from "../authReducer";
 import { getUserInfo, signIn } from "./authSagaHelpers";
 
 export default function* registerWatcher(action) {

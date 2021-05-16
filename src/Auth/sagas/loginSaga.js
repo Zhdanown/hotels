@@ -1,7 +1,6 @@
 import { call, put } from "redux-saga/effects";
 import { CookieUtils } from "../../redux/api";
-import { SET_USER } from "../authReducer";
-import { loginPending, setLoginError } from "../authReducer";
+import { SET_USER, loginPending, setLoginError } from "../authReducer";
 import { getUserInfo, signIn } from "./authSagaHelpers";
 
 export default function* loginWatcher(action) {
@@ -25,6 +24,6 @@ export default function* loginWatcher(action) {
   yield put(loginPending(false));
 }
 
-export function* logoutWatcher(action) {
+export function* logoutWatcher() {
   yield call(CookieUtils.clearToken);
 }
