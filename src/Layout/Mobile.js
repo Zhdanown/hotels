@@ -3,23 +3,24 @@ import styled, { createGlobalStyle } from "styled-components";
 
 import LayoutContext from "./LayoutContext";
 import { ColumnMobileQueries } from "./MediaQueries";
-import useNavbarHeight from "./hooks/useNavbarHeight";
 import TitleScreen from "./DesktopColTitleScreen";
 
 const HTMLOverflowHidden = createGlobalStyle`
-  html {
-    overflow: hidden;
+  html, body, #root {
+    height: 100%;
   }
 `;
 
 const Layout = styled.div`
   overflow-x: hidden;
+  width: 100%;
+  height: 100%;
 
-  .wrapper {
+  .columns-wrapper {
     display: flex;
     width: 300%;
+    height: 100%;
     transition: transform 0.5s;
-    overflow-y: hidden;
     transform: translateX(${p => p.step * -33.33}%);
   }
 `;
@@ -38,17 +39,17 @@ function LayoutMobile({ children }) {
   return (
     <>
       <HTMLOverflowHidden />
-      <Layout className="layout-mobile" step={currentStep - 1}>
-        <div className="wrapper">
-          <MColumn num={1} goForward={goForward}>
+      <Layout className="layout-viewport" step={currentStep - 1}>
+        <div className="columns-wrapper">
+          <MobileColumn num={1} goForward={goForward}>
             {children[0]}
-          </MColumn>
-          <MColumn num={2} goBack={goBack} goForward={goForward}>
+          </MobileColumn>
+          <MobileColumn num={2} goBack={goBack} goForward={goForward}>
             {children[1]}
-          </MColumn>
-          <MColumn num={3} goBack={goBack}>
+          </MobileColumn>
+          <MobileColumn num={3} goBack={goBack}>
             {children[2]}
-          </MColumn>
+          </MobileColumn>
         </div>
       </Layout>
     </>
@@ -56,14 +57,12 @@ function LayoutMobile({ children }) {
 }
 
 const StyledColumn = styled.div`
-  height: calc(100vh - ${p => p.navbarHeight}px);
   flex: 1;
   transition: all 0.5s;
-  overflow-y: hidden;
   transform: scale(${p => (p.active ? 1 : 0.4)});
   opacity: ${p => (p.active ? 1 : 0.5)};
 
-  .column-wrapper {
+  .column-viewport {
     overflow-y: auto;
     height: 100%;
   }
@@ -80,13 +79,13 @@ const ColumnContainer = styled.div`
   ${ColumnMobileQueries}
 `;
 
-function MColumn({ children, num }) {
+function MobileColumn({ children, num }) {
   const { currentStep } = useContext(LayoutContext);
   const active = currentStep === num;
 
   return (
-    <StyledColumn active={active} navbarHeight={useNavbarHeight}>
-      <div className="column-wrapper">
+    <StyledColumn active={active}>
+      <div className="column-viewport">
         <ColumnContainer>{children}</ColumnContainer>
         <TitleScreen num={num} />
       </div>

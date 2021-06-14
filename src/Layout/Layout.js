@@ -19,7 +19,7 @@ function Layout({ children }) {
   }, [hotelName]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: '100%' }}>
       {isShowNavbar && <Navbar />}
       {isDesktop ? (
         <LayoutDesktop>{children}</LayoutDesktop>
