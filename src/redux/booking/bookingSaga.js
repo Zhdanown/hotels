@@ -78,7 +78,7 @@ async function requestRoom(bookingParams) {
       payment,
       childs: childs.filter(x => x.count),
       packages: packages.map(x => ({ code: x.code, price: x.price })),
-      notes: [{ code: "RES", text: comment }],
+      notes: [{ code: "RMA", text: comment }],
     },
   };
 

@@ -91,6 +91,7 @@ const StyledInput = styled(ReactInputMask)`
   border: 1px solid ${p => p.color};
   border-radius: 3px;
   resize: none;
+  padding-left: 0.5rem;
 
   &::placeholder {
     transition: transform ${SPEED}s;

@@ -25,7 +25,7 @@ export default function PaymentOptions() {
   const bookRoom = payment => dispatch(submitOrder(payment));
 
   const onOptionSelect = opt => {
-    const payment = opt.is_not_pay ? null : { percent: 100 };
+    const payment = opt.is_not_pay ? null : opt;
     setPayment({ payment });
   };
 

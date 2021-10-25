@@ -51,7 +51,7 @@ function Category({ initialValue, onChange, name, annotation }) {
 export default Category;
 
 export function ChildCategory({ category, onChange }) {
-  const { code, name } = category;
+  const { code, name, from_age, to_age } = category;
   const onChildrenCountChange = useCallback(
     count => {
       onChange(count, code);
@@ -61,8 +61,8 @@ export function ChildCategory({ category, onChange }) {
 
   return (
     <Category
-      name="Дети"
-      annotation={name}
+      name={name}
+      annotation={`От ${from_age} до ${to_age}`}
       initialValue={0}
       onChange={onChildrenCountChange}
     ></Category>
