@@ -6,7 +6,8 @@ import { Centered } from "../components/Centered";
 import Button from "../components/Button";
 import HTMLParser from "../components/HTMLParser";
 import { getPaymentOptions, getPaymentForm } from "../redux/hotelConfig";
-import { submitOrder } from "../redux/booking";
+import { submitOrder, getParams } from "../redux/booking";
+
 
 const Option = styled.div`
   flex-grow: 1;
@@ -18,6 +19,10 @@ const Option = styled.div`
 
 export default function PaymentOptions() {
   const options = useSelector(getPaymentOptions);
+  const orderInfo = useSelector(getParams);
+
+  const nights = orderInfo.rate.nights.length;
+
   const dispatch = useDispatch();
 
   const [selectedPayment, setPayment] = useState(null);
@@ -38,13 +43,22 @@ export default function PaymentOptions() {
     <>
       <h1 className="is-size-4">Варианты бронирования</h1>
       <div className="mt-3" style={{ display: "flex" }}>
-        {options.map(option => (
-          <Option key={option.id}>
-            <Button block onClick={() => onOptionSelect(option)}>
-              {option.payment_type}
-            </Button>
-          </Option>
-        ))}
+        {
+        options.map(option => (
+          <>
+          {
+            nights==1 && option.payment_alias=='FIRST_NIGTH' ? (
+              null
+            ) : 
+            <Option key={option.id}>
+              <Button block onClick={() => onOptionSelect(option)}>
+                {option.payment_type}
+              </Button>
+            </Option>
+          }
+          </>
+        ))
+        }
       </div>
     </>
   );
