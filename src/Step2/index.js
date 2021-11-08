@@ -21,7 +21,7 @@ function RoomsWithExtraServices() {
 
   const continueBooking = () => {
     setStep(step => ++step);
-    // dispatch(changeParams(selectedRoomAndRate));
+    dispatch(changeParams(selectedRoomAndRate));
   };
 
   useEffect(() => {
