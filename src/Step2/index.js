@@ -1,12 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import produce from "immer";
 
-import LayoutContext from "../Layout/LayoutContext";
+import Rooms from "./Rooms";
+import ExtraServicesList from "./ExtraServiceList";
 import { getExtraServices } from "./roomsReducer";
 import { changeParams } from "../redux/booking";
-import produce from "immer";
-import ExtraServicesList from "./ExtraServiceList";
-import Rooms from "./Rooms";
+import LayoutContext from "../Layout/LayoutContext";
 
 function RoomsWithExtraServices() {
   const extraServices = useSelector(getExtraServices);
@@ -20,8 +20,8 @@ function RoomsWithExtraServices() {
   const [scrolled, setScrolled] = useState(false);
 
   const continueBooking = () => {
+    dispatch(changeParams(selectedRoomAndRate));
     setStep(step => ++step);
-    // dispatch(changeParams(selectedRoomAndRate));
   };
 
   useEffect(() => {
@@ -34,15 +34,12 @@ function RoomsWithExtraServices() {
     }
   }, [headerRef, scrolled]);
 
-  const onSelect = data => {
-    setSelected(data);
-
-    if (!extraServices.length) {
-      // skip extraServices
-      dispatch(changeParams(data));
+  useEffect(() => {
+    // skip extraServices step
+    if (selectedRoomAndRate && !extraServices.length) {
       continueBooking();
     }
-  };
+  }, [extraServices, selectedRoomAndRate]);
 
   const cancelServices = () => {
     setSelected(null);
@@ -85,7 +82,7 @@ function RoomsWithExtraServices() {
       />
     );
   }
-  return <Rooms onSelect={onSelect} goBack={goStepBack} />;
+  return <Rooms onSelect={setSelected} goBack={goStepBack} />;
 }
 
 export default RoomsWithExtraServices;
