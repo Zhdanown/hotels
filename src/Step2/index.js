@@ -48,6 +48,7 @@ function RoomsWithExtraServices() {
 
   const goStepBack = () => {
     setStep(step => --step);
+    setSelected(null);
   };
 
   useEffect(() => {
