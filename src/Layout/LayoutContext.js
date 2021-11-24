@@ -23,7 +23,16 @@ function useSteps() {
   const dispatchControlledAction = step => {
     updateSteps(
       produce(draft => {
-        draft[step].enabled = true;
+        const selectedStep = draft[step];
+        const nextStep = draft[step + 1];
+
+        if (!selectedStep.enabled) {
+          selectedStep.enabled = true;
+        }
+
+        if (nextStep && nextStep.enabled) {
+          nextStep.enabled = false;
+        }
       })
     );
   };
