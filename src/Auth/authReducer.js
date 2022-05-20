@@ -74,6 +74,9 @@ export function setRegisterError(error) {
 export function login(payload) {
   return { type: LOGIN, payload };
 }
+export function sberLogin() {
+  return { type: LOGIN, payload: { sberLogin: true }};
+}
 
 export function loginPending(payload) {
   return { type: LOGIN_PENDING, payload };

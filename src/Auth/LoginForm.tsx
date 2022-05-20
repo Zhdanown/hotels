@@ -7,11 +7,17 @@ import Button from "../components/Button";
 import Loader from "../components/Loader";
 import { Error } from "../components/Input";
 import { FormikInput } from "../components/Input";
-import { getIsLoginPending, getLoginError, getUser } from "./authReducer";
+import {
+  getIsLoginPending,
+  getLoginError,
+  getUser,
+  sberLogin,
+} from "./authReducer";
 import { login } from "./authReducer";
+import { SberIcon } from "../components/CustomIcons";
 
-function validate(values) {
-  const errors = {};
+function validate(values: any) {
+  const errors = {} as any;
 
   if (!values.username) {
     errors.username = "Это поле не должно быть пустым";
@@ -23,19 +29,23 @@ function validate(values) {
   return errors;
 }
 
-export default function LoginForm({ close }) {
+export default function LoginForm({ close }: { close: () => void }) {
   const user = useSelector(getUser);
   const isPending = useSelector(getIsLoginPending);
   const loginError = useSelector(getLoginError);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let timeout;
+    let timeout: NodeJS.Timeout;
     if (user) {
       timeout = setTimeout(close, 1500);
     }
     return () => clearTimeout(timeout);
   }, [user, close]);
+
+  const redirectToSberLogin = () => {
+    dispatch(sberLogin());
+  };
 
   if (user) {
     return (
@@ -79,6 +89,19 @@ export default function LoginForm({ close }) {
             Войти
           </Button>
         )}
+        <hr />
+        <Button block onClick={redirectToSberLogin}>
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <SberIcon style={{ marginRight: 8 }} />
+            Войти по SberId
+          </span>
+        </Button>
         <AuthLink to="/register">зарегистрироваться</AuthLink>
       </Form>
     </Formik>

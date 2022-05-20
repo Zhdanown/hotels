@@ -1,11 +1,16 @@
 import { LeftOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { ButtonHTMLAttributes, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { mediumMobileWidth } from "../Layout/MediaQueries";
 import { getPrimaryColor, getHoverColor } from "../redux/hotelConfig";
 
-const ColoredButton = styled.button`
+const ColoredButton = styled.button<{
+  bgColor: string;
+  block?: boolean;
+  outline?: boolean;
+  hoverColor: string;
+}>`
   background-color: ${props => props.bgColor};
   width: ${props => (props.block ? "100%" : "unset")};
   color: white;
@@ -14,7 +19,7 @@ const ColoredButton = styled.button`
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition: background-color 0.2s, opacity 0.2s;
 
   &.small {
     padding: 0.25rem 0.5rem;
@@ -41,10 +46,16 @@ const ColoredButton = styled.button`
 
   @media (max-width: ${mediumMobileWidth}) {
     font-size: 0.8rem;
-  }
+  }<
 `;
 
-function Button({ children, onClick, disabled, ...props }) {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  small?: boolean;
+  outline?: boolean;
+  block?: boolean;
+};
+
+function Button({ children, onClick, disabled, style, ...props }: ButtonProps) {
   const primaryColor = useSelector(getPrimaryColor);
   const hoverColor = useSelector(getHoverColor);
 
@@ -56,7 +67,7 @@ function Button({ children, onClick, disabled, ...props }) {
       hoverColor={hoverColor}
       disabled={disabled}
       onClick={onClick}
-      style={props.style}
+      style={style}
       {...props}
     >
       {children}
@@ -66,7 +77,14 @@ function Button({ children, onClick, disabled, ...props }) {
 
 export default Button;
 
-export function BackButton({ children, ...props }) {
+export function BackButton({
+  children,
+  outline,
+  ...props
+}: {
+  children: ReactNode;
+  outline?: boolean;
+}) {
   return (
     <Button small outline {...props}>
       <LeftOutlined />

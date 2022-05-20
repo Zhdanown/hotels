@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useRouteMatch, matchPath } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { SberIcon } from "../components/CustomIcons";
 
 import Loader from "../components/Loader";
 import { getPrimaryColor } from "../redux/hotelConfig";
@@ -26,7 +27,13 @@ function AuthNavButton() {
   } else if (isLoginPending) {
     return <Loader />;
   } else if (user) {
-    return <SignOutBtn signOut={signOut} name={user.first_name} />;
+    return (
+      <SignOutBtn
+        signOut={signOut}
+        name={user.first_name}
+        isSberUser={user.sber_info}
+      />
+    );
   } else {
     return <SignInBtn url={url} />;
   }
@@ -34,7 +41,7 @@ function AuthNavButton() {
 
 export default AuthNavButton;
 
-const SignOutBtn = ({ signOut, name }) => {
+const SignOutBtn = ({ signOut, name, isSberUser }) => {
   const color = useSelector(getPrimaryColor);
 
   const {
@@ -44,6 +51,7 @@ const SignOutBtn = ({ signOut, name }) => {
   return (
     <Dropdown color={color}>
       <NavbarLink as="button" witharrow color={color}>
+        {isSberUser && <SberIcon style={{ marginRight: 8 }} />}
         {name}
       </NavbarLink>
       <DropdownMenu color={color}>

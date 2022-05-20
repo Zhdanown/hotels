@@ -2,13 +2,17 @@ import { call, put } from "redux-saga/effects";
 import { CookieUtils } from "../../redux/api";
 import { SET_USER } from "../authReducer";
 import { loginPending, setLoginError } from "../authReducer";
-import { getUserInfo, signIn } from "./authSagaHelpers";
+import { getUserInfo, sberSignIn, signIn } from "./authSagaHelpers";
 
 export default function* loginWatcher(action) {
   yield put(loginPending(true));
   yield put(setLoginError(null));
 
-  const { token, signInError } = yield call(signIn, action.payload);
+  const { sberLogin, ...bodyRequest } = action.payload;
+  const { token, signInError } = yield call(
+    sberLogin ? sberSignIn : signIn,
+    bodyRequest
+  );
   if (signInError) {
     if (signInError.response.data) {
       yield put(setLoginError(signInError.response.data));
