@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form as FormikForm } from "formik";
+import { useParams } from "react-router-dom";
 
 import { AuthLink, Form, FormTitle, Greetings } from "./components";
 import Button from "../components/Button";
@@ -11,7 +12,6 @@ import {
   getIsLoginPending,
   getLoginError,
   getUser,
-  sberLogin,
 } from "./authReducer";
 import { login } from "./authReducer";
 import { SberIcon } from "../components/CustomIcons";
@@ -35,6 +35,10 @@ export default function LoginForm({ close }: { close: () => void }) {
   const loginError = useSelector(getLoginError);
   const dispatch = useDispatch();
 
+  const api = process.env.REACT_APP_API
+
+  let { slug: hotelAlias } = useParams<{ slug?: string }>();
+
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (user) {
@@ -42,10 +46,6 @@ export default function LoginForm({ close }: { close: () => void }) {
     }
     return () => clearTimeout(timeout);
   }, [user, close]);
-
-  const redirectToSberLogin = () => {
-    dispatch(sberLogin());
-  };
 
   if (user) {
     return (
@@ -90,18 +90,20 @@ export default function LoginForm({ close }: { close: () => void }) {
           </Button>
         )}
         <hr />
-        <Button block onClick={redirectToSberLogin}>
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <SberIcon style={{ marginRight: 8 }} />
-            Войти по SberId
-          </span>
-        </Button>
+        <a href={`${api}api/v1/users/sberID-login-form?hotel_alias=${hotelAlias}`}>
+          <Button block>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <SberIcon style={{ marginRight: 8 }} />
+              Войти по SberId
+            </span>
+          </Button>
+        </a>
         <AuthLink to="/register">зарегистрироваться</AuthLink>
       </Form>
     </Formik>

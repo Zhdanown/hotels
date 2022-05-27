@@ -19,14 +19,3 @@ export async function signIn(bodyRequest) {
   }
 }
 
-export async function sberSignIn(bodyRequest) {
-  try {
-    const response = await api.post("/api/v1/users/sberID-auth", {
-      username: "nik",
-    });
-    const { token } = response.data;
-    return { token };
-  } catch (error) {
-    return { signInError: error };
-  }
-}
