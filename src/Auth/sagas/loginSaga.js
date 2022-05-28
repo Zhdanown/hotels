@@ -3,12 +3,18 @@ import { CookieUtils } from "../../redux/api";
 import { SET_USER } from "../authReducer";
 import { loginPending, setLoginError } from "../authReducer";
 import { getUserInfo, signIn } from "./authSagaHelpers";
+import { signInWithSber } from "./sberSaga";
 
 export default function* loginWatcher(action) {
   yield put(loginPending(true));
   yield put(setLoginError(null));
 
-  const { token, signInError } = yield call(signIn, action.payload);
+  const { one_time_pass } = action.payload;
+
+  const { token, signInError } = one_time_pass
+    ? yield call(signInWithSber, one_time_pass)
+    : yield call(signIn, action.payload);
+
   if (signInError) {
     if (signInError.response.data) {
       yield put(setLoginError(signInError.response.data));

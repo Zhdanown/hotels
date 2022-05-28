@@ -9,7 +9,7 @@ import Step3 from "./Step3/Step3";
 import { LayoutContextProvider } from "./Layout/LayoutContext";
 import history from "./history";
 import AuthRoutes from "./Auth/AuthRoutes";
-import { startSession } from "./Auth/authReducer";
+import { login, startSession } from "./Auth/authReducer";
 import { useQueryParams } from "./useQueryParams";
 import { changeParams } from "./redux/booking";
 import { Toast } from "./components/Toast";
@@ -23,14 +23,15 @@ export default App;
 function App() {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
+  const { one_time_pass } = queryParams;
 
   useEffect(() => {
     dispatch(changeParams(queryParams));
   }, [queryParams, dispatch]);
 
   useEffect(() => {
-    dispatch(startSession());
-  }, [dispatch]);
+    dispatch(one_time_pass ? login({ one_time_pass }) : startSession());
+  }, [dispatch, one_time_pass]);
 
   return (
     <Router history={history}>

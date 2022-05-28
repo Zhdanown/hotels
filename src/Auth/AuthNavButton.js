@@ -31,7 +31,7 @@ function AuthNavButton() {
       <SignOutBtn
         signOut={signOut}
         name={user.first_name}
-        isSberUser={user.sber_info}
+        isSberEmploye={user.sber_info?.is_company_employee}
       />
     );
   } else {
@@ -41,7 +41,7 @@ function AuthNavButton() {
 
 export default AuthNavButton;
 
-const SignOutBtn = ({ signOut, name, isSberUser }) => {
+const SignOutBtn = ({ signOut, name, isSberEmploye }) => {
   const color = useSelector(getPrimaryColor);
 
   const {
@@ -51,7 +51,7 @@ const SignOutBtn = ({ signOut, name, isSberUser }) => {
   return (
     <Dropdown color={color}>
       <NavbarLink as="button" witharrow color={color}>
-        {isSberUser && <SberIcon style={{ marginRight: 8 }} />}
+        {isSberEmploye && <SberIcon style={{ marginRight: 8 }} />}
         {name}
       </NavbarLink>
       <DropdownMenu color={color}>
