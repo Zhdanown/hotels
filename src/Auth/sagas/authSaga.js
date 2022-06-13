@@ -15,13 +15,13 @@ import registerWatcher from "./registerSaga";
 import { getUserInfo } from "./authSagaHelpers";
 
 export default function* authSaga() {
-  yield takeEvery(START_SESSION, startSessionWatcher);
+  yield takeEvery(START_SESSION, fetchUserInfo);
   yield takeEvery(REGISTER, registerWatcher);
   yield takeEvery(LOGIN, loginWatcher);
   yield takeEvery(LOGOUT, logoutWatcher);
 }
 
-function* startSessionWatcher() {
+export function* fetchUserInfo() {
   const token = yield call(CookieUtils.getToken);
   if (!token) return;
 

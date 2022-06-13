@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { getPrimaryColor } from "../redux/hotelConfig";
@@ -7,17 +7,14 @@ import { mediumMobileWidth } from "../Layout/MediaQueries";
 
 function Checkbox({ value, onChange, label }) {
   const color = useSelector(getPrimaryColor);
-  const [checked, setChecked] = useState(value);
 
-  useEffect(() => {
-    onChange(checked);
-  }, [checked, onChange]);
-
-  const toggle = () => setChecked(isChecked => !isChecked);
+  const onCheckboxChange = ({ target }) => {
+    onChange(target.checked)
+  }
 
   return (
     <CheckboxInput color={color}>
-      <Input type="checkbox" checked={checked} onChange={toggle} />
+      <Input type="checkbox" checked={value} onChange={onCheckboxChange} />
       <ToggleLabel>
         <span>{label}</span>
       </ToggleLabel>

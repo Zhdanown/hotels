@@ -8,12 +8,14 @@ import configReducer from "./hotelConfig";
 import roomsReducer from "../Step2/roomsReducer";
 import authReducer from "../Auth/authReducer";
 import rootSaga from "./rootSaga";
+import { extraGuestReducer } from "../Step3/AddedGuests.saga";
 
 const rootReducer = combineReducers({
   rooms: roomsReducer,
   reservation: reservationReducer,
   hotelConfig: configReducer,
   auth: authReducer,
+  guests: extraGuestReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
