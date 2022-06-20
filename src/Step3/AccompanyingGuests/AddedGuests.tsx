@@ -152,7 +152,7 @@ const GuestList = ({
   onEditGuest: (guest: Guest) => void;
 }) => {
   const onSelectGuest = (checked: boolean, guest: Guest) => {
-    const newSelected = [...selectedGuests, guest.id]
+    const newSelected = checked ? [...selectedGuests, guest.id] : selectedGuests.filter(x => x !== guest.id)
 
     if (guestCount < newSelected.length) {
       console.warn(`you can choose no more than ${guestCount} guests`);
