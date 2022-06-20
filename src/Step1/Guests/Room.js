@@ -17,7 +17,7 @@ function Room() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(changeParams({ adults }));
+    dispatch(changeParams({ adults, guests: [] }));
   }, [adults, dispatch]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function Room() {
 
   useEffect(() => {
     const newChilds = childs.map(({ code, count }) => ({ code, count }));
-    dispatch(changeParams({ childs: newChilds }));
+    dispatch(changeParams({ childs: newChilds, guests: [] }));
   }, [childs, dispatch]);
 
   const updateChilds = useCallback((count, index) => {
