@@ -1,13 +1,18 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getIsSberEmploye, getUser } from "../../Auth/authReducer";
-import Button from "../../components/Button";
+import Button, { ButtonWithIcon } from "../../components/Button";
 import Modal from "../../components/Modal";
 import { changeParams, getParams } from "../../redux/booking";
 import { GuestForm, GuestFormFields } from "./GuestForm";
 import { ExtraGuest } from "./ExtraGuest";
 import plural from "plural-ru";
 import styled from "styled-components";
+import {
+  ArrowLeftOutlined,
+  CheckOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 
 export type Attachment = {
   id: number;
@@ -88,7 +93,9 @@ export const AddedGuests = () => {
   const renderList = () => (
     <>
       <div className="has-text-centered">
-        <Button onClick={createGuest}>+ Добавить гостя</Button>
+        <ButtonWithIcon onClick={createGuest} Icon={PlusOutlined}>
+          Добавить гостя
+        </ButtonWithIcon>
       </div>
       <GuestList
         guests={userGuests}
@@ -98,9 +105,14 @@ export const AddedGuests = () => {
         onEditGuest={onEditGuest}
       />
       <div className="has-text-centered">
-        <Button onClick={confirmGuests} disabled={!selectedGuests.length} block>
+        <ButtonWithIcon
+          Icon={CheckOutlined}
+          onClick={confirmGuests}
+          disabled={!selectedGuests.length}
+          block
+        >
           Подтвердить состав гостей
-        </Button>
+        </ButtonWithIcon>
       </div>
     </>
   );
@@ -108,7 +120,12 @@ export const AddedGuests = () => {
   const renderForm = () =>
     guestForm.fields && (
       <>
-        <Button onClick={() => setView("list")}>Назад</Button>
+        <ButtonWithIcon
+          Icon={ArrowLeftOutlined}
+          onClick={() => setView("list")}
+        >
+          Назад
+        </ButtonWithIcon>
 
         <GuestForm
           initialValues={guestForm.fields}
@@ -152,7 +169,9 @@ const GuestList = ({
   onEditGuest: (guest: Guest) => void;
 }) => {
   const onSelectGuest = (checked: boolean, guest: Guest) => {
-    const newSelected = checked ? [...selectedGuests, guest.id] : selectedGuests.filter(x => x !== guest.id)
+    const newSelected = checked
+      ? [...selectedGuests, guest.id]
+      : selectedGuests.filter(x => x !== guest.id);
 
     if (guestCount < newSelected.length) {
       console.warn(`you can choose no more than ${guestCount} guests`);

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { mediumMobileWidth } from "../Layout/MediaQueries";
 import { getPrimaryColor, getHoverColor } from "../redux/hotelConfig";
+import AntIcon from "@ant-design/icons";
 
 const ColoredButton = styled.button<{
   bgColor: string;
@@ -92,3 +93,14 @@ export function BackButton({
     </Button>
   );
 }
+
+export const ButtonWithIcon = ({
+  Icon,
+  children,
+  ...props
+}: ButtonProps & { Icon: typeof AntIcon }) => (
+  <Button {...props}>
+    <Icon style={{ marginRight: "0.5rem" }} />
+    {children}
+  </Button>
+);

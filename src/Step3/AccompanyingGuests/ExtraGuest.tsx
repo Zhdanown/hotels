@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Checkbox from "../../components/Checkbox";
 import { mediumMobileWidth } from "../../Layout/MediaQueries";
 import { EditOutlined } from "@ant-design/icons";
-import Button from "../../components/Button";
+import { ButtonWithIcon } from "../../components/Button";
 import { Guest } from "./AddedGuests";
 import { AttachmentChip } from "./Attachment";
 
@@ -15,21 +15,40 @@ type ExtraGuestProps = {
   editGuest: (guest: Guest) => void;
 };
 
-export const ExtraGuest = ({ guest, selected, onSelect, disabled, editGuest }: ExtraGuestProps) => {
+export const ExtraGuest = ({
+  guest,
+  selected,
+  onSelect,
+  disabled,
+  editGuest,
+}: ExtraGuestProps) => {
   const { first_name, last_name, attachments } = guest;
   const label = `${first_name} ${last_name}`;
   return (
     <StyledService>
       <HeaderSection>
-        <Checkbox label={label} value={selected} disabled={disabled} onChange={onSelect} />
-        <Button small onClick={() => editGuest(guest)} disabled={disabled}>
-          <EditOutlined />
+        <Checkbox
+          label={label}
+          value={selected}
+          disabled={disabled}
+          onChange={onSelect}
+        />
+        <ButtonWithIcon
+          Icon={EditOutlined}
+          small
+          onClick={() => editGuest(guest)}
+          disabled={disabled}
+        >
           Редактировать
-        </Button>
+        </ButtonWithIcon>
       </HeaderSection>
       <>
         {attachments.map(attachment => (
-          <AttachmentChip key={attachment.id} fileName={attachment.file_name} disabled={disabled}/>
+          <AttachmentChip
+            key={attachment.id}
+            fileName={attachment.file_name}
+            disabled={disabled}
+          />
         ))}
       </>
     </StyledService>
