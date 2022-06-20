@@ -1,52 +1,109 @@
 import { Form, Formik, useFormikContext } from "formik";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getUser } from "../../Auth/authReducer";
 import Button from "../../components/Button";
 import { FormikInput } from "../../components/Input";
 import Loader from "../../components/Loader";
-import { addExtraGuest, getIsCreateGuestPending } from "../AddedGuests.saga";
+import { Attachment } from "./AddedGuests";
+import {
+  createExtraGuest,
+  getIsCreateGuestPending,
+  updateExtraGuest,
+} from "./AddedGuests.saga";
+import { AttachmentChip } from "./Attachment";
 
 export type GuestFormFields = {
   first_name: string;
   last_name: string;
-  files: FileList | null;
-  description: string;
+  files?: FileList | null;
+  attachment?: Attachment | null;
   id: number | null;
 };
 
 type GuestFormProps = {
   initialValues: GuestFormFields;
+  attachments?: Attachment[];
+  goBack: () => void;
 };
 
-export const GuestForm = ({ initialValues }: GuestFormProps) => {
+const useActionWhenPendingStops = (pending: boolean, action: () => void) => {
+  const pendingStarted = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (pendingStarted.current && !pending) {
+      pendingStarted.current = false;
+      action();
+    }
+    if (pending) {
+      pendingStarted.current = true;
+    }
+  }, [action, pending]);
+};
+
+export const GuestForm = ({ initialValues, goBack }: GuestFormProps) => {
   const isCreateGuestPending = useSelector(getIsCreateGuestPending);
-  const { id: userId }: { id: number } = useSelector(getUser) || {};
+  const user = useSelector(getUser) || {};
+  const { id: userId }: { id: number } = user;
+
+  useActionWhenPendingStops(isCreateGuestPending, goBack);
+
   const dispatch = useDispatch();
+
+  function validate(values: GuestFormFields) {
+    const errors = {} as { [P in keyof GuestFormFields]: string };
+
+    if (!values.first_name) {
+      errors.first_name = "Это поле не должно быть пустым";
+    }
+    if (!values.last_name) {
+      errors.last_name = "Это поле не должно быть пустым";
+    }
+
+    if (!values.attachment && !values.files?.length) {
+      errors.files = "Файл не выбран, Ошибка";
+    }
+
+    return errors;
+  }
 
   return (
     <div style={{ marginTop: 40 }}>
       <Formik
-        // key to rerender form when initialValues change 
+        // key to rerender form when initialValues change
         // (enableReinitialize doesn't work)
         key={initialValues.first_name + initialValues.last_name}
         initialValues={initialValues}
-        //   validate={validate}
+        validate={validate}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          const { first_name, last_name, files, description } = values;
+          const { first_name, last_name, files, id, attachment } = values;
 
-          dispatch(
-            addExtraGuest({
-              hotelId: 1,
-              userId,
-              firstName: first_name,
-              lastName: last_name,
-              files: files ? Array.from(files) : [],
-              description,
-            })
-          );
+          if (!attachment && !files?.length) {
+            return;
+          }
+
+          const getFiles = () => {
+            if (attachment) {
+              // attachment was not changed
+              return [];
+            }
+            // attachment was changed -> save new files
+            return files ? Array.from(files) : [];
+          };
+
+          const guest_ = {
+            guestId: id || null,
+            hotelId: 1,
+            userId,
+            firstName: first_name,
+            lastName: last_name,
+            files: getFiles(),
+          };
+
+          const action = id ? updateExtraGuest : createExtraGuest;
+          dispatch(action(guest_));
+
           setSubmitting(false);
         }}
       >
@@ -57,21 +114,14 @@ export const GuestForm = ({ initialValues }: GuestFormProps) => {
 };
 
 const NewGuestForm = ({ isPending }: { isPending: boolean }) => {
-  const { setFieldValue, getFieldProps } = useFormikContext();
+  const { setFieldValue, getFieldProps, isValid } = useFormikContext();
 
-  const changePreview = (files: File[]) => {
-    const [file] = files;
-    const preview = document.getElementById("preview") as any;
-    const reader = new FileReader();
-    reader.onloadend = function () {
-      preview.src = reader.result;
-    };
+  const guestId = getFieldProps("id").value;
+  const files = getFieldProps("files").value as FileList;
+  const attachment = getFieldProps("attachment").value;
 
-    if (file) {
-      reader.readAsDataURL(file);
-    } else {
-      preview.src = "";
-    }
+  const replaceFile = () => {
+    setFieldValue("files", null);
   };
 
   return (
@@ -79,39 +129,53 @@ const NewGuestForm = ({ isPending }: { isPending: boolean }) => {
       <FormikInput type="text" label="Имя" name="first_name" />
       <FormikInput type="text" label="Фамилия" name="last_name" />
 
-      <input
-        type="file"
-        name="file"
-        onChange={event => {
-          const fileList = event.target.files;
-          const files = fileList ? Array.from(fileList) : [];
-          setFieldValue("files", files);
-          changePreview(files);
-        }}
-        multiple
-      />
+      <FileContainer>
+        {!attachment && !files?.length && (
+          <input
+            type="file"
+            name="file"
+            accept="image/jpeg, image/png, application/pdf"
+            onChange={event => {
+              const fileList = event.target.files;
+              const files = fileList ? Array.from(fileList) : [];
+              setFieldValue("files", files);
+            }}
+          />
+        )}
 
-      {getFieldProps("files").value && (
-        <FormikInput type="text" label="Описание" name="description" />
-      )}
+        {attachment && (
+          <AttachmentChip
+            fileName={attachment.file_name}
+            onDelete={() => setFieldValue("attachment", null)}
+          />
+        )}
 
-      <Preview id="preview" src="" alt="preview..." />
+        {files?.length && (
+          <AttachmentChip fileName={files[0].name} onDelete={replaceFile} />
+        )}
+      </FileContainer>
 
-      <Button block type="submit">
-        Зарегистрировать нового гостя
+      <Button block type="submit" disabled={!isValid} style={{ marginTop: 20 }}>
+        {guestId ? "Сохранить изменения" : "Создать нового гостя"}
       </Button>
 
       {isPending ? (
-        <LoadPending>
+        <LoadingPending>
           <Loader />
-          <span>Добавляем гостя...</span>
-        </LoadPending>
+          <span>{guestId ? "Обновляем данные..." : "Добавляем гостя..."}</span>
+        </LoadingPending>
       ) : null}
     </Form>
   );
 };
 
-const LoadPending = styled.div`
+const FileContainer = styled.div`
+  height: 60;
+  display: flex;
+  align-items: center;
+`;
+
+const LoadingPending = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,13 +187,4 @@ const LoadPending = styled.div`
   top: 0;
   opacity: 0.8;
   background: white;
-`;
-
-const Preview = styled.img`
-  border-radius: 4px;
-  height: 200px;
-  width: 100%;
-  box-shadow: 0 2px 8px -1px grey;
-  object-fit: cover;
-  margin: 16px 0;
 `;

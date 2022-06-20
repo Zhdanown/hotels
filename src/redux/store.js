@@ -8,7 +8,7 @@ import configReducer from "./hotelConfig";
 import roomsReducer from "../Step2/roomsReducer";
 import authReducer from "../Auth/authReducer";
 import rootSaga from "./rootSaga";
-import { extraGuestReducer } from "../Step3/AddedGuests.saga";
+import { extraGuestReducer } from "../Step3/AccompanyingGuests/AddedGuests.saga";
 
 const rootReducer = combineReducers({
   rooms: roomsReducer,

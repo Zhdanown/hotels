@@ -9,7 +9,6 @@ import ColumnHeader from "../components/ColumnHeader";
 import { searchRooms } from "../Step2/roomsReducer";
 import LayoutContext from "../Layout/LayoutContext";
 import { getIsShowPromoCode } from "../redux/hotelConfig";
-import { AddedGuests } from "../Step3/AddedGuests";
 
 function Step1() {
   const IsShowPromoCode = useSelector(getIsShowPromoCode);
@@ -25,7 +24,6 @@ function Step1() {
     <>
       <ColumnHeader>Параметры бронирования</ColumnHeader>
       <Guests />
-      <AddedGuests />
       <DateRangePicker />
       {IsShowPromoCode ? <Promocode /> : null}
       <Button block onClick={onClick} style={{ marginBottom: "1rem" }}>

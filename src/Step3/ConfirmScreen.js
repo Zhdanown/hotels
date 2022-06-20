@@ -21,6 +21,7 @@ import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
 import { getUser } from "../Auth/authReducer";
 import { AuthLink } from "../Auth/components";
+import { AddedGuests } from "./AccompanyingGuests/AddedGuests";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
@@ -88,6 +89,10 @@ function ConfirmScreen() {
         )}
 
         <CommentField />
+
+        <div style={{ marginTop: 20 }}>
+          <AddedGuests />
+        </div>
 
         <Conditions column>
           <Link href={rulesAndServicesFile} target="_blank" underlined>

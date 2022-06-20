@@ -5,7 +5,7 @@ import { getPrimaryColor } from "../redux/hotelConfig";
 import checkmark from "../assets/checkmark.svg";
 import { mediumMobileWidth } from "../Layout/MediaQueries";
 
-function Checkbox({ value, onChange, label }) {
+function Checkbox({ value, onChange, label, disabled }) {
   const color = useSelector(getPrimaryColor);
 
   const onCheckboxChange = ({ target }) => {
@@ -14,7 +14,7 @@ function Checkbox({ value, onChange, label }) {
 
   return (
     <CheckboxInput color={color}>
-      <Input type="checkbox" checked={value} onChange={onCheckboxChange} />
+      <Input type="checkbox" checked={value} disabled={disabled} onChange={onCheckboxChange} />
       <ToggleLabel>
         <span>{label}</span>
       </ToggleLabel>
