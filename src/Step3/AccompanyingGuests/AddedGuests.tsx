@@ -1,9 +1,9 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getUser } from "../../Auth/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { getIsSberEmploye, getUser } from "../../Auth/authReducer";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
-import { getParams } from "../../redux/booking";
+import { changeParams, getParams } from "../../redux/booking";
 import { GuestForm, GuestFormFields } from "./GuestForm";
 import { ExtraGuest } from "./ExtraGuest";
 import plural from "plural-ru";
@@ -17,7 +17,7 @@ export type Attachment = {
   uploaded: string;
 };
 
-type Guest = {
+export type Guest = {
   first_name: string;
   last_name: string;
   id: number;
@@ -29,25 +29,31 @@ type GuestForm = {
   attachments?: Attachment[];
 };
 
-export type GuestOption = Guest & {
-  checked: boolean;
-};
-
 export const AddedGuests = () => {
   const params = useSelector(getParams);
   const { user_guests: userGuests }: { user_guests: Guest[] } =
     useSelector(getUser) || {};
+  const isSberEmploye = useSelector(getIsSberEmploye);
+  const reservationParams = useSelector(getParams);
 
   const extraGuestsCount = getExtraGuestsCount(params);
 
-  const [view, setView] = useState<"list" | "form">("list");
-
   const [isAddGuestOpen, toggleGuestScreen] = useState(false); // TEMP while in modal
-  const [selectedGuests, setSelectedGuests] = useState<GuestOption[]>([]);
+  const [selectedGuests, setSelectedGuests] = useState<number[]>(
+    reservationParams.guests || []
+  );
+  const [view, setView] = useState<"list" | "form">("list");
   const [guestForm, setGuestForm] = useState<GuestForm>({ fields: null });
 
+  useEffect(() => {
+    setSelectedGuests(reservationParams.guests || []);
+  }, [reservationParams.guests]);
+
+  const dispatch = useDispatch();
+
   const confirmGuests = () => {
-    console.log("Выбраны следующие гости", selectedGuests);
+    dispatch(changeParams({ guests: selectedGuests }));
+    toggleGuestScreen(false);
   };
 
   const createGuest = () => {
@@ -63,7 +69,7 @@ export const AddedGuests = () => {
     setView("form");
   };
 
-  const onEditGuest = (guest: GuestOption) => {
+  const onEditGuest = (guest: Guest) => {
     const { first_name, last_name, id, attachments } = guest;
 
     setGuestForm({
@@ -87,6 +93,7 @@ export const AddedGuests = () => {
       <GuestList
         guests={userGuests}
         guestCount={extraGuestsCount}
+        selectedGuests={selectedGuests}
         onSelectionChange={selectedGuests => setSelectedGuests(selectedGuests)}
         onEditGuest={onEditGuest}
       />
@@ -115,13 +122,15 @@ export const AddedGuests = () => {
     form: renderForm,
   };
 
-  if (!extraGuestsCount) {
+  if (!extraGuestsCount || !isSberEmploye) {
     return null;
   }
 
   return (
     <>
-      <Button onClick={() => toggleGuestScreen(true)} block>Выбрать сопровождающих гостей</Button>
+      <Button onClick={() => toggleGuestScreen(true)} block>
+        Выбрать сопровождающих гостей
+      </Button>
       <Modal open={isAddGuestOpen} toggle={toggleGuestScreen}>
         <div>{views[view]()}</div>
       </Modal>
@@ -132,47 +141,39 @@ export const AddedGuests = () => {
 const GuestList = ({
   guests,
   guestCount,
+  selectedGuests,
   onSelectionChange,
   onEditGuest,
 }: {
   guests: Guest[];
   guestCount: number;
-  onSelectionChange: (selectedGuests: GuestOption[]) => void;
-  onEditGuest: (guest: GuestOption) => void;
+  selectedGuests: number[];
+  onSelectionChange: (selectedGuests: number[]) => void;
+  onEditGuest: (guest: Guest) => void;
 }) => {
-  const [guestList, setGuests] = useState<GuestOption[]>(
-    guests?.map(g => ({ ...g, checked: false })) || []
-  );
-
-  useEffect(() => {
-    setGuests(guests?.map(g => ({ ...g, checked: false })) || []);
-  }, [guests]);
-
   const onSelectGuest = (checked: boolean, guest: Guest) => {
-    const updatedGuests = guestList.map(g =>
-      g.id === guest.id ? { ...g, checked } : g
-    );
+    const newSelected = [...selectedGuests, guest.id]
 
-    if (guestCount < updatedGuests.filter(g => g.checked).length) {
+    if (guestCount < newSelected.length) {
       console.warn(`you can choose no more than ${guestCount} guests`);
       return;
     }
 
-    setGuests(updatedGuests);
-    onSelectionChange(updatedGuests.filter(x => x.checked));
+    onSelectionChange(newSelected);
   };
 
-  const vacantPlaces = guestCount - guestList.filter(g => g.checked).length;
+  const vacantPlaces = guestCount - selectedGuests.length;
 
   return (
     <>
-      {guestList.map(guest => (
+      {guests.map(guest => (
         <ExtraGuest
           key={guest.id}
           guest={guest}
+          selected={selectedGuests.includes(guest.id)}
           onSelect={(checked: boolean) => onSelectGuest(checked, guest)}
           editGuest={onEditGuest}
-          disabled={!vacantPlaces ? !guest.checked : false}
+          disabled={!vacantPlaces ? !selectedGuests.includes(guest.id) : false}
         />
       ))}
       <LimitWarning>

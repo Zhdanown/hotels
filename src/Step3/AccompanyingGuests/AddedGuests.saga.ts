@@ -19,7 +19,6 @@ export type ExtraGuest = {
 
 const initialState = {
   isCreateGuestPending: false,
-  userUpdateCompleted: null,
 };
 
 export function extraGuestReducer(state = initialState, action: any) {

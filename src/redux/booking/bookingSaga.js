@@ -59,6 +59,7 @@ async function requestRoom(bookingParams) {
     rate,
     packages,
     comment,
+    guests,
   } = bookingParams;
 
   const url = `api/v1/reservation/${hotel_id}/`;
@@ -80,6 +81,7 @@ async function requestRoom(bookingParams) {
       packages: packages.map(x => ({ code: x.code, price: x.price })),
       notes: [{ code: "RMA", text: comment }],
     },
+    guests,
   };
 
   try {

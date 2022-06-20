@@ -4,23 +4,24 @@ import Checkbox from "../../components/Checkbox";
 import { mediumMobileWidth } from "../../Layout/MediaQueries";
 import { EditOutlined } from "@ant-design/icons";
 import Button from "../../components/Button";
-import { GuestOption } from "./AddedGuests";
+import { Guest } from "./AddedGuests";
 import { AttachmentChip } from "./Attachment";
 
 type ExtraGuestProps = {
-  guest: GuestOption;
+  guest: Guest;
   onSelect?: (selected: boolean) => void;
+  selected?: boolean;
   disabled: boolean;
-  editGuest: (guest: GuestOption) => void;
+  editGuest: (guest: Guest) => void;
 };
 
-export const ExtraGuest = ({ guest, onSelect, disabled, editGuest }: ExtraGuestProps) => {
-  const { first_name, last_name, checked, attachments } = guest;
+export const ExtraGuest = ({ guest, selected, onSelect, disabled, editGuest }: ExtraGuestProps) => {
+  const { first_name, last_name, attachments } = guest;
   const label = `${first_name} ${last_name}`;
   return (
     <StyledService>
       <HeaderSection>
-        <Checkbox label={label} value={checked} disabled={disabled} onChange={onSelect} />
+        <Checkbox label={label} value={selected} disabled={disabled} onChange={onSelect} />
         <Button small onClick={() => editGuest(guest)} disabled={disabled}>
           <EditOutlined />
           Редактировать
