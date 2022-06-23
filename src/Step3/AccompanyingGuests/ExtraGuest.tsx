@@ -47,6 +47,7 @@ export const ExtraGuest = ({
           <AttachmentChip
             key={attachment.id}
             fileName={attachment.file_name}
+            url={attachment.file}
             disabled={disabled}
           />
         ))}

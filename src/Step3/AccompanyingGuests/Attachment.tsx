@@ -8,14 +8,37 @@ type ChipProps = {
   fileName: string;
   onDelete?: () => void;
   disabled?: boolean;
-};
+} & ({ url?: never; file: File } | { url: string; file?: never });
 
-export const AttachmentChip = ({ fileName, onDelete, disabled }: ChipProps) => {
+export const AttachmentChip = ({
+  fileName,
+  url,
+  file,
+  onDelete,
+  disabled,
+}: ChipProps) => {
   const primaryColor = useSelector(getPrimaryColor);
+
+  const openFile = () => {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onloadend = function (e) {
+      const img = new Image();
+      img.src = e.target?.result as string;
+      const newWindow = window.open("", "_blank");
+      newWindow?.document.write(img.outerHTML);
+      newWindow?.document.close();
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <ChipContainer disabled={disabled}>
-      <FileName color={primaryColor}>{fileName}</FileName>
+      <FileName color={primaryColor} href={url} target="_blank" onClick={openFile}>
+        {fileName}
+      </FileName>
       {onDelete && (
         <Button
           small
@@ -35,11 +58,10 @@ const ChipContainer = styled.div<{ disabled?: boolean }>`
   opacity: ${p => (p.disabled ? 0.25 : 1)};
 `;
 
-const FileName = styled.div<{ color: string }>`
+const FileName = styled.a<{ color: string }>`
   margin: 10px 0;
   padding: 4px 6px;
-  border-radius: 3px;
-  border: 1px solid ${p => p.color};
+  color: ${p => p.color};
   font-size: 0.875rem;
   display: flex;
   align-items: center;

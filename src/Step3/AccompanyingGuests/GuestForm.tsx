@@ -146,12 +146,13 @@ const NewGuestForm = ({ isPending }: { isPending: boolean }) => {
         {attachment && (
           <AttachmentChip
             fileName={attachment.file_name}
+            url={attachment.file}
             onDelete={() => setFieldValue("attachment", null)}
           />
         )}
 
         {files?.length && (
-          <AttachmentChip fileName={files[0].name} onDelete={replaceFile} />
+          <AttachmentChip fileName={files[0].name} file={files[0]} onDelete={replaceFile} />
         )}
       </FileContainer>
 
