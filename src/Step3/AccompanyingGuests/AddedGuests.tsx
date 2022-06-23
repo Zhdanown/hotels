@@ -41,7 +41,7 @@ export const AddedGuests = () => {
   const isSberEmploye = useSelector(getIsSberEmploye);
   const reservationParams = useSelector(getParams);
 
-  const extraGuestsCount = getExtraGuestsCount(params);
+  const extraGuestsCount = getTotalGuestsCount(params);
 
   const [isAddGuestOpen, toggleGuestScreen] = useState(false); // TEMP while in modal
   const [selectedGuests, setSelectedGuests] = useState<number[]>(
@@ -146,7 +146,7 @@ export const AddedGuests = () => {
   return (
     <>
       <Button onClick={() => toggleGuestScreen(true)} block>
-        Выбрать сопровождающих гостей
+        Выбрать состав гостей
       </Button>
       <Modal open={isAddGuestOpen} toggle={toggleGuestScreen}>
         <div>{views[view]()}</div>
@@ -200,7 +200,7 @@ const GuestList = ({
           ? `Осталось выбрать ${vacantPlaces} ${plural(
               vacantPlaces,
               "гостя",
-              "гостей",
+              "гостя",
               "гостей"
             )}`
           : "Все гости выбраны"}
@@ -209,14 +209,14 @@ const GuestList = ({
   );
 };
 
-function getExtraGuestsCount(params: any) {
+function getTotalGuestsCount(params: any) {
   const { adults, childs } = params;
   const childrenCount = childs.reduce(
     (totalCount: number, { count }: { count?: number }) =>
       totalCount + (count || 0),
     0
   );
-  return adults + childrenCount - 1;
+  return adults + childrenCount;
 }
 
 const LimitWarning = styled.p<{ visible?: boolean }>`
