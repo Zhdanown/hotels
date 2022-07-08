@@ -90,7 +90,7 @@ export default function LoginForm({ close }: { close: () => void }) {
           </Button>
         )}
         <hr />
-        <a href={`${api}api/v1/users/sberID-login-form?hotel_alias=${hotelAlias}`}>
+        <a href={`${api}api/v1/users/teamID-login-form?hotel_alias=${hotelAlias}`}>
           <Button block>
             <span
               style={{
@@ -100,7 +100,7 @@ export default function LoginForm({ close }: { close: () => void }) {
               }}
             >
               <SberIcon style={{ marginRight: 8 }} />
-              Войти по SberId
+              Войти по TeamId
             </span>
           </Button>
         </a>
