@@ -23,15 +23,15 @@ export default App;
 function App() {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
-  const { one_time_pass } = queryParams;
+  const { team_one_time_pass } = queryParams;
 
   useEffect(() => {
     dispatch(changeParams(queryParams));
   }, [queryParams, dispatch]);
 
   useEffect(() => {
-    dispatch(one_time_pass ? login({ one_time_pass }) : startSession());
-  }, [dispatch, one_time_pass]);
+    dispatch(team_one_time_pass ? login({ one_time_pass: team_one_time_pass }) : startSession());
+  }, [dispatch, team_one_time_pass]);
 
   return (
     <Router history={history}>
