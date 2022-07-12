@@ -6,7 +6,7 @@ import { SberIcon } from "../components/CustomIcons";
 
 import Loader from "../components/Loader";
 import { getPrimaryColor } from "../redux/hotelConfig";
-import { getIsLoginPending, getUser, logout } from "./authReducer";
+import { getIsLoginPending, getUser, getIsSberEmploye, logout } from "./authReducer";
 
 function AuthNavButton() {
   let location = useLocation();
@@ -17,6 +17,8 @@ function AuthNavButton() {
   });
 
   const isLoginPending = useSelector(getIsLoginPending);
+  const isSberEmploye = useSelector(getIsSberEmploye);
+
   const user = useSelector(getUser);
 
   const dispatch = useDispatch();
@@ -31,7 +33,7 @@ function AuthNavButton() {
       <SignOutBtn
         signOut={signOut}
         name={user.first_name}
-        isSberEmploye={user.sber_info?.is_company_employee}
+        isSberEmploye={isSberEmploye}
       />
     );
   } else {
