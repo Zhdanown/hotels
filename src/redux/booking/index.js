@@ -73,7 +73,7 @@ function handleChangeOfParams(draft, action) {
     if (key === "departure") {
       action.payload[key] = checkDeparture(
         action.payload[key],
-        draft.params.arrival
+        action.payload.arrival
       );
     }
     if (key === "promo_code") {
