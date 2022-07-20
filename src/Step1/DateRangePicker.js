@@ -68,6 +68,7 @@ function DateRangePicker() {
       singleMode: false,
       lang: "ru-RU",
       hotelMode: true,
+      selectForward: false,
       tooltipText: {
         one: "ночь",
         other: "ночей",
