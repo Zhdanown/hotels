@@ -19,19 +19,30 @@ import LayoutContext from "../Layout/LayoutContext";
 import { Centered } from "../components/Centered";
 import Input from "../components/Input";
 import OrderSummary from "./OrderSummary";
-import { getUser } from "../Auth/authReducer";
+import { getIsSberEmploye, getUser } from "../Auth/authReducer";
 import { AuthLink } from "../Auth/components";
 import { AddedGuests } from "./AccompanyingGuests/AddedGuests";
+import SberForm from "./SberForm";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
 `;
+
+function useIsSberFormValid() {
+  const params = useSelector(getParams);
+
+  const { email, phone } = params.guest;
+  return email && phone;
+}
 
 function ConfirmScreen() {
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
   const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
   const user = useSelector(getUser);
+
+  const isSberEmploye = useSelector(getIsSberEmploye);
+  const isSberFormValid = useIsSberFormValid();
 
   const [modal, setModal] = useState(false);
   const [consent, setConsent] = useState(false);
@@ -75,6 +86,8 @@ function ConfirmScreen() {
         <ColumnHeader goBack={goBack}>Оплата</ColumnHeader>
         <OrderSummary />
 
+        {isSberEmploye && <SberForm guest={guest} onSubmit={onSubmit} />}
+
         {!user && (
           <>
             <label htmlFor="">Забронировать без регистрации</label>
@@ -115,7 +128,7 @@ function ConfirmScreen() {
 
         <SubmitButton
           user={user}
-          consent={consent}
+          disabled={!consent || (isSberEmploye && !isSberFormValid)}
           onSubmit={onSubmit}
           style={{ marginBottom: "1rem" }}
         >
@@ -153,11 +166,11 @@ function CommentField() {
   );
 }
 
-function SubmitButton({ user, children, onSubmit, consent, style }) {
+function SubmitButton({ user, children, onSubmit, disabled, style }) {
   return !user ? (
     <Button
       block
-      disabled={!consent}
+      disabled={disabled}
       style={style}
       type="submit"
       form="no-registration"
@@ -165,7 +178,7 @@ function SubmitButton({ user, children, onSubmit, consent, style }) {
       {children}
     </Button>
   ) : (
-    <Button block disabled={!consent} onClick={onSubmit} style={style}>
+    <Button block disabled={disabled} onClick={onSubmit} style={style}>
       {children}
     </Button>
   );
