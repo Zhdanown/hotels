@@ -94,7 +94,7 @@ export function logout() {
 export const getIsLoginPending = state => state.auth.isLoginPending;
 export const getIsRegistrationPending = state => state.auth.isLoginPending;
 export const getUser = state => state.auth.user;
-export const getIsSberEmploye = state => state.auth.user?.teamID_info ? state.auth.user?.teamID_info.is_active : false
+export const getIsSberEmploye = state => state.auth.user?.teamID_info?.is_active;
 export const getUserGuest = (state, guestId) => state.auth.user.user_guests.find(g => g.id === guestId)
 export const getRegisterError = state => state.auth.registerError;
 export const getLoginError = state => state.auth.loginError;
