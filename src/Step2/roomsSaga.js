@@ -42,7 +42,7 @@ function* getRequestParams() {
 }
 
 function* fetchRooms({ pms_type, hotel_id, ...params }) {
-  const url = `/api/v1/availability/${hotel_id}/`;
+  const url = `/api/v1/ota-availability/${hotel_id}/`;
   const { payload, error } = yield call(fetchWithParams, params, url);
   return [payload, error];
 }
