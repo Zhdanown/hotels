@@ -12,7 +12,7 @@ import {
   phoneIsValid,
 } from "../utils/validationHelpers";
 import { changeParams } from "../redux/booking";
-import { Guest } from "./types";;
+import { Guest } from "./types";
 
 function filterByFieldName(fields: typeof userFields) {
   return fields.filter(x => fieldNames.includes(x.name));
@@ -28,12 +28,12 @@ type SberFormProps = {
 
 function SberForm({ guest, onSubmit }: SberFormProps) {
   const dispatch = useDispatch();
+  const user = useSelector(getUser);
+  const { email, phone } = user || {};
 
   return (
     <Formik
-      initialValues={{
-        ...guest,
-      }}
+      initialValues={{ ...guest, email, phone }}
       validate={validate}
       onSubmit={(values, { setSubmitting }) => {
         dispatch(changeParams({ guest: values }));
@@ -42,18 +42,18 @@ function SberForm({ guest, onSubmit }: SberFormProps) {
         setSubmitting(false);
       }}
     >
-      <FormShowingServerErrors />
+      <FormShowingServerErrors user={user} />
     </Formik>
   );
 }
 
 export default SberForm;
 
-function FormShowingServerErrors() {
+function FormShowingServerErrors({ user }: { user: Guest }) {
   const registerError = useSelector(getRegisterError);
-  const { setErrors, values, isValid } = useFormikContext<Guest>();
+  const { setErrors, values, isValid, setFieldValue } =
+    useFormikContext<Guest>();
 
-  const user = useSelector(getUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function FormShowingServerErrors() {
     const { first_name, last_name } = user || {};
 
     dispatch(changeParams({ guest: { ...values, first_name, last_name  } }));
-  }, [isValid, values, user, dispatch]);
+  }, [isValid, values, user, dispatch, setFieldValue]);
 
   useEffect(() => {
     if (registerError) {
