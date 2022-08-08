@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form as FormikForm } from "formik";
 import { useParams } from "react-router-dom";
@@ -15,6 +15,7 @@ import {
 } from "./authReducer";
 import { login } from "./authReducer";
 import { SberIcon } from "../components/CustomIcons";
+import LayoutContext from "../Layout/LayoutContext";
 
 function validate(values: any) {
   const errors = {} as any;
@@ -34,6 +35,8 @@ export default function LoginForm({ close }: { close: () => void }) {
   const isPending = useSelector(getIsLoginPending);
   const loginError = useSelector(getLoginError);
   const dispatch = useDispatch();
+
+  const { setStep } = useContext(LayoutContext)
 
   const api = process.env.REACT_APP_API
 
@@ -66,6 +69,7 @@ export default function LoginForm({ close }: { close: () => void }) {
       onSubmit={(values, { setSubmitting }) => {
         dispatch(login(values));
         setSubmitting(false);
+        setStep(1)
       }}
     >
       <Form as={FormikForm}>

@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useRouteMatch, matchPath } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { SberIcon } from "../components/CustomIcons";
 
 import Loader from "../components/Loader";
+import LayoutContext from "../Layout/LayoutContext";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import { getIsLoginPending, getUser, getIsSberEmploye, logout } from "./authReducer";
 
 function AuthNavButton() {
   let location = useLocation();
   let { url } = useRouteMatch();
+
+  const { setStep } = useContext(LayoutContext)
 
   const hideButton = matchPath(location.pathname, {
     path: ["/:slug/login", "/:slug/register"],
@@ -22,7 +25,10 @@ function AuthNavButton() {
   const user = useSelector(getUser);
 
   const dispatch = useDispatch();
-  const signOut = () => dispatch(logout());
+  const signOut = () => {
+    dispatch(logout());
+    setStep(1)
+  }
 
   if (hideButton) {
     return null;
