@@ -13,7 +13,7 @@ function AuthNavButton() {
   let location = useLocation();
   let { url } = useRouteMatch();
 
-  const { setStep } = useContext(LayoutContext)
+  const { setStep } = useContext(LayoutContext) || {}
 
   const hideButton = matchPath(location.pathname, {
     path: ["/:slug/login", "/:slug/register"],

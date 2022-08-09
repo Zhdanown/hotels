@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 function whitelisted(url) {
-  const list = ["/users/info", "/create-profile", "/users/guest", "/users/attachments/upload/", 'users/delete-guest-attachments'];
+  const list = ["/users/info", "/create-profile", "/users/guest", "/users/attachments/upload/", 'users/delete-guest-attachments', 'account-reservation'];
   return list.some(listItem => url.includes(listItem));
 }
 

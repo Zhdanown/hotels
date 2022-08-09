@@ -11,12 +11,12 @@ import history from "./history";
 import AuthRoutes from "./Auth/AuthRoutes";
 import { login, startSession } from "./Auth/authReducer";
 import { useQueryParams } from "./useQueryParams";
-import { changeParams } from "./redux/booking";
+import { changeParams, getBookingList } from "./redux/booking";
 import { Toast } from "./components/Toast";
 import { Suspense } from "react";
 import HotelConfigLoader from "./HotelConfigLoader";
 
-const Profile = React.lazy(() => import("./Profile"));
+const Profile = React.lazy(() => import("./Profile/ProfileMain"));
 
 export default App;
 
@@ -27,10 +27,15 @@ function App() {
 
   useEffect(() => {
     dispatch(changeParams(queryParams));
+    dispatch(getBookingList);
   }, [queryParams, dispatch]);
 
   useEffect(() => {
-    dispatch(team_one_time_pass ? login({ one_time_pass: team_one_time_pass }) : startSession());
+    dispatch(
+      team_one_time_pass
+        ? login({ one_time_pass: team_one_time_pass })
+        : startSession()
+    );
   }, [dispatch, team_one_time_pass]);
 
   return (
