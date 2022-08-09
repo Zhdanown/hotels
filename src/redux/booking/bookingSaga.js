@@ -1,8 +1,9 @@
-import { takeEvery, call, select, put } from "redux-saga/effects";
+import { takeEvery, takeLatest, call, select, put, all } from "redux-saga/effects";
 
 import api, { getAuthHeaderIfTokenPresent } from "../api";
 import {
   getParams,
+  GET_BOOKING_LIST2,
   isBooking,
   setBookingError,
   setBookingResponse,
@@ -11,7 +12,14 @@ import {
 import { getConfigId, getConfigNoteCode, getHotelPms } from "../hotelConfig";
 
 export function* bookingSaga() {
-  yield takeEvery(SUBMIT_ORDER, bookRoom);
+  yield all ([
+    yield takeEvery(SUBMIT_ORDER, bookRoom),
+    yield takeLatest(GET_BOOKING_LIST2, fetchBookingList),
+  ]);
+  // yield takeLatest(GET_BOOKING_LIST2, function*(action) {
+  //   console.log(123123, action)
+  //   yield put({type: 'alsdjlsdf', payload: 'sdfsdf'})
+  // })
 }
 
 function* bookRoom(action) {
@@ -107,4 +115,16 @@ async function requestRoom(bookingParams) {
     }
     return { error };
   }
+}
+
+function* fetchBookingList(action) {
+  console.log("fetch them", action);
+  yield call(getBookingList);
+}
+
+async function getBookingList() {
+  const response = await api.get(
+    "https://nlb.agex.host/api/v1/account-reservation/list/5/"
+  );
+  debugger;
 }

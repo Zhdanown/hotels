@@ -11,6 +11,7 @@ export const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
 export const IS_BOOKING = "booking/IS_BOOKING";
 export const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
 export const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
+export const GET_BOOKING_LIST2 = "booking/GET_LIST";
 
 const [arrival, departure] = (function () {
   const arrival = new Date();
@@ -39,6 +40,9 @@ const initialState = {
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
+    case GET_BOOKING_LIST2: 
+      console.log('action')
+      return;
     case CHANGE_PARAMS:
       handleChangeOfParams(draft, action);
       return;
@@ -118,6 +122,12 @@ export function setBookingResponse(payload) {
 
 export function setBookingError(error) {
   return { type: SET_BOOKING_ERROR, error };
+}
+
+export function getBookingList(payload) {
+  console.log('sdfsf')
+  return { type: GET_BOOKING_LIST2, payload };
+  // return { type: GET_BOOKING_LIST2, payload: 123123123 }
 }
 
 export const getParams = state => state.reservation.params;

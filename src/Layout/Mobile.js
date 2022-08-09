@@ -5,7 +5,7 @@ import LayoutContext from "./LayoutContext";
 import { ColumnMobileQueries } from "./MediaQueries";
 import TitleScreen from "./DesktopColTitleScreen";
 
-const HTMLOverflowHidden = createGlobalStyle`
+export const HTMLOverflowHiddenMobile = createGlobalStyle`
   html, body, #root {
     height: 100%;
   }
@@ -38,7 +38,7 @@ function LayoutMobile({ children }) {
 
   return (
     <>
-      <HTMLOverflowHidden />
+      <HTMLOverflowHiddenMobile />
       <Layout className="layout-viewport" step={currentStep - 1}>
         <div className="columns-wrapper">
           <MobileColumn num={1} goForward={goForward}>
