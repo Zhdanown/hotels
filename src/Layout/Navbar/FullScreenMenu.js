@@ -61,6 +61,18 @@ export default function FullScreenMenu({ isOpen, close }) {
     return () => document.removeEventListener("keydown", handleEsc);
   }, [close]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      return;
+    }
+    
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'hidden'
+    }
+  }, [isOpen])
+
   return (
     <>
       <Backdrop diameter={diameter} open={isOpen} color={color} />

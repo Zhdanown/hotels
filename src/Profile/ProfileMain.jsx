@@ -7,6 +7,8 @@ import Navbar from "../Layout/Navbar";
 import { getIsShowNavbar } from "../redux/hotelConfig";
 import { ProfileTab } from "./ProfileTab";
 import { MyBookings } from "./BookingList";
+import { Switch } from "react-router-dom";
+import { routes as pages } from './routes'
 
 const ProfileContainer = styled.div`
   height: 100%;
@@ -18,8 +20,8 @@ function Profile() {
   const isShowNavbar = useSelector(getIsShowNavbar);
 
   const tabs = [
-    { id: 1, title: "Мои брони", content: <MyBookings /> },
-    { id: 3, title: "Профиль", content: <ProfileTab /> },
+    { id: 1, title: "Мои брони", content: <MyBookings />, url: pages.bookingList },
+    { id: 3, title: "Профиль", content: <ProfileTab />, url: pages.profileInfo },
   ];
 
   return (
@@ -27,7 +29,10 @@ function Profile() {
       <HTMLOverflowHiddenMobile />
       {isShowNavbar && <Navbar />}
       <ProfileContainer>
-        <Tabs tabs={tabs} />
+        <Switch>
+
+          <Tabs tabs={tabs} />
+        </Switch>
       </ProfileContainer>
     </div>
   );

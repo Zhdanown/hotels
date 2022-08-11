@@ -31,6 +31,7 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/elements/button.sass";
 @import "../node_modules/bulma/sass/elements/container.sass";
 @import "../node_modules/bulma/sass/elements/title.sass";
+@import "../node_modules/bulma/sass/elements/tag.sass";
 @import "../node_modules/bulma/sass/form/_all.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
 @import "../node_modules/bulma/sass/layout/hero.sass";
@@ -39,7 +40,10 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/helpers/typography.sass";
 @import "../node_modules/bulma/sass/helpers/spacing.sass";
 @import "../node_modules/bulma/sass/components/modal.sass";
+@import "../node_modules/bulma/sass/components/tabs.sass";
 @import "../node_modules/bulma/sass/elements/box.sass";
+@import "../node_modules/bulma/sass/elements/table.sass";
+
 
 body {
     background: white;
