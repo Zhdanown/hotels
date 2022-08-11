@@ -63,7 +63,7 @@ const SignOutBtn = ({ signOut, name, isSberEmploye }) => {
         {name}
       </NavbarLink>
       <DropdownMenu color={color}>
-        <DropdownItem as={Link} to={`/${slug}/profile`}>
+        <DropdownItem as={Link} to={`/${slug}/profile/booking`}>
           Личный кабинет
         </DropdownItem>
         <DropdownItem as="button" onClick={signOut}>
