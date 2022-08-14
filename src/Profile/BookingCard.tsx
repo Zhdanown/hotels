@@ -3,6 +3,12 @@ import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
 
+export type Rate = {
+  code: string;
+  id: number;
+  name: string;
+}
+
 export type Booking = {
   arrival: string;
   confirmed: false;
@@ -12,7 +18,7 @@ export type Booking = {
   id: number;
   is_sber_employee: boolean;
   price: string;
-  rate_name: string | null;
+  rate: Rate;
   room_type: string;
   status: "CREATED";
 };
@@ -21,7 +27,7 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
   const { url } = useRouteMatch();
   const [, , isDesktop] = useWindowWidth();
 
-  const { id, status, arrival, departure, room_type, rate_name, price } =
+  const { id, status, arrival, departure, room_type, rate, price } =
     booking;
   return (
     <Link
@@ -30,10 +36,7 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
       style={{ display: "block" }}
     >
       <article className="box">
-        <div
-          style={{ display: "flex" }}
-          className="is-justify-content-space-between"
-        >
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h3 className="title is-6 mb-2">
             <span className="subtitle is-6 mr-1">№</span>
             {id}
@@ -46,7 +49,7 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
 
         <div className="mb-4">
           <p className="title is-6">{room_type}</p>
-          <p className="subtitle is-6">{rate_name}</p>
+          <p className="subtitle is-6">{rate.name}</p>
         </div>
 
         <DatesAndPrice isDesktop={Boolean(isDesktop)}>

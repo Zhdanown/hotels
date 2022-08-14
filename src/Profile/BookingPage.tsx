@@ -1,13 +1,13 @@
-import { LeftOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { Link, useHistory, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useHistory, useParams } from "react-router-dom";
 import { BackButton } from "../components/Button";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
-import api from "../redux/api";
 import { getPrimaryColor } from "../redux/hotelConfig";
+import { Guest } from "../Step3/AccompanyingGuests/AddedGuests";
+import { Rate } from "./BookingCard";
 import { useData } from "./BookingList";
+import { GuestList } from "./ProfileTab";
 
 export const BookingPage = () => {
   const { booking_id } = useParams<{ booking_id: string }>();
@@ -16,11 +16,9 @@ export const BookingPage = () => {
     `https://nlb.agex.host/api/v1/account-reservation/detail/${booking_id}/`
   );
 
-  console.log(bookingDetails);
-
   return (
     <div>
-      <BackButton onClick={() => history.goBack()}>Back</BackButton>
+      <BackButton onClick={() => history.goBack()}>Назад</BackButton>
       {bookingDetails && <BookingPageDumb details={bookingDetails} />}
     </div>
   );
@@ -36,6 +34,14 @@ type Payment = {
   payment_type: string;
 };
 
+type Room = {
+  code: "DR";
+  name: string;
+  long_description: string;
+  short_description: string;
+  square: null | number;
+};
+
 type BookingDetails = {
   adults: number;
   arrival: string;
@@ -48,10 +54,10 @@ type BookingDetails = {
   is_sber_employee: boolean;
   link_key: string;
   price: string;
-  rate_code: string;
-  rate_name: null | string;
+  rate: Rate;
+  accompanying_guests: Guest[];
   reservation_payments: Payment[];
-  // room_type: {id: 84, photo_rooms: Array(1), option_rooms: Array(1), ext_id: null, ts: '2022-08-08T11:21:48.342230+03:00', …}
+  room_type: Room;
   rooms_count: number;
   status: string;
 };
@@ -65,19 +71,17 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
     departure,
     created,
     is_sber_employee,
+    accompanying_guests,
     price,
-    rate_code,
-    rate_name,
+    rate,
+    room_type,
     rooms_count,
     reservation_payments,
     status,
   } = details;
   return (
-    <article className="box">
-      <div
-        style={{ display: "flex" }}
-        className="is-justify-content-space-between"
-      >
+    <article className="box mt-5">
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3 className="title is-6 mb-2">
           <span className="subtitle is-6 mr-1">№</span>
           <span>{id}</span>
@@ -92,9 +96,8 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
       </div>
 
       <div className="mb-4">
-        {/* <p className="title is-6">{room_type}</p> */}
-        <p className="subtitle is-6">{rate_name}</p>
-        <p className="subtitle is-6">{rate_code}</p>
+        <p className="title is-6">{room_type.name}</p>
+        <p className="subtitle is-6">{rate.name}</p>
       </div>
 
       {/* <DatesAndPrice isDesktop={Boolean(isDesktop)}> */}
@@ -106,6 +109,11 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
           <span>{departure}</span>
         </div>
       </div>
+
+      <section className="mt-4">
+        <h4 className="title is-5 mb-2">Сопровождающие гости</h4>
+        <GuestList guests={accompanying_guests} />
+      </section>
 
       <div>
         {reservation_payments.map(payment => (
@@ -155,4 +163,3 @@ const PaymentSection = ({ payment }: { payment: Payment }) => {
     </section>
   );
 };
-
