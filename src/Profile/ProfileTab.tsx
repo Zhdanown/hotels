@@ -22,7 +22,7 @@ export const ProfileTab = () => {
 
   return (
     <>
-    {/* <View> */}
+      {/* <View> */}
       <p className="title is-4">{`${last_name} ${first_name} ${middle_name}`}</p>
       {sber_info?.department && (
         <div
@@ -60,54 +60,51 @@ export const ProfileTab = () => {
 
       <div className="mt-5 mb-5">
         <h4 className="title is-5 mb-2">Добавленные ранее гости</h4>
-        <table className="table is-striped is-fullwidth">
-          <tbody>
-            {user_guests?.map((guest: Guest, i: number) => (
-              <tr key={i}>
-                <td>
-                  <div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span>
-                        {guest.first_name} {guest.last_name}
-                      </span>
-                      <CloseOutlined />
-                    </div>
-                    {guest.attachments.map(attachment => (
-                      <AttachmentChip
-                        key={attachment.id}
-                        fileName={attachment.file_name}
-                        url={attachment.file}
-                        //   disabled={disabled}
-                      />
-                    ))}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <GuestList guests={user_guests} />
       </div>
-
-      {/* <ul>
-        {user_guests.map((guest: Guest) => (
-          <li>
-            {guest.first_name} {guest.last_name}
-          </li>
-        ))}
-      </ul> */}
     </>
     // </View>
   );
 };
 
-const View = styled.div`
-    height: 100%;
-    overflow: auto;
+export const GuestList = ({ guests }: { guests: Guest[] }) => {
+  return (
+    <table className="table is-striped is-fullwidth">
+      <tbody>
+        {guests?.map(guest => (
+          <tr key={guest.id}>
+            <td>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span>
+                    {guest.first_name} {guest.last_name}
+                  </span>
+                  <CloseOutlined />
+                </div>
+                {guest.attachments.map(attachment => (
+                  <AttachmentChip
+                    key={attachment.id}
+                    fileName={attachment.file_name}
+                    url={attachment.file}
+                    //   disabled={disabled}
+                  />
+                ))}
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
-`
+const View = styled.div`
+  height: 100%;
+  overflow: auto;
+`;

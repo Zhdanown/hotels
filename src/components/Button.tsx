@@ -83,7 +83,7 @@ export function BackButton({
   outline,
   ...props
 }: ButtonProps & {
-  children: ReactNode;
+  children?: ReactNode;
   outline?: boolean;
 }) {
   return (
