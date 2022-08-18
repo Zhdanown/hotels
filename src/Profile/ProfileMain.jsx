@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { Tabs } from "../components/Tabs";
@@ -20,8 +20,8 @@ function Profile() {
   const isShowNavbar = useSelector(getIsShowNavbar);
 
   const tabs = [
-    { id: 1, title: "Мои брони", content: <MyBookings />, url: pages.bookingList },
-    { id: 3, title: "Профиль", content: <ProfileTab />, url: pages.profileInfo },
+    { title: "Мои брони", content: <MyBookings />, url: pages.bookingList },
+    { title: "Профиль", content: <ProfileTab />, url: pages.profileInfo },
   ];
 
   return (

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useRouteMatch,
+} from "react-router-dom";
 import { BookingPage } from "../Profile/BookingPage";
 import { routes } from "../Profile/routes";
-
-import { getHoverColor } from "../redux/hotelConfig";
 
 // const Tab = styled.button`
 //   flex: 1;
@@ -61,22 +64,30 @@ import { getHoverColor } from "../redux/hotelConfig";
 // };
 
 export const Tabs = ({ tabs }) => {
-  // const color = useSelector(getHoverColor);
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(tabs[0].url);
   const { path, url } = useRouteMatch();
+  const { pathname } = useLocation();
 
-  // console.log(`${path}${routes.bookingPage}`);
-  console.log(path);
-  console.log(`${path}${routes.bookingList}`);
+  useEffect(() => {
+    for (let key of Object.keys(routes)) {
+      const route = routes[key];
+
+      if (new RegExp(route).test(pathname)) {
+        setActiveTab(route);
+        break;
+      }
+    }
+  }, [pathname]);
+
   return (
     <>
       <div className="tabs" style={{ marginTop: 24 }}>
         <ul>
           {tabs.map(tab => (
             <li
-              key={tab.id}
-              className={activeTab === tab.id ? "is-active" : ""}
-              onClick={() => setActiveTab(tab.id)}
+              key={tab.url}
+              className={activeTab === tab.url ? "is-active" : ""}
+              onClick={() => setActiveTab(tab.url)}
             >
               <Link to={`${url}${tab.url}`}>{tab.title}</Link>
             </li>
@@ -91,10 +102,10 @@ export const Tabs = ({ tabs }) => {
               <BookingPage />
             </Route>
             {tabs.map(tab => (
-              <Route key={tab.id} path={`${path}${tab.url}`}>
+              <Route key={tab.url} path={`${path}${tab.url}`}>
                 <div
                   className="tab"
-                  style={tab.id === activeTab ? {} : { display: "none" }}
+                  style={tab.url === activeTab ? {} : { display: "none" }}
                 >
                   {tab.content}
                 </div>
