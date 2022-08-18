@@ -110,10 +110,14 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
         </div>
       </div>
 
-      <section className="mt-4">
-        <h4 className="title is-5 mb-2">Сопровождающие гости</h4>
-        <GuestList guests={accompanying_guests} />
-      </section>
+      {accompanying_guests.length > 0 && (
+        <section className="mt-4">
+          <h4 className="title is-5 mb-2">
+            Гости ({accompanying_guests.length})
+          </h4>
+          <GuestList guests={accompanying_guests} />
+        </section>
+      )}
 
       <div>
         {reservation_payments.map(payment => (
