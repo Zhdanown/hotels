@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Link,
   Redirect,
@@ -7,8 +8,10 @@ import {
   useLocation,
   useRouteMatch,
 } from "react-router-dom";
+import styled from "styled-components";
 import { BookingPage } from "../Profile/BookingPage";
 import { routes } from "../Profile/routes";
+import { getPrimaryColor } from "../redux/hotelConfig";
 
 // const Tab = styled.button`
 //   flex: 1;
@@ -63,10 +66,26 @@ import { routes } from "../Profile/routes";
 //   ],
 // };
 
+const TabsStyled = styled.div`
+  margin-top: 24px;
+
+  li {
+    a {
+      color: ${p => p.color};
+    }
+
+    &.is-active a {
+      color: ${p => p.color};
+      border-color: ${p => p.color} !important;
+    }
+  }
+`;
+
 export const Tabs = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].url);
   const { path, url } = useRouteMatch();
   const { pathname } = useLocation();
+  const color = useSelector(getPrimaryColor);
 
   useEffect(() => {
     for (let key of Object.keys(routes)) {
@@ -81,7 +100,7 @@ export const Tabs = ({ tabs }) => {
 
   return (
     <>
-      <div className="tabs" style={{ marginTop: 24 }}>
+      <TabsStyled className="tabs" color={color}>
         <ul>
           {tabs.map(tab => (
             <li
@@ -93,7 +112,7 @@ export const Tabs = ({ tabs }) => {
             </li>
           ))}
         </ul>
-      </div>
+      </TabsStyled>
       <div className="tab-contents" style={{ overflowY: "auto" }}>
         <div className="container p-4">
           <Switch>
