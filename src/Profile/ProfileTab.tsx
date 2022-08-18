@@ -85,7 +85,7 @@ export const GuestList = ({ guests }: { guests: Guest[] }) => {
                   <span>
                     {guest.first_name} {guest.last_name}
                   </span>
-                  <CloseOutlined />
+                  {/* <CloseOutlined /> */}
                 </div>
                 {guest.attachments.map(attachment => (
                   <AttachmentChip
