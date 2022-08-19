@@ -8,7 +8,7 @@ import {
   setBookingResponse,
   SUBMIT_ORDER,
 } from ".";
-import { getConfigId, getHotelPms } from "../hotelConfig";
+import { getConfigId, getConfigNoteCode, getHotelPms } from "../hotelConfig";
 
 export function* bookingSaga() {
   yield takeEvery(SUBMIT_ORDER, bookRoom);
@@ -34,19 +34,21 @@ function* getParamsAndRequestRoom(action) {
   const bookingParams = yield select(getParams);
   const hotel_id = yield select(getConfigId);
   const pms_type = yield select(getHotelPms);
+  const note_code = yield select(getConfigNoteCode);
 
   const { payload, error } = yield call(requestRoom, {
     ...bookingParams,
     payment: action.payload,
     hotel_id,
     pms_type,
+    note_code
   });
 
   return { payload, error };
 }
 
 async function requestRoom(bookingParams) {
-  const { hotel_id, pms_type } = bookingParams;
+  const { hotel_id, pms_type, note_code } = bookingParams;
   const {
     guest,
     payment,
@@ -79,7 +81,7 @@ async function requestRoom(bookingParams) {
       payment,
       childs: childs.filter(x => x.count),
       packages: packages.map(x => ({ code: x.code, price: x.price })),
-      notes: [{ code: "RES", text: comment }],
+      notes: [{ code: note_code, text: comment }],
     },
     guests,
   };
