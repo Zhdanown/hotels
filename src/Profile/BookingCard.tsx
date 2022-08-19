@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
+import { Dates } from "./Dates";
 
 export type Rate = {
   code: string;
@@ -53,14 +54,8 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
         </div>
 
         <DatesAndPrice isDesktop={Boolean(isDesktop)}>
-          <div style={{ display: "flex" }}>
-            <div className="subtitle is-5">
-              <span>{arrival}</span>
-              <span> - </span>
-              <span>{departure}</span>
-            </div>
-          </div>
-
+          <Dates arrival={arrival} departure={departure} />
+          
           <h3
             className="title is-5 mt-2"
             style={{ display: "flex", justifyContent: "end" }}

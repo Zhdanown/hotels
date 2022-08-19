@@ -2,11 +2,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { BackButton } from "../components/Button";
-import useWindowWidth from "../Layout/hooks/useWindowWidth";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import { Guest } from "../Step3/AccompanyingGuests/AddedGuests";
 import { Rate } from "./BookingCard";
 import { useData } from "./BookingList";
+import { Dates } from "./Dates";
 import { GuestList } from "./ProfileTab";
 
 export const BookingPage = () => {
@@ -63,31 +63,24 @@ type BookingDetails = {
 };
 
 const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
-  const [, , isDesktop] = useWindowWidth();
-
   const {
     id,
     arrival,
     departure,
-    created,
-    is_sber_employee,
     accompanying_guests,
     price,
     rate,
     room_type,
-    rooms_count,
     reservation_payments,
     status,
   } = details;
+
   return (
     <article className="box mt-5">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3 className="title is-6 mb-2">
           <span className="subtitle is-6 mr-1">№</span>
           <span>{id}</span>
-          {/* <span className="subtitle is-6">
-            {new Date(created).toLocaleDateString()}
-          </span> */}
         </h3>
 
         <div>
@@ -100,15 +93,7 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
         <p className="subtitle is-6">{rate.name}</p>
       </div>
 
-      {/* <DatesAndPrice isDesktop={Boolean(isDesktop)}> */}
-
-      <div style={{ display: "flex" }}>
-        <div className="subtitle is-5">
-          <span>{arrival}</span>
-          <span> - </span>
-          <span>{departure}</span>
-        </div>
-      </div>
+      <Dates arrival={arrival} departure={departure} />
 
       {accompanying_guests.length > 0 && (
         <section className="mt-4">
@@ -130,8 +115,6 @@ const BookingPageDumb = ({ details }: { details: BookingDetails }) => {
       >
         {Number(price).toLocaleString()} &#8381;
       </h3>
-
-      {/* </DatesAndPrice> */}
     </article>
   );
 };
