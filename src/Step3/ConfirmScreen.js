@@ -7,7 +7,7 @@ import {
   getBookingResponse,
   getParams,
 } from "../redux/booking";
-import { getRulesAndServicesFileReference } from "../redux/hotelConfig";
+import { getIsBookingAllowed, getRulesAndServicesFileReference } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
@@ -42,10 +42,8 @@ function ConfirmScreen() {
   const user = useSelector(getUser);
 
   const isSberEmploye = useSelector(getIsSberEmploye);
-  const isSberFormValid = useIsSberFormValid();
 
   const [modal, setModal] = useState(false);
-  const [consent, setConsent] = useState(false);
 
   const [guest] = useState({
     username: "",
@@ -113,27 +111,11 @@ function ConfirmScreen() {
           </Link>
         </Conditions>
 
-        <label className="checkbox">
-          <input
-            type="checkbox"
-            name="consent"
-            id="consent"
-            value={consent}
-            onChange={() => setConsent(x => !x)}
-            style={{ marginRight: ".5rem" }}
-          />
-          Я подтверждаю своё согласие с{" "}
-          <Link>Политикой в отношении обработки персональных данныx</Link>
-        </label>
-
-        <SubmitButton
+        <ConfirmReservationButton
           user={user}
-          disabled={!consent || (isSberEmploye && !isSberFormValid)}
           onSubmit={onSubmit}
-          style={{ marginBottom: "1rem" }}
-        >
-          {consent ? "Продолжить" : "Необходимо согласие"}
-        </SubmitButton>
+          isSberEmploye={isSberEmploye}
+        />
 
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
@@ -144,6 +126,43 @@ function ConfirmScreen() {
 }
 
 export default ConfirmScreen;
+
+const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
+  const [consent, setConsent] = useState(false);
+  const isBookingAllowed = useSelector(getIsBookingAllowed);
+  const isSberFormValid = useIsSberFormValid();
+
+  /** скрывать кнопку блокирования во время тестирования */
+  if (!isBookingAllowed) {
+    return null;
+  }
+
+  return (
+    <>
+      <label className="checkbox">
+        <input
+          type="checkbox"
+          name="consent"
+          id="consent"
+          value={consent}
+          onChange={() => setConsent(x => !x)}
+          style={{ marginRight: ".5rem" }}
+        />
+        Я подтверждаю своё согласие с{" "}
+        <Link>Политикой в отношении обработки персональных данныx</Link>
+      </label>
+
+      <SubmitButton
+        user={user}
+        disabled={!consent || (isSberEmploye && !isSberFormValid)}
+        onSubmit={onSubmit}
+        style={{ marginBottom: "1rem" }}
+      >
+        {consent ? "Продолжить" : "Необходимо согласие"}
+      </SubmitButton>
+    </>
+  );
+};
 
 function CommentField() {
   const params = useSelector(getParams);
