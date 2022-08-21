@@ -27,11 +27,10 @@ export type Rate = {
   long_description: string;
 };
 
-
 export type BookingDetails = {
   adults: number;
   arrival: string;
-  // child_categories: [{…}]
+  childs: { cc_name: string; price: number; quantity: number }[];
   confirmed: boolean;
   created: string;
   departure: string;
@@ -47,4 +46,3 @@ export type BookingDetails = {
   rooms_count: number;
   status: string;
 };
-

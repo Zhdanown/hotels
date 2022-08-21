@@ -24,10 +24,35 @@ import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
 import { BookingDetails } from "./types";
 
+const GuestCounts = ({
+  adults,
+  childs,
+}: {
+  adults: number;
+  childs: number;
+}) => {
+  const items = [{ label: "Взрослых", count: adults }];
+  childs && items.push({ label: "Детей", count: childs });
+  return <Counters items={items} />;
+};
+
+const Counters = ({ items }: { items: { label: string; count: number }[] }) => (
+  <div className="field is-grouped is-grouped-multiline mt-4">
+    {items.map(({ label, count }) => (
+      <div className="control">
+        <div className="tags has-addons">
+          <span className="tag is-light">{label}</span>
+          <span className="tag is-dark">{count}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export const BookingPage = () => {
   const { booking_id } = useParams<{ booking_id: string }>();
   const history = useHistory();
-  
+
   const { data, error, isPending } = useSelector(getReservation);
 
   const dispatch = useDispatch();
@@ -42,8 +67,8 @@ export const BookingPage = () => {
   }, [booking_id, dispatch]);
 
   useEffect(() => {
-    error && notify("Не удалось загрузить данные")
-  }, [error])
+    error && notify("Не удалось загрузить данные");
+  }, [error]);
 
   const cancel = () => dispatch(cancelReservation(booking_id));
 
@@ -51,18 +76,19 @@ export const BookingPage = () => {
     <div>
       <BackButton onClick={() => history.goBack()}>Назад</BackButton>
       {isPending && (
-        <LoaderWrapper style={{ width: "100%", marginTop: '2rem' }}>
+        <LoaderWrapper style={{ width: "100%", marginTop: "2rem" }}>
           <Loader />
         </LoaderWrapper>
       )}
-      {data && (
-        <BookingDescription details={data} cancel={cancel} />
-      )}
+      {data && <BookingDescription details={data} cancel={cancel} />}
     </div>
   );
 };
 
 const CANCELED_STATUS = "Отменена гостем";
+
+const getChildsCount = (childs: BookingDetails["childs"]) =>
+  childs.reduce((acc, item) => item.quantity, 0);
 
 const BookingDescription = ({
   details,
@@ -75,6 +101,8 @@ const BookingDescription = ({
     id,
     arrival,
     departure,
+    adults,
+    childs,
     accompanying_guests,
     price,
     rate,
@@ -119,6 +147,8 @@ const BookingDescription = ({
       <RoomInfo room={room_type} />
       <RateInfo rate={rate} />
 
+      <GuestCounts adults={adults} childs={getChildsCount(childs)} />
+
       {accompanying_guests.length > 0 && (
         <section className="mt-5 mb-5">
           <Accordion
@@ -148,7 +178,10 @@ const BookingDescription = ({
       </h3>
 
       {status !== CANCELED_STATUS && (
-        <CancelReservation cancelReservation={cancel} isCancelling={isCancelling} />
+        <CancelReservation
+          cancelReservation={cancel}
+          isCancelling={isCancelling}
+        />
       )}
     </article>
   );
