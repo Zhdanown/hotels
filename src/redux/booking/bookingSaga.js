@@ -1,7 +1,18 @@
-import { takeEvery, takeLatest, call, select, put, all } from "redux-saga/effects";
+import {
+  takeEvery,
+  takeLatest,
+  call,
+  select,
+  put,
+  all,
+} from "redux-saga/effects";
 
 import api, { getAuthHeaderIfTokenPresent } from "../api";
 import {
+  CANCELLATION_ERROR,
+  CANCELLATION_SUCCESSFUL,
+  CANCELLING_RESERVATION,
+  CANCEL_RESERVATION,
   getParams,
   GET_BOOKING_LIST2,
   isBooking,
@@ -12,14 +23,50 @@ import {
 import { getConfigId, getConfigNoteCode, getHotelPms } from "../hotelConfig";
 
 export function* bookingSaga() {
-  yield all ([
+  yield all([
     yield takeEvery(SUBMIT_ORDER, bookRoom),
     yield takeLatest(GET_BOOKING_LIST2, fetchBookingList),
+    yield takeEvery(CANCEL_RESERVATION, cancelBookingWatcher),
   ]);
   // yield takeLatest(GET_BOOKING_LIST2, function*(action) {
   //   console.log(123123, action)
   //   yield put({type: 'alsdjlsdf', payload: 'sdfsdf'})
   // })
+}
+
+function* cancelBookingWatcher(action) {
+  const hotelId = yield select(getConfigId);
+  const { bookingId } = action;
+
+  yield put({ type: CANCELLATION_ERROR, error: null });
+  yield put({ type: CANCELLING_RESERVATION, payload: true });
+
+  const { err } = yield call(cancelBooking, { hotelId, bookingId });
+
+  err && (yield put({ type: CANCELLATION_ERROR, error: err }));
+  yield put({ type: CANCELLING_RESERVATION, payload: false });
+  !err && (yield call(onCancellationSuccess));
+}
+
+function* onCancellationSuccess() {
+  yield put({ type: CANCELLATION_SUCCESSFUL, payload: true });
+  yield call(() => new Promise(res => setTimeout(res, 1000)));
+  yield put({ type: CANCELLATION_SUCCESSFUL, payload: false });
+}
+
+async function cancelBooking({ hotelId, bookingId }) {
+  const bodyRequest = {
+    reservation_id: bookingId,
+    status: "CANCELED_BY_GUEST",
+  };
+
+  const url = `/api/v1/reservation-status/${hotelId}/`;
+  try {
+    await api.post(url, bodyRequest);
+    return {};
+  } catch (err) {
+    return { err };
+  }
 }
 
 function* bookRoom(action) {
@@ -49,7 +96,7 @@ function* getParamsAndRequestRoom(action) {
     payment: action.payload,
     hotel_id,
     pms_type,
-    note_code
+    note_code,
   });
 
   return { payload, error };

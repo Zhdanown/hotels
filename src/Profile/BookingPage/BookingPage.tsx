@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { BackButton } from "../../components/Button";
+import Button, { BackButton } from "../../components/Button";
+import { notify } from "../../components/Toast";
+import {
+  cancelReservation,
+  getCancellationError,
+  getIsCancellationSuccessful,
+  getIsCancelling,
+} from "../../redux/booking";
 import { Guest } from "../../Step3/AccompanyingGuests/AddedGuests";
 import { Rate } from "../BookingCard";
 import { useData } from "../BookingList";
@@ -17,10 +25,16 @@ export const BookingPage = () => {
     `https://nlb.agex.host/api/v1/account-reservation/detail/${booking_id}/`
   );
 
+  const dispatch = useDispatch();
+
+  const cancel = () => dispatch(cancelReservation(booking_id));
+
   return (
     <div>
       <BackButton onClick={() => history.goBack()}>Назад</BackButton>
-      {bookingDetails && <BookingDescription details={bookingDetails} />}
+      {bookingDetails && (
+        <BookingDescription details={bookingDetails} cancel={cancel} />
+      )}
     </div>
   );
 };
@@ -45,7 +59,15 @@ type BookingDetails = {
   status: string;
 };
 
-const BookingDescription = ({ details }: { details: BookingDetails }) => {
+const CANCELED_STATUS = "Отменена гостем";
+
+const BookingDescription = ({
+  details,
+  cancel,
+}: {
+  details: BookingDetails;
+  cancel: () => void;
+}) => {
   const {
     id,
     arrival,
@@ -57,6 +79,22 @@ const BookingDescription = ({ details }: { details: BookingDetails }) => {
     reservation_payments,
     status,
   } = details;
+
+  const isCancelling = useSelector(getIsCancelling);
+  const cancellationError = useSelector(getCancellationError);
+  const cancellationSuccess = useSelector(getIsCancellationSuccessful);
+
+  useEffect(() => {
+    if (cancellationSuccess) {
+      notify("Бронь успешно отменена");
+    }
+  }, [cancellationSuccess]);
+
+  useEffect(() => {
+    if (cancellationError) {
+      notify("При отмене бронирования произошла ошибка");
+    }
+  }, [cancellationError]);
 
   return (
     <article className="box mt-5">
@@ -97,7 +135,12 @@ const BookingDescription = ({ details }: { details: BookingDetails }) => {
       >
         {Number(price).toLocaleString()} &#8381;
       </h3>
+
+      {status !== CANCELED_STATUS && (
+        <Button block onClick={cancel} loading={isCancelling}>
+          Отменить бронирование
+        </Button>
+      )}
     </article>
   );
 };
-

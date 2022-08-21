@@ -1,4 +1,4 @@
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import React, { ButtonHTMLAttributes, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -54,9 +54,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   small?: boolean;
   outline?: boolean;
   block?: boolean;
+  loading?: boolean;
 };
 
-function Button({ children, onClick, disabled, style, ...props }: ButtonProps) {
+function Button({ children, onClick, disabled, style, loading, ...props }: ButtonProps) {
   const primaryColor = useSelector(getPrimaryColor);
   const hoverColor = useSelector(getHoverColor);
 
@@ -66,11 +67,12 @@ function Button({ children, onClick, disabled, style, ...props }: ButtonProps) {
       className={props.small ? "small" : ""}
       bgColor={primaryColor}
       hoverColor={hoverColor}
-      disabled={disabled}
+      disabled={disabled || loading}
       onClick={onClick}
       style={style}
       {...props}
     >
+      {loading && <LoadingOutlined style={{ marginRight: "1rem" }} />}
       {children}
     </ColoredButton>
   );

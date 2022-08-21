@@ -1,3 +1,4 @@
+import { addDays } from "date-fns";
 import produce from "immer";
 import {
   stringToDate,
@@ -12,16 +13,21 @@ export const IS_BOOKING = "booking/IS_BOOKING";
 export const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
 export const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
 export const GET_BOOKING_LIST2 = "booking/GET_LIST";
+export const CANCEL_RESERVATION = "booking/CANCEL";
+export const CANCELLATION_ERROR = "booking/CANCELLATION_ERROR";
+export const CANCELLING_RESERVATION = "booking/CANCELLING";
+export const CANCELLATION_SUCCESSFUL = "booking/CANCELLATION_SUCCESSFUL";
 
 const [arrival, departure] = (function () {
   const arrival = new Date();
-  const departure = new Date().addDays(1);
+  const departure = addDays(new Date(), 1);
   return [arrival.toLocaleDateString(), departure.toLocaleDateString()];
 })();
 
 const initialState = {
   params: {
     guest: {},
+    guests: null,
     room: null,
     rate: null,
     arrival,
@@ -36,13 +42,30 @@ const initialState = {
   isBooking: false,
   response: null,
   error: null,
+  cancellation: {
+    isPending: false,
+    error: null,
+    success: null,
+  },
 };
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
-    case GET_BOOKING_LIST2: 
-      console.log('action')
+    case GET_BOOKING_LIST2:
       return;
+
+    case CANCELLING_RESERVATION:
+      draft.cancellation.isPending = action.payload;
+      return;
+
+    case CANCELLATION_ERROR:
+      draft.cancellation.error = action.error;
+      return;
+
+    case CANCELLATION_SUCCESSFUL:
+      draft.cancellation.success = action.payload;
+      return;
+
     case CHANGE_PARAMS:
       handleChangeOfParams(draft, action);
       return;
@@ -66,7 +89,12 @@ const reducer = produce((draft, action) => {
 
 export default reducer;
 
-function handleChangeOfParams(draft, action) {
+type Action = {
+  type: string;
+  payload?: any;
+};
+
+function handleChangeOfParams(draft: typeof initialState, action: Action) {
   for (let key in action.payload) {
     if (key === "arrival" || key === "departure") {
       action.payload[key] = persistDateStringFormat(action.payload[key]);
@@ -87,7 +115,7 @@ function handleChangeOfParams(draft, action) {
   draft.params = { ...draft.params, ...action.payload };
 }
 
-function checkIfArrivalIsExpired(dateString) {
+function checkIfArrivalIsExpired(dateString: string) {
   const date = stringToDate(dateString);
   if (+date < +new Date()) {
     return new Date().toLocaleDateString();
@@ -96,47 +124,64 @@ function checkIfArrivalIsExpired(dateString) {
   }
 }
 
-function checkDeparture(departure, arrival) {
+function checkDeparture(departure: string, arrival: string) {
   if (isNotLater(departure, arrival)) {
-    return new Date().addDays(1).toLocaleDateString();
+    return addDays(new Date(), 1).toLocaleDateString();
   } else {
     return departure;
   }
 }
 
-export function changeParams(payload) {
+export function changeParams(payload: any) {
   return { type: CHANGE_PARAMS, payload };
 }
 
-export function submitOrder(payload) {
+export function submitOrder(payload: any) {
   return { type: SUBMIT_ORDER, payload };
 }
 
-export function isBooking(payload) {
+export function isBooking(payload: any) {
   return { type: IS_BOOKING, payload };
 }
 
-export function setBookingResponse(payload) {
+export function setBookingResponse(payload: any) {
   return { type: SET_BOOKING_RESPONSE, payload };
 }
 
-export function setBookingError(error) {
+export function setBookingError(error: any) {
   return { type: SET_BOOKING_ERROR, error };
 }
 
-export function getBookingList(payload) {
-  console.log('sdfsf')
+export function getBookingList(payload: any) {
   return { type: GET_BOOKING_LIST2, payload };
-  // return { type: GET_BOOKING_LIST2, payload: 123123123 }
 }
 
-export const getParams = state => state.reservation.params;
-export const getBookingState = state => state.reservation.isBooking;
-export const getBookingResponse = state => state.reservation.response;
-export const getNightsCount = state => {
+export function cancelReservation(bookingId: any) {
+  return { type: CANCEL_RESERVATION, bookingId };
+}
+
+interface StoreState {
+  reservation: typeof initialState;
+}
+
+export const getParams = (state: StoreState) => state.reservation.params;
+export const getBookingState = (state: StoreState) =>
+  state.reservation.isBooking;
+export const getBookingResponse = (state: StoreState) =>
+  state.reservation.response;
+export const getNightsCount = (state: StoreState) => {
   const { arrival, departure } = getParams(state);
   const start = stringToDate(arrival);
   const end = stringToDate(departure);
   const nightsCount = calculateNightsCount(start, end);
   return nightsCount;
 };
+
+export const getCancellationError = (state: StoreState) =>
+  state.reservation.cancellation.error;
+export const getIsCancelling = (state: StoreState) =>
+  state.reservation.cancellation.isPending;
+export const getIsCancellationSuccessful = (state: StoreState) =>
+  state.reservation.cancellation.success;
+
+  

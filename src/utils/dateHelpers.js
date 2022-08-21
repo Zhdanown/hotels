@@ -28,10 +28,3 @@ export const persistDateStringFormat = dateString => {
 
 export const isNotLater = (dateString1, dateString2) =>
   +stringToDate(dateString1) <= +stringToDate(dateString2);
-
-/*eslint no-extend-native: ["error", { "exceptions": ["Date"] }]*/
-Date.prototype.addDays = function (days = 1) {
-  let date = new Date(this);
-  date.setDate(date.getDate() + days);
-  return date;
-};
