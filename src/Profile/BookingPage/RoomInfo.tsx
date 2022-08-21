@@ -41,8 +41,8 @@ const ImageContainer = styled.div`
   ${mapMaxWidthToHeight(heightMap)}
 `;
 
-export const RoomInfo = ({ room }: { room: Room & { rate_name: string } }) => {
-  const { square, img, name, short_description, long_description, rate_name } = room;
+export const RoomInfo = ({ room }: { room: Room }) => {
+  const { square, img, name, short_description, long_description } = room;
 
   return (
     <div>
@@ -57,14 +57,13 @@ export const RoomInfo = ({ room }: { room: Room & { rate_name: string } }) => {
             {square} м<sup>2</sup>
           </span>
         </p>
-        <p className="subtitle is-6">{rate_name}</p>
 
         <HTMLParser html={short_description} />
 
         {long_description && (
           <div className="mt-3 mb-3">
             <Accordion
-              renderTitleAfter={(toggle: () => void, isOpen: boolean) => (
+              renderTitle={(toggle: () => void, isOpen: boolean) => (
                 <Button
                   small
                   outline
@@ -75,7 +74,7 @@ export const RoomInfo = ({ room }: { room: Room & { rate_name: string } }) => {
                   <Icon open={isOpen} />
                 </Button>
               )}
-              renderTitle={null}
+              renderTitleAfter={null}
             >
               <HTMLParser html={long_description} />
             </Accordion>

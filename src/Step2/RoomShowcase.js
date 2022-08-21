@@ -75,7 +75,11 @@ export default function RoomShowcase({ room, onSelect }) {
         >
           <RoomDetails style={{ paddingBottom: "1rem" }}>
             <HTMLParser html={short_description} />
-            {square ? <Title>{square} кв. метра</Title> : null}
+            {square ? (
+              <Title>
+                {square} м<sup>2</sup>
+              </Title>
+            ) : null}
             {room_options.length ? (
               <RoomFeatures features={room_options} />
             ) : null}

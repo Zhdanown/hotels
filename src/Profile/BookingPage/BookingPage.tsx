@@ -10,13 +10,13 @@ import {
   getIsCancelling,
 } from "../../redux/booking";
 import { Guest } from "../../Step3/AccompanyingGuests/AddedGuests";
-import { Rate } from "../BookingCard";
 import { useData } from "../BookingList";
 import { Dates } from "../Dates";
 import { GuestList } from "../ProfileTab";
 import { PaymentSection } from "./PaymentSection";
+import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
-import { Payment, Room } from "./types";
+import { Payment, Rate, Room } from "./types";
 
 export const BookingPage = () => {
   const { booking_id } = useParams<{ booking_id: string }>();
@@ -113,7 +113,8 @@ const BookingDescription = ({
         <Dates arrival={arrival} departure={departure} />
       </div>
 
-      <RoomInfo room={{ ...room_type, rate_name: rate.name }} />
+      <RoomInfo room={room_type} />
+      <RateInfo rate={rate} />
 
       {accompanying_guests.length > 0 && (
         <section className="mt-6 mb-6">

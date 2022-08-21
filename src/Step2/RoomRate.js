@@ -57,7 +57,6 @@ export default function RoomRate({ rate, onClick }) {
             </Justified>
           </>
         )}
-        style={{ marginBottom: "2rem" }}
       >
         {long_description ? (
           <LongDescription>

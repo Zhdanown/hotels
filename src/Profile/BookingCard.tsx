@@ -2,13 +2,8 @@ import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
+import { Rate } from "./BookingPage/types";
 import { Dates } from "./Dates";
-
-export type Rate = {
-  code: string;
-  id: number;
-  name: string;
-}
 
 export type Booking = {
   arrival: string;
@@ -28,8 +23,7 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
   const { url } = useRouteMatch();
   const [, , isDesktop] = useWindowWidth();
 
-  const { id, status, arrival, departure, room_type, rate, price } =
-    booking;
+  const { id, status, arrival, departure, room_type, rate, price } = booking;
   return (
     <Link
       to={`${url}/${booking.id}`}
@@ -55,7 +49,6 @@ export const BookingCard = ({ booking }: { booking: Booking }) => {
 
         <DatesAndPrice isDesktop={Boolean(isDesktop)}>
           <Dates arrival={arrival} departure={departure} />
-          
           <h3
             className="title is-5 mt-2"
             style={{ display: "flex", justifyContent: "end" }}
