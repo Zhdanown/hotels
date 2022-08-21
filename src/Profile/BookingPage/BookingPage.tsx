@@ -88,7 +88,7 @@ export const BookingPage = () => {
 const CANCELED_STATUS = "Отменена гостем";
 
 const getChildsCount = (childs: BookingDetails["childs"]) =>
-  childs.reduce((acc, item) => item.quantity, 0);
+  childs.reduce((acc, item) => acc + item.quantity, 0);
 
 const BookingDescription = ({
   details,
