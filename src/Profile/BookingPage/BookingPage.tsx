@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import styled from "styled-components";
+import Accordion, { Icon } from "../../components/Accordion";
 import Button, { BackButton } from "../../components/Button";
 import { notify } from "../../components/Toast";
 import {
@@ -117,11 +119,18 @@ const BookingDescription = ({
       <RateInfo rate={rate} />
 
       {accompanying_guests.length > 0 && (
-        <section className="mt-6 mb-6">
-          <h4 className="title is-5 mb-2">
-            Гости ({accompanying_guests.length})
-          </h4>
-          <GuestList guests={accompanying_guests} />
+        <section className="mt-5 mb-5">
+          <Accordion
+            renderTitle={(toggle: () => void, isOpen: boolean) => (
+              <Button small outline onClick={toggle}>
+                Гости ({accompanying_guests.length})
+                <Icon open={isOpen} />
+              </Button>
+            )}
+            renderTitleAfter={null}
+          >
+            <GuestList guests={accompanying_guests} />
+          </Accordion>
         </section>
       )}
 
