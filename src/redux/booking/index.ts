@@ -1,5 +1,6 @@
 import { addDays } from "date-fns";
 import produce from "immer";
+import { BookingDetails } from "../../Profile/BookingPage/types";
 import {
   stringToDate,
   calculateNightsCount,
@@ -13,6 +14,10 @@ export const IS_BOOKING = "booking/IS_BOOKING";
 export const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
 export const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
 export const GET_BOOKING_LIST2 = "booking/GET_LIST";
+export const GET_BOOKING_DETAILS = "booking/GET_DETAILS";
+export const SET_BOOKING_DETAILS = "booking/SET_DETAILS";
+export const LOADING_BOOKING_DETAILS = "booking/LOADING_DETAILS";
+export const BOOKING_DETAILS_ERROR = "booking/GET_DETAILS_ERROR";
 export const CANCEL_RESERVATION = "booking/CANCEL";
 export const CANCELLATION_ERROR = "booking/CANCELLATION_ERROR";
 export const CANCELLING_RESERVATION = "booking/CANCELLING";
@@ -47,11 +52,28 @@ const initialState = {
     error: null,
     success: null,
   },
+  bookingDetails: {
+    data: null,
+    error: null,
+    isPending: false,
+  },
 };
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
     case GET_BOOKING_LIST2:
+      return;
+
+    case SET_BOOKING_DETAILS:
+      draft.bookingDetails.data = action.payload;
+      return;
+
+    case BOOKING_DETAILS_ERROR:
+      draft.bookingDetails.error = action.error;
+      return;
+
+    case LOADING_BOOKING_DETAILS:
+      draft.bookingDetails.isPending = action.payload;
       return;
 
     case CANCELLING_RESERVATION:
@@ -156,6 +178,20 @@ export function getBookingList(payload: any) {
   return { type: GET_BOOKING_LIST2, payload };
 }
 
+export function getReservationDetails(bookingId: string) {
+  return { type: GET_BOOKING_DETAILS, bookingId };
+}
+
+export function setReservationDetails(payload: BookingDetails | null) {
+  return { type: SET_BOOKING_DETAILS, payload };
+}
+export function reservationDetailsPending(payload: boolean) {
+  return { type: LOADING_BOOKING_DETAILS, payload };
+}
+export function reservationDetailsError(error: any) {
+  return { type: BOOKING_DETAILS_ERROR, error };
+}
+
 export function cancelReservation(bookingId: any) {
   return { type: CANCEL_RESERVATION, bookingId };
 }
@@ -184,4 +220,7 @@ export const getIsCancelling = (state: StoreState) =>
 export const getIsCancellationSuccessful = (state: StoreState) =>
   state.reservation.cancellation.success;
 
+export const getReservation = (state: StoreState) => state.reservation.bookingDetails;
+// export const getIsReservationPending = (state: StoreState) => state.reservation.bookingDetails.isPending;
+// export const getReservation = (state: StoreState) => state.reservation.bookingDetails.data;
   

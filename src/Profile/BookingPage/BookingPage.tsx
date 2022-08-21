@@ -1,64 +1,65 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import styled from "styled-components";
 import Accordion, { Icon } from "../../components/Accordion";
 import Button, { BackButton } from "../../components/Button";
+import Loader, { LoaderWrapper } from "../../components/Loader";
 import { notify } from "../../components/Toast";
 import {
   cancelReservation,
   getCancellationError,
   getIsCancellationSuccessful,
   getIsCancelling,
+  getReservation,
+  getReservationDetails,
+  reservationDetailsError,
+  reservationDetailsPending,
+  setReservationDetails,
 } from "../../redux/booking";
-import { Guest } from "../../Step3/AccompanyingGuests/AddedGuests";
-import { useData } from "../BookingList";
 import { Dates } from "../Dates";
 import { GuestList } from "../ProfileTab";
+import { CancelReservation } from "./CancelReservation";
 import { PaymentSection } from "./PaymentSection";
 import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
-import { Payment, Rate, Room } from "./types";
+import { BookingDetails } from "./types";
 
 export const BookingPage = () => {
   const { booking_id } = useParams<{ booking_id: string }>();
   const history = useHistory();
-  const [bookingDetails, loading] = useData<BookingDetails>(
-    `https://nlb.agex.host/api/v1/account-reservation/detail/${booking_id}/`
-  );
+  
+  const { data, error, isPending } = useSelector(getReservation);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getReservationDetails(booking_id));
+    return () => {
+      dispatch(reservationDetailsError(null));
+      dispatch(setReservationDetails(null));
+      dispatch(reservationDetailsPending(false));
+    };
+  }, [booking_id, dispatch]);
+
+  useEffect(() => {
+    error && notify("Не удалось загрузить данные")
+  }, [error])
 
   const cancel = () => dispatch(cancelReservation(booking_id));
 
   return (
     <div>
       <BackButton onClick={() => history.goBack()}>Назад</BackButton>
-      {bookingDetails && (
-        <BookingDescription details={bookingDetails} cancel={cancel} />
+      {isPending && (
+        <LoaderWrapper style={{ width: "100%", marginTop: '2rem' }}>
+          <Loader />
+        </LoaderWrapper>
+      )}
+      {data && (
+        <BookingDescription details={data} cancel={cancel} />
       )}
     </div>
   );
-};
-
-type BookingDetails = {
-  adults: number;
-  arrival: string;
-  // child_categories: [{…}]
-  confirmed: boolean;
-  created: string;
-  departure: string;
-  external_id: string;
-  id: number;
-  is_sber_employee: boolean;
-  link_key: string;
-  price: string;
-  rate: Rate;
-  accompanying_guests: Guest[];
-  reservation_payments: Payment[];
-  room_type: Room;
-  rooms_count: number;
-  status: string;
 };
 
 const CANCELED_STATUS = "Отменена гостем";
@@ -147,9 +148,7 @@ const BookingDescription = ({
       </h3>
 
       {status !== CANCELED_STATUS && (
-        <Button block onClick={cancel} loading={isCancelling}>
-          Отменить бронирование
-        </Button>
+        <CancelReservation cancelReservation={cancel} isCancelling={isCancelling} />
       )}
     </article>
   );

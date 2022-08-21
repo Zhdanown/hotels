@@ -14,10 +14,14 @@ import {
   CANCELLING_RESERVATION,
   CANCEL_RESERVATION,
   getParams,
+  GET_BOOKING_DETAILS,
   GET_BOOKING_LIST2,
   isBooking,
+  reservationDetailsError,
+  reservationDetailsPending,
   setBookingError,
   setBookingResponse,
+  setReservationDetails,
   SUBMIT_ORDER,
 } from ".";
 import { getConfigId, getConfigNoteCode, getHotelPms } from "../hotelConfig";
@@ -27,11 +31,35 @@ export function* bookingSaga() {
     yield takeEvery(SUBMIT_ORDER, bookRoom),
     yield takeLatest(GET_BOOKING_LIST2, fetchBookingList),
     yield takeEvery(CANCEL_RESERVATION, cancelBookingWatcher),
+    yield takeLatest(GET_BOOKING_DETAILS, getBookingDetails),
   ]);
   // yield takeLatest(GET_BOOKING_LIST2, function*(action) {
   //   console.log(123123, action)
   //   yield put({type: 'alsdjlsdf', payload: 'sdfsdf'})
   // })
+}
+
+function* getBookingDetails(action) {
+  yield put(reservationDetailsPending(true));
+  const { data, err } = yield call(fetchBookingDetails, action.bookingId);
+  if (data) {
+    yield put(setReservationDetails(data));
+  } else {
+    yield put(reservationDetailsError(err));
+  }
+  yield put(reservationDetailsPending(null));
+}
+
+async function fetchBookingDetails(bookingId) {
+  const url = `https://nlb.agex.host/api/v1/account-reservation/detail/${bookingId}/`;
+  try {
+    const res = await api.get(url);
+    if (res.status === 200) {
+      return { data: res.data };
+    }
+  } catch (err) {
+    return { err };
+  }
 }
 
 function* cancelBookingWatcher(action) {
@@ -45,12 +73,15 @@ function* cancelBookingWatcher(action) {
 
   err && (yield put({ type: CANCELLATION_ERROR, error: err }));
   yield put({ type: CANCELLING_RESERVATION, payload: false });
-  !err && (yield call(onCancellationSuccess));
+  !err && (yield call(onCancellationSuccess, action));
 }
 
-function* onCancellationSuccess() {
+function* onCancellationSuccess(action) {
   yield put({ type: CANCELLATION_SUCCESSFUL, payload: true });
-  yield call(() => new Promise(res => setTimeout(res, 1000)));
+  yield all([
+    call(() => new Promise(res => setTimeout(res, 1000))),
+    call(getBookingDetails, action),
+  ]);
   yield put({ type: CANCELLATION_SUCCESSFUL, payload: false });
 }
 
