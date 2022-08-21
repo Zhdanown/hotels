@@ -57,6 +57,7 @@ export const getConfigError = state => state.configError;
 export const getIsShowPromoCode = state => getConfig(state).promo_code;
 export const getRulesAndServicesFileReference = state =>
   getConfig(state).rules_and_services;
+export const getUsersTerms = state => getConfig(state).users_term;
 export const getIsShowNavbar = state =>
   getConfig(state).hotel_style_config.show_header;
 export const getHotelName = state => getConfig(state).name;

@@ -7,7 +7,7 @@ import {
   getBookingResponse,
   getParams,
 } from "../redux/booking";
-import { getIsBookingAllowed, getRulesAndServicesFileReference } from "../redux/hotelConfig";
+import { getIsBookingAllowed, getRulesAndServicesFileReference, getUsersTerms } from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
@@ -131,6 +131,7 @@ const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
   const [consent, setConsent] = useState(false);
   const isBookingAllowed = useSelector(getIsBookingAllowed);
   const isSberFormValid = useIsSberFormValid();
+  const userTermsFile = useSelector(getUsersTerms);
 
   /** скрывать кнопку блокирования во время тестирования */
   if (!isBookingAllowed) {
@@ -149,7 +150,7 @@ const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
           style={{ marginRight: ".5rem" }}
         />
         Я подтверждаю своё согласие с{" "}
-        <Link>Политикой в отношении обработки персональных данныx</Link>
+        <Link href={userTermsFile} target="_blank">Политикой в отношении обработки персональных данныx</Link>
       </label>
 
       <SubmitButton
