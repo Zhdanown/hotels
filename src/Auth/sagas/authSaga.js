@@ -23,7 +23,10 @@ export default function* authSaga() {
 
 export function* fetchUserInfo() {
   const token = yield call(CookieUtils.getToken);
-  if (!token) return;
+  if (!token) {
+    yield call(redirectToLoginPage);
+    return;
+  }
 
   yield put(loginPending(true));
 
@@ -40,12 +43,19 @@ export function* fetchUserInfo() {
   yield put(loginPending(false));
 }
 
-function* redirectToLoginPage() {
+function* redirectToPage(redirectPath) {
   let { pathname } = window.location;
 
   const match = pathname.match(/^(?<path>\/\w*)(\/login\/?)?/);
   if (match) {
     const { path } = match.groups;
-    yield call(history.push, `${path}/login`);
+    yield call(history.push, `${path}${redirectPath}`);
   }
+}
+
+function* redirectToLoginPage() {
+  yield call(redirectToPage, '/login')
+}
+export function* redirectToMainPage() {
+  yield call(redirectToPage, '/')
 }

@@ -2,6 +2,7 @@ import { call, put } from "redux-saga/effects";
 import { CookieUtils } from "../../redux/api";
 import { SET_USER } from "../authReducer";
 import { loginPending, setLoginError } from "../authReducer";
+import { redirectToMainPage } from "./authSaga";
 import { getUserInfo, signIn } from "./authSagaHelpers";
 import { signInWithSber } from "./sberSaga";
 
@@ -33,4 +34,5 @@ export default function* loginWatcher(action) {
 
 export function* logoutWatcher(action) {
   yield call(CookieUtils.clearToken);
+  yield call(redirectToMainPage);
 }
