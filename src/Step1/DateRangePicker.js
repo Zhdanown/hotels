@@ -1,36 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Litepicker from "litepicker";
-import styled, { createGlobalStyle } from "styled-components";
+import  { createGlobalStyle } from "styled-components";
 import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
 import { changeParams, getParams } from "../redux/booking";
-import { hexToRgb, withOpacity } from "../utils/colorHelpers";
-import Input from "../components/Input";
+import { pickTextColorBasedOnBgColor } from "../utils/colorHelpers";
 import { stringToDate } from "../utils/dateHelpers";
 
-const CalendarTheme = createGlobalStyle`
-  :root {
-    --litepickerDayIsStartBg: ${props => props.primaryColor} !important;
-    --litepickerDayIsEndBg: ${props => props.primaryColor};
-    --litepickerDayIsInRange: rgba(${props =>
-      withOpacity(hexToRgb(props.primaryColor), 0.3)});
-    --litepickerDayColorHover: #333333;
-    --litepickerDayIsTodayColor: ${props => props.primaryColor};
-    --litepickerMonthButtonHover: ${props => props.primaryColor};
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_green.css";
+import { Russian } from "flatpickr/dist/l10n/ru";
+import { isBefore, sub } from "date-fns";
+
+const FlatpickrTheme = createGlobalStyle`
+  .flatpickr-months .flatpickr-month, 
+  .flatpickr-current-month .flatpickr-monthDropdown-months, 
+  .flatpickr-weekdays, span.flatpickr-weekday {
+    background: ${p => p.primaryColor};
+    color: ${p => p.textColor};
   }
-`;
 
-const InputContainer = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 1rem;
-`;
+  .flatpickr-day.selected, .flatpickr-day.selected:hover,
+  span.flatpickr-day.startRange, span.flatpickr-day.startRange:hover,
+  span.flatpickr-day.endRange, span.flatpickr-day.endRange:hover,
 
-const DatePickerContainer = styled.div`
-  position: relative;
-  text-align: center;
+  .flatpickr-day.endRange.nextMonthDay, 
+  .flatpickr-day.selected.prevMonthDay, 
+  .flatpickr-day.selected.prevMonthDay.startRange, 
+  .flatpickr-day.startRange.prevMonthDay {
+    background: ${p => p.primaryColor};
+    border-color: ${p => p.primaryColor};
+    color: ${p => p.textColor};
+  }
+
+  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), 
+  .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), 
+  .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+    webkit-box-shadow: -10px 0 0 ${p => p.primaryColor};
+    box-shadow: -10px 0 0 ${p => p.primaryColor};
+  }
 `;
 
 function DateRangePicker() {
@@ -42,12 +49,14 @@ function DateRangePicker() {
 
   const dispatch = useDispatch();
   const primaryColor = useSelector(getPrimaryColor);
+  const textColor = pickTextColorBasedOnBgColor(primaryColor, '#ffffff', '#000000')
 
   useEffect(() => {
     if (!range) return;
 
     const { start, end } = range;
 
+    console.log(range);
     dispatch(
       changeParams({
         arrival: start.toLocaleDateString(),
@@ -56,75 +65,42 @@ function DateRangePicker() {
     );
   }, [dispatch, range]);
 
+  const [preselectedRange, setPreselectedRange] = useState([
+    range.start,
+    range.end,
+  ]);
+
   useEffect(() => {
-    let picker = new Litepicker({
-      element: document.getElementById("startDate"),
-      elementEnd: document.getElementById("endDate"),
-      parentEl: "#date-rande-picker",
-      startDate: range.start,
-      endDate: range.end,
-      autoRefresh: true,
-      inlineMode: true,
-      singleMode: false,
-      lang: "ru-RU",
-      hotelMode: true,
-      selectForward: false,
-      tooltipText: {
-        one: "ночь",
-        other: "ночей",
-        few: "ночи",
-        many: "ночей",
-      },
-      minDate: new Date().setHours(0, 0, 0, 0),
-      onSelect: (start, end) => setRange({ start, end }),
-    });
-
-    document.addEventListener("click", e => {
-      let el = e.target;
-      let isDayItem = el && el.classList.contains("day-item");
-      let isStartDate = !document.querySelector(".day-item.is-end-date");
-
-      if (isDayItem && isStartDate) {
-        let startDate = new Date(Number(el.dataset.time));
-        onStartChange(startDate);
-      }
-    });
-
-    function onStartChange(startDate) {
-      // const inRange = _range.find(
-      //   date => date.getDate() === startDate.getDate()
-      // );
-      //   if (inRange) {
-      //   debugger
-      //   picker.setLockDays(range);
-      //   }
+    const [start, end] = preselectedRange;
+    if (start && end) {
+      setRange({ start, end });
     }
-
-    return () => picker.destroy();
-  }, []);
+  }, [preselectedRange]);
 
   return (
-    <div style={{ margin: "2rem 0" }}>
+    <div style={{ margin: "2rem 0", display: "inline-block" }}>
       <ArrivalDepartureTime />
-      <InputContainer style={{ display: "none" }}>
-        <Input
-          type="text"
-          name="startDate"
-          label={`Заезд`}
-          value={range.start}
-          readOnly
-        />
-        <span style={{ margin: "0 1.25rem" }}>{" - "}</span>
-        <Input
-          type="text"
-          name="endDate"
-          label={`Выезд`}
-          value={range.end}
-          readOnly
-        />
-      </InputContainer>
-      <CalendarTheme primaryColor={primaryColor} />
-      <DatePickerContainer id="date-rande-picker"></DatePickerContainer>
+      <span>
+        {range.start.getDate()} - {range.end.getDate()}
+      </span>
+
+      <FlatpickrTheme primaryColor={primaryColor} textColor={textColor}/>
+      <Flatpickr
+        render={(props, ref) => <span ref={ref}></span>}
+        data-enable-time
+        value={preselectedRange}
+        options={{
+          inline: true,
+          mode: "range",
+          locale: Russian,
+          
+          disable: [date => isBefore(date, sub(new Date(), { days: 1 }))],
+        }}
+        onChange={range => {
+          setPreselectedRange(range);
+
+        }}
+      />
     </div>
   );
 }
