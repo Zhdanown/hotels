@@ -5,6 +5,7 @@
   "proxy": "https://nlb.agex.host/",
   "dependencies": {
     "@ant-design/icons": "^4.4.0",
+    "@popperjs/core": "^2.11.6",
     "@sentry/react": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -33,6 +34,7 @@
     "react-image-lightbox": "^5.1.1",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-motion": "^0.5.2",
+    "react-popper": "^2.3.0",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
