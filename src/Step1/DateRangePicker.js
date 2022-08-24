@@ -20,7 +20,7 @@ import { stringToDate } from "../utils/dateHelpers";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import { Russian } from "flatpickr/dist/l10n/ru";
-import { addMonths, format, isBefore, sub } from "date-fns";
+import { addMonths, format, isBefore, parse, sub } from "date-fns";
 import { createPopper } from "@popperjs/core";
 import { useData } from "../hooks/useData";
 
@@ -94,7 +94,7 @@ function useAvailability(start) {
       setAvailaibleDates(dates => [...dates, ...availabilityData]);
   }, [availabilityData]);
 
-  return [availability, loading]
+  return [availability, loading];
 }
 
 function DateRangePicker() {
@@ -112,7 +112,7 @@ function DateRangePicker() {
     "#000000"
   );
 
-  const [availability, loading] = useAvailability(range.start)
+  const [availability, loading] = useAvailability(range.start);
 
   useEffect(() => {
     if (!range) return;
@@ -244,12 +244,7 @@ export default DateRangePicker;
 
 function ArrivalDepartureTime() {
   const { arrivalTime, departureTime } = useSelector(getArrivalDepartureTime);
-
-  const formatTime = time => {
-    const regex = /(\d{2}:\d{2}):\d{2}/;
-    let match = time.match(regex);
-    return match ? match[1] : time;
-  };
+  const formatTime = time => format(parse(time, "HH:mm:ss", new Date()), "HH:mm");
 
   return (
     <div style={{ marginBottom: "1rem" }}>
