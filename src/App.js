@@ -10,7 +10,7 @@ import { LayoutContextProvider } from "./Layout/LayoutContext";
 import history from "./history";
 import AuthRoutes from "./Auth/AuthRoutes";
 import { login, startSession } from "./Auth/authReducer";
-import { useQueryParams } from "./useQueryParams";
+import { useQueryParams } from "./hooks/useQueryParams";
 import { changeParams, getBookingList } from "./redux/booking";
 import { Toast } from "./components/Toast";
 import { Suspense } from "react";

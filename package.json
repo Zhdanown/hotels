@@ -29,6 +29,7 @@
     "react": "^16.13.1",
     "react-collapse": "^5.1.0",
     "react-dom": "^16.13.1",
+    "react-flatpickr": "^3.10.13",
     "react-image-lightbox": "^5.1.1",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-motion": "^0.5.2",
