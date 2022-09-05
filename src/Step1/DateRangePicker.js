@@ -47,20 +47,29 @@ const FlatpickrTheme = createGlobalStyle`
     }
   }
 
-  .flatpickr-day.selected, .flatpickr-day.selected:hover,
-  .flatpickr-day.startRange, .flatpickr-day.startRange:hover,
-  .flatpickr-day.endRange, .flatpickr-day.endRange:hover
-   {
-    background: ${p => p.primaryColor} !important;
-    border-color: ${p => p.primaryColor} !important;
-    color: ${p => p.textColor} !important;
-  }
+  .flatpickr-day {
+    border-radius: 4px;
 
-  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), 
-  .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), 
-  .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
-    webkit-box-shadow: -10px 0 0 ${p => p.primaryColor};
-    box-shadow: -10px 0 0 ${p => p.primaryColor};
+    &.selected, &.selected:hover,
+    &.startRange, &.startRange:hover,
+    &.endRange, &.endRange:hover {
+      background: ${p => p.primaryColor} !important;
+      border-color: ${p => p.primaryColor} !important;
+      color: ${p => p.textColor} !important;
+    }
+    &.startRange {
+      border-radius: 4px 0 0 4px !important;
+    }
+    &.endRange {
+      border-radius: 0 4px 4px 0 !important;
+    }
+
+    &.selected.startRange + .endRange:not(:nth-child(7n+1)), 
+    &.startRange.startRange + .endRange:not(:nth-child(7n+1)), 
+    &.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+      webkit-box-shadow: -10px 0 0 ${p => p.primaryColor};
+      box-shadow: -10px 0 0 ${p => p.primaryColor};
+    }
   }
 
   .availability-badge {
