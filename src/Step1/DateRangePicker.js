@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 import {
@@ -21,15 +14,37 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import { Russian } from "flatpickr/dist/l10n/ru";
 import { addMonths, format, isBefore, parse, sub } from "date-fns";
-import { createPopper } from "@popperjs/core";
 import { useData } from "../hooks/useData";
 
 const FlatpickrTheme = createGlobalStyle`
   .flatpickr-months .flatpickr-month, 
   .flatpickr-current-month .flatpickr-monthDropdown-months, 
   .flatpickr-weekdays, span.flatpickr-weekday {
-    background: ${p => p.primaryColor};
-    color: ${p => p.textColor};
+    background: white;
+    color: rgba(0,0,0,0.54);
+  }
+  
+  .flatpickr-weekdays {
+    border-left: 1px solid rgba(72,72,72,0.2);
+    border-right: 1px solid rgba(72,72,72,0.2);
+  }
+  
+  .flatpickr-months {
+    .flatpickr-month {
+      border: 1px solid rgba(72,72,72,0.2);
+      border-bottom: none;
+    }
+
+    .flatpickr-next-month, .flatpickr-prev-month {
+      svg {
+        fill: rgba(0,0,0,0.54);
+        transition: .4s transform;
+      }
+      &:hover svg {
+        fill: ${p => p.primaryColor};
+        transform: scale(1.25);
+      }
+    }
   }
 
   .flatpickr-day.selected, .flatpickr-day.selected:hover,
@@ -48,7 +63,7 @@ const FlatpickrTheme = createGlobalStyle`
     box-shadow: -10px 0 0 ${p => p.primaryColor};
   }
 
-  .tooltip {
+  .availability-badge {
     position: absolute;
     width: 15px;
     height: 3px;
@@ -56,27 +71,7 @@ const FlatpickrTheme = createGlobalStyle`
     bottom: 3px;
     left: calc(50% - 7.5px);
   }
-
-  .hint {
-    border-radius: 5px;
-    background: rgba(50, 50, 50, .75);
-    padding: 5px;
-    color: white;
-    white-space: nowrap;
-    display: block;
-  }
 `;
-
-function generateGetBoundingClientRect(x = 0, y = 0) {
-  return () => ({
-    width: 0,
-    height: 0,
-    top: y,
-    right: x,
-    bottom: y,
-    left: x,
-  });
-}
 
 function useAvailability(start) {
   const hotelId = useSelector(getConfigId);
@@ -139,75 +134,6 @@ function DateRangePicker() {
     }
   }, [preselectedRange]);
 
-  const [x, setX] = useState(-5000);
-  const [y, setY] = useState(-5000);
-  const [text, setText] = useState("");
-
-  const virtualElement = useMemo(
-    () => ({
-      getBoundingClientRect: generateGetBoundingClientRect(x, y),
-      text,
-    }),
-    [x, y, text]
-  );
-
-  const popperElement = useRef(null);
-  const instRef = useRef(null);
-
-  useEffect(() => {
-    const instance = createPopper(virtualElement, popperElement.current);
-    instRef.current = instance;
-
-    return () => {
-      instance.destroy();
-    };
-  }, [virtualElement]);
-
-  const onDayCreate = (dObj, dStr, fp, dayElem) => {
-    const dateString = format(dayElem.dateObj, "yyyy-MM-dd");
-    if (!availability.length) {
-      return;
-    }
-
-    const info = availability.find(item => item.date === dateString);
-    if (info) {
-      const { legend, color } = info.availability;
-      dayElem.innerHTML += `<span class='tooltip' style="background-color: ${color}"></span>`;
-
-      dayElem.onmouseover = event => {
-        const rect = dayElem.getBoundingClientRect();
-        const { x, y, height, width } = rect;
-        setX(x + width);
-        setY(y + height);
-        setText(legend);
-        instRef.current.update();
-      };
-      // TODO remake
-      dayElem.onmouseout = () => {
-        setX(-5000);
-        setY(-5000);
-        setText("");
-        instRef.current.update();
-      };
-    }
-  };
-
-  const render = useCallback((props, ref) => <span ref={ref}></span>, []);
-  const onChange = useCallback(range => {
-    setPreselectedRange(range);
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      inline: true,
-      mode: "range",
-      locale: Russian,
-      disableMobile: true,
-      disable: [date => isBefore(date, sub(new Date(), { days: 1 }))],
-    }),
-    []
-  );
-
   return (
     <div
       style={{
@@ -221,21 +147,32 @@ function DateRangePicker() {
       <FlatpickrTheme primaryColor={primaryColor} textColor={textColor} />
       <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Flatpickr
-          render={render}
+          render={(props, ref) => <span ref={ref}></span>}
           data-enable-time
           value={preselectedRange}
-          options={options}
-          onChange={onChange}
-          onDayCreate={onDayCreate}
+          options={{
+            inline: true,
+            mode: "range",
+            locale: Russian,
+            disableMobile: true,
+            disable: [date => isBefore(date, sub(new Date(), { days: 1 }))],
+          }}
+          onChange={range => setPreselectedRange(range)}
+          onDayCreate={(dObj, dStr, fp, dayElem) => {
+            const dateString = format(dayElem.dateObj, "yyyy-MM-dd");
+            console.log(availability);
+            if (!availability.length) {
+              return;
+            }
+
+            const info = availability.find(item => item.date === dateString);
+            if (info) {
+              const { color } = info.availability;
+              dayElem.innerHTML += `<span class='availability-badge' style="background-color: ${color}"></span>`;
+            }
+          }}
         />
       </div>
-      {/* disable for touch devices */}
-      {createPortal(
-        <div ref={popperElement}>
-          {text && <span className="hint">{text}</span>}
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
@@ -244,7 +181,8 @@ export default DateRangePicker;
 
 function ArrivalDepartureTime() {
   const { arrivalTime, departureTime } = useSelector(getArrivalDepartureTime);
-  const formatTime = time => format(parse(time, "HH:mm:ss", new Date()), "HH:mm");
+  const formatTime = time =>
+    format(parse(time, "HH:mm:ss", new Date()), "HH:mm");
 
   return (
     <div style={{ marginBottom: "1rem" }}>
