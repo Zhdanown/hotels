@@ -13,11 +13,16 @@ function Room() {
 
   const [childs, setChilds] = useState(childCategories);
   const [adults, setAdults] = useState(params.adults);
+  const [roomCount, setRoomCount] = useState(params.rooms_count);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(changeParams({ adults, guests: [] }));
   }, [adults, dispatch]);
+
+  useEffect(() => {
+    dispatch(changeParams({ rooms_count: roomCount }));
+  }, [roomCount, dispatch]);
 
   useEffect(() => {
     const newChilds = childs.map(({ code, count }) => ({ code, count }));
@@ -43,6 +48,11 @@ function Room() {
           onChange={(count, code) => updateChilds(count, index)}
         ></ChildCategory>
       ))}
+      <Category
+        name="Количество комнат"
+        initialValue={roomCount}
+        onChange={setRoomCount}
+      />
     </StyledRoom>
   );
 }
