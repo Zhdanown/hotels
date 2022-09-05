@@ -17,12 +17,12 @@ const Sign = styled.button`
   color: ${props => props.color};
 `;
 
-function Category({ initialValue, onChange, name, annotation }) {
-  const [count, setCount] = useState(initialValue);
+function Category({ initialValue, onChange, name, annotation, maxValue = Infinity }) {
+  const [count, setCount] = useState(initialValue > maxValue ? maxValue : initialValue);
   const primaryColor = useSelector(getPrimaryColor);
 
   const decrement = () => setCount(x => (x > 0 ? --x : x));
-  const increment = () => setCount(x => ++x);
+  const increment = () => setCount(x => x < maxValue ? ++x : x);
 
   useEffect(() => {
     onChange(count);
