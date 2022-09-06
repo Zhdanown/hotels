@@ -73,13 +73,17 @@ export default function RoomShowcase({ room, onSelect }) {
             </Title>
           )}
         >
+          <div className="tags">
+            {square ? (
+              <span className="tag is-light">
+                площадь: {square} м<sup>2</sup>
+              </span>
+            ) : null}
+            <span className="tag is-light">количество спальных мест: 2 </span>
+          </div>
           <RoomDetails style={{ paddingBottom: "1rem" }}>
             <HTMLParser html={short_description} />
-            {square ? (
-              <Title>
-                {square} м<sup>2</sup>
-              </Title>
-            ) : null}
+
             {room_options.length ? (
               <RoomFeatures features={room_options} />
             ) : null}
