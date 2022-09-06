@@ -5,11 +5,12 @@ import produce from "immer";
 import Category, { ChildCategory } from "./Category";
 import { StyledRoom, RoomHeader } from "./styled";
 import { changeParams, getParams } from "../../redux/booking";
-import { getChildCategories } from "../../redux/hotelConfig";
+import { getChildCategories, getMaxRoomsCount } from "../../redux/hotelConfig";
 
 function Room() {
   const params = useSelector(getParams);
   const childCategories = useSelector(getChildCategories);
+  const maxRoomsCount = useSelector(getMaxRoomsCount);
 
   const [childs, setChilds] = useState(childCategories);
   const [adults, setAdults] = useState(params.adults);
@@ -52,7 +53,7 @@ function Room() {
         name="Количество комнат"
         initialValue={roomCount}
         onChange={setRoomCount}
-        maxValue={2}
+        maxValue={maxRoomsCount}
       />
     </StyledRoom>
   );
