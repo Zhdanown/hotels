@@ -169,7 +169,6 @@ function DateRangePicker() {
           onChange={range => setPreselectedRange(range)}
           onDayCreate={(dObj, dStr, fp, dayElem) => {
             const dateString = format(dayElem.dateObj, "yyyy-MM-dd");
-            console.log(availability);
             if (!availability.length) {
               return;
             }
