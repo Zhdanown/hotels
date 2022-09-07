@@ -29,6 +29,7 @@ export default function RoomShowcase({ room, onSelect }) {
     rates,
     square,
     room_options,
+    guest_limit,
   } = room;
 
   const onRateSelect = rate => {
@@ -74,12 +75,14 @@ export default function RoomShowcase({ room, onSelect }) {
           )}
         >
           <div className="tags">
-            {square ? (
+            {square && (
               <span className="tag is-light">
                 площадь: {square} м<sup>2</sup>
               </span>
-            ) : null}
-            <span className="tag is-light">количество спальных мест: 2 </span>
+            )}
+            {guest_limit && (
+              <span className="tag is-light">количество спальных мест: {guest_limit} </span>
+            )}
           </div>
           <RoomDetails style={{ paddingBottom: "1rem" }}>
             <HTMLParser html={short_description} />
