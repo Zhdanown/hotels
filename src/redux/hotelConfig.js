@@ -47,6 +47,10 @@ export const loadConfig = slug => async dispatch => {
   }
 };
 
+export const resetConfig = () => {
+  return { type: SET_CONFIG, payload: null };
+};
+
 export const getConfig = state => state.hotelConfig.params;
 export const getConfigId = state => getConfig(state).id;
 export const getConfigNoteCode = state => getConfig(state).note;

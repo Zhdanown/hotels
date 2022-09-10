@@ -1,5 +1,7 @@
 import { call, put } from "redux-saga/effects";
 import { CookieUtils } from "../../redux/api";
+import { resetParams } from "../../redux/booking";
+import { resetConfig } from "../../redux/hotelConfig";
 import { SET_USER } from "../authReducer";
 import { loginPending, setLoginError } from "../authReducer";
 import { redirectToMainPage } from "./authSaga";
@@ -29,10 +31,16 @@ export default function* loginWatcher(action) {
   if (userInfoError) return;
 
   yield put({ type: SET_USER, userInfo });
+  
+  yield put(resetParams());
+
   yield put(loginPending(false));
 }
 
 export function* logoutWatcher(action) {
   yield call(CookieUtils.clearToken);
   yield call(redirectToMainPage);
+
+  yield put(resetParams());
+  yield put(resetConfig());
 }

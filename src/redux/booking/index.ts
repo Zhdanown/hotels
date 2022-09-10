@@ -9,11 +9,11 @@ import {
 } from "../../utils/dateHelpers";
 
 export const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
+export const RESET_PARAMS = "booking/RESET_PARAMS";
 export const SUBMIT_ORDER = "booking/SUBMIT_ORDER";
 export const IS_BOOKING = "booking/IS_BOOKING";
 export const SET_BOOKING_RESPONSE = "booking/SET_BOOKING_RESPONSE";
 export const SET_BOOKING_ERROR = "booking/SET_BOOKING_ERROR";
-export const GET_BOOKING_LIST2 = "booking/GET_LIST";
 export const GET_BOOKING_DETAILS = "booking/GET_DETAILS";
 export const SET_BOOKING_DETAILS = "booking/SET_DETAILS";
 export const LOADING_BOOKING_DETAILS = "booking/LOADING_DETAILS";
@@ -61,9 +61,6 @@ const initialState = {
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
-    case GET_BOOKING_LIST2:
-      return;
-
     case SET_BOOKING_DETAILS:
       draft.bookingDetails.data = action.payload;
       return;
@@ -103,6 +100,9 @@ const reducer = produce((draft, action) => {
     case SET_BOOKING_ERROR:
       draft.error = action.error;
       return;
+
+    case RESET_PARAMS:
+      return initialState;
 
     default:
       return draft;
@@ -154,6 +154,10 @@ function checkDeparture(departure: string, arrival: string) {
   }
 }
 
+export function resetParams() {
+  return { type: RESET_PARAMS };
+}
+
 export function changeParams(payload: any) {
   return { type: CHANGE_PARAMS, payload };
 }
@@ -172,10 +176,6 @@ export function setBookingResponse(payload: any) {
 
 export function setBookingError(error: any) {
   return { type: SET_BOOKING_ERROR, error };
-}
-
-export function getBookingList(payload: any) {
-  return { type: GET_BOOKING_LIST2, payload };
 }
 
 export function getReservationDetails(bookingId: string) {
@@ -220,7 +220,5 @@ export const getIsCancelling = (state: StoreState) =>
 export const getIsCancellationSuccessful = (state: StoreState) =>
   state.reservation.cancellation.success;
 
-export const getReservation = (state: StoreState) => state.reservation.bookingDetails;
-// export const getIsReservationPending = (state: StoreState) => state.reservation.bookingDetails.isPending;
-// export const getReservation = (state: StoreState) => state.reservation.bookingDetails.data;
-  
+export const getReservation = (state: StoreState) =>
+  state.reservation.bookingDetails;

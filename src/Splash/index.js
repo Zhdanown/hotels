@@ -40,7 +40,7 @@ const SplashBackground = styled.div`
   }
 `;
 
-export default function Splash({ children }) {
+export default function Splash({ children, hasConfig }) {
   const svgBgColor = useSelector(getSvgBgColor);
   const cssUrl = useSelector(getCssUrl);
   const svgUrl = useSelector(getSvgUrl);
@@ -55,6 +55,10 @@ export default function Splash({ children }) {
   const [visible, setVisible] = useState(true);
 
   const [svg] = useStyledSvg(cssUrl, svgUrl);
+
+  useEffect(() => {
+    !hasConfig && visible && setVisible(true);
+  }, [hasConfig, visible])
 
   useEffect(() => {
     if (!svg) return;

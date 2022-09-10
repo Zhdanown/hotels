@@ -11,7 +11,7 @@ import history from "./history";
 import AuthRoutes from "./Auth/AuthRoutes";
 import { login, startSession } from "./Auth/authReducer";
 import { useQueryParams } from "./hooks/useQueryParams";
-import { changeParams, getBookingList } from "./redux/booking";
+import { changeParams } from "./redux/booking";
 import { Toast } from "./components/Toast";
 import { Suspense } from "react";
 import HotelConfigLoader from "./HotelConfigLoader";
@@ -27,7 +27,6 @@ function App() {
 
   useEffect(() => {
     dispatch(changeParams(queryParams));
-    dispatch(getBookingList);
   }, [queryParams, dispatch]);
 
   useEffect(() => {
@@ -62,12 +61,14 @@ function Routes() {
       </Route>
       <Route path={path}>
         <LayoutContextProvider>
-          <Layout>
-            <Step1 />
-            <Rooms />
-            <Step3 />
-          </Layout>
           <AuthRoutes />
+          <Route exact path="/:slug">
+            <Layout>
+              <Step1 />
+              <Rooms />
+              <Step3 />
+            </Layout>
+          </Route>
         </LayoutContextProvider>
       </Route>
     </Switch>

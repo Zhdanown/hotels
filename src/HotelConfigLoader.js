@@ -19,10 +19,10 @@ function HotelConfigLoader({ children }) {
   const configError = useSelector(getConfigError);
 
   useEffect(() => {
-    if (slug) {
+    if (slug && !config) {
       dispatch(loadConfig(slug));
     }
-  }, [dispatch, slug]);
+  }, [dispatch, slug, config]);
 
   const getMessage = () => {
     const text = () => {
@@ -43,7 +43,7 @@ function HotelConfigLoader({ children }) {
 
   return (
     <>
-      <SplashScreen>{getMessage()}</SplashScreen>
+      <SplashScreen hasConfig={Boolean(config)}>{getMessage()}</SplashScreen>
       {config ? children : null}
     </>
   );
