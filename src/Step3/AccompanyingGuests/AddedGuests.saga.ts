@@ -70,9 +70,8 @@ function* createGuestWatcher(action: {
   const { files, userId, hotelId, firstName, lastName } = action.payload;
 
   yield put(creatingGuestPending(true));
-  const { id } = yield call(uploadFile, { userId, files });
-
-  const attachments = [id];
+  
+  const attachments = yield call(getAttachments, userId, files);
 
   const extraGuestBodyRequest = {
     id: null,
@@ -83,9 +82,17 @@ function* createGuestWatcher(action: {
   };
 
   yield call(createOrUpdateGuest, hotelId, extraGuestBodyRequest);
-
   yield call(fetchUserInfo);
   yield put(creatingGuestPending(false));
+}
+
+function* getAttachments(userId: number, files: File[]) {
+  if (!files.length) {
+    return [];
+  }
+
+  const { id } = yield call(uploadFile, { userId, files });
+  return [id];
 }
 
 function* updateGuestWatcher(action: {

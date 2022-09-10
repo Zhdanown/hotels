@@ -29,7 +29,7 @@ export type Guest = {
   attachments: Attachment[];
 };
 
-type GuestForm = {
+type GuestFormType = {
   fields: GuestFormFields | null;
   attachments?: Attachment[];
 };
@@ -48,7 +48,7 @@ export const AddedGuests = () => {
     reservationParams.guests || []
   );
   const [view, setView] = useState<"list" | "form">("list");
-  const [guestForm, setGuestForm] = useState<GuestForm>({ fields: null });
+  const [guestForm, setGuestForm] = useState<GuestFormType>({ fields: null });
 
   useEffect(() => {
     setSelectedGuests(reservationParams.guests || []);

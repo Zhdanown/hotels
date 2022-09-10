@@ -61,10 +61,6 @@ export const GuestForm = ({ initialValues, goBack }: GuestFormProps) => {
       errors.last_name = "Это поле не должно быть пустым";
     }
 
-    if (!values.attachment && !values.files?.length) {
-      errors.files = "Файл не выбран, Ошибка";
-    }
-
     return errors;
   }
 
@@ -78,10 +74,6 @@ export const GuestForm = ({ initialValues, goBack }: GuestFormProps) => {
         validate={validate}
         onSubmit={(values, { setSubmitting }) => {
           const { first_name, last_name, files, id, attachment } = values;
-
-          if (!attachment && !files?.length) {
-            return;
-          }
 
           const getFiles = () => {
             if (attachment) {
