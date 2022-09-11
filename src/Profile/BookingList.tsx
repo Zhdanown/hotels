@@ -4,8 +4,6 @@ import Loader, { LoaderWrapper } from "../components/Loader";
 import { useData } from "../hooks/useData";
 import { getConfigId } from "../redux/hotelConfig";
 import { BookingCard, Booking } from "./BookingCard";
-import { Filters } from "./Filters";
-
 
 export const MyBookings = () => {
   const hotelId = useSelector(getConfigId);
@@ -23,10 +21,6 @@ export const MyBookings = () => {
 
   return (
     <div>
-      <div className="mb-4">
-        <Filters />
-      </div>
-
       {bookingList?.map(booking => (
         <BookingCard key={booking.id} booking={booking} />
       ))}
