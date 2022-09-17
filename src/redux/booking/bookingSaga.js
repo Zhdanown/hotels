@@ -22,38 +22,50 @@ import {
   setBookingResponse,
   setReservationDetails,
   SUBMIT_ORDER,
+  GET_BOOKING_LIST,
+  setBookingListPending,
+  setBookingList,
+  setBookingListError,
 } from ".";
 import { getConfigId, getConfigNoteCode, getHotelPms } from "../hotelConfig";
+import { fetcher } from "../utils";
 
 export function* bookingSaga() {
   yield all([
     yield takeEvery(SUBMIT_ORDER, bookRoom),
     yield takeEvery(CANCEL_RESERVATION, cancelBookingWatcher),
     yield takeLatest(GET_BOOKING_DETAILS, getBookingDetails),
+    yield takeLatest(GET_BOOKING_LIST, getBookingList),
   ]);
+}
+
+function* getBookingList(action) {
+  yield put(setBookingListPending(true));
+  const hotelId = yield select(getConfigId);
+  
+  const url = `/api/v1/account-reservation/list/${hotelId}/`;
+  const { data, err } = yield call(fetcher, url);
+
+  if (data) {
+    yield put(setBookingList(data));
+  } else {
+    yield put(setBookingListError(err));
+  }
+  yield put(setBookingListPending(false));
 }
 
 function* getBookingDetails(action) {
   yield put(reservationDetailsPending(true));
-  const { data, err } = yield call(fetchBookingDetails, action.bookingId);
+
+  const url = `https://nlb.agex.host/api/v1/account-reservation/detail/${action.bookingId}/`;
+  const { data, err } = yield call(fetcher, url);
+
   if (data) {
     yield put(setReservationDetails(data));
   } else {
     yield put(reservationDetailsError(err));
   }
   yield put(reservationDetailsPending(null));
-}
-
-async function fetchBookingDetails(bookingId) {
-  const url = `https://nlb.agex.host/api/v1/account-reservation/detail/${bookingId}/`;
-  try {
-    const res = await api.get(url);
-    if (res.status === 200) {
-      return { data: res.data };
-    }
-  } catch (err) {
-    return { err };
-  }
 }
 
 function* cancelBookingWatcher(action) {

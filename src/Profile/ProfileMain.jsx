@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Tabs } from "../components/Tabs";
 import { HTMLOverflowHiddenMobile } from "../Layout/Mobile";
@@ -9,6 +9,7 @@ import { ProfileTab } from "./ProfileTab";
 import { MyBookings } from "./BookingList";
 import { Switch } from "react-router-dom";
 import { routes as pages } from './routes'
+import { getBookingListCount, loadBookingList } from "../redux/booking";
 
 const ProfileContainer = styled.div`
   height: 100%;
@@ -18,9 +19,17 @@ const ProfileContainer = styled.div`
 
 function Profile() {
   const isShowNavbar = useSelector(getIsShowNavbar);
+  const bookingCount = useSelector(getBookingListCount)
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadBookingList());
+  }, [dispatch])
+
+  const count = (bookingCount ? ` (${bookingCount})` : '');
   const tabs = [
-    { title: "Мои брони", content: <MyBookings />, url: pages.bookingList },
+    { title: `Мои брони` + count, content: <MyBookings />, url: pages.bookingList },
     { title: "Профиль", content: <ProfileTab />, url: pages.profileInfo },
   ];
 

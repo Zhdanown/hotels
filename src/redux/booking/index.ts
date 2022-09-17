@@ -18,10 +18,16 @@ export const GET_BOOKING_DETAILS = "booking/GET_DETAILS";
 export const SET_BOOKING_DETAILS = "booking/SET_DETAILS";
 export const LOADING_BOOKING_DETAILS = "booking/LOADING_DETAILS";
 export const BOOKING_DETAILS_ERROR = "booking/GET_DETAILS_ERROR";
+
 export const CANCEL_RESERVATION = "booking/CANCEL";
 export const CANCELLATION_ERROR = "booking/CANCELLATION_ERROR";
 export const CANCELLING_RESERVATION = "booking/CANCELLING";
 export const CANCELLATION_SUCCESSFUL = "booking/CANCELLATION_SUCCESSFUL";
+
+export const GET_BOOKING_LIST = "booking/GET_BOOKING_LIST";
+export const SET_BOOKING_LIST = "booking/SET_BOOKING_LIST";
+export const SET_BOOKING_LIST_PENDING = "booking/SET_BOOKING_LIST_PENDING";
+export const SET_BOOKING_LIST_ERROR = "booking/SET_BOOKING_LIST_ERROR";
 
 const [arrival, departure] = (function () {
   const arrival = new Date();
@@ -57,10 +63,27 @@ const initialState = {
     error: null,
     isPending: false,
   },
+  bookingList: {
+    data: [],
+    isPending: false,
+    error: null,
+  },
 };
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
+    case SET_BOOKING_LIST:
+      draft.bookingList.data = action.payload;
+      return;
+
+    case SET_BOOKING_LIST_PENDING:
+      draft.bookingList.isPending = action.isPending;
+      return;
+
+    case SET_BOOKING_LIST_ERROR:
+      draft.bookingList.error = action.error;
+      return;
+
     case SET_BOOKING_DETAILS:
       draft.bookingDetails.data = action.payload;
       return;
@@ -154,6 +177,19 @@ function checkDeparture(departure: string, arrival: string) {
   }
 }
 
+export function loadBookingList() {
+  return { type: GET_BOOKING_LIST };
+}
+export function setBookingList(payload: any) {
+  return { type: SET_BOOKING_LIST, payload };
+}
+export function setBookingListPending(isPending: boolean) {
+  return { type: SET_BOOKING_LIST_PENDING, isPending };
+}
+export function setBookingListError(error: any) {
+  return { type: SET_BOOKING_LIST_ERROR, error };
+}
+
 export function resetParams() {
   return { type: RESET_PARAMS };
 }
@@ -222,3 +258,8 @@ export const getIsCancellationSuccessful = (state: StoreState) =>
 
 export const getReservation = (state: StoreState) =>
   state.reservation.bookingDetails;
+
+export const getBookingList = (state: StoreState) =>
+  state.reservation.bookingList;
+export const getBookingListCount = (state: StoreState) =>
+  state.reservation.bookingList.data?.length;

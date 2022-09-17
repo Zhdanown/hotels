@@ -1,5 +1,6 @@
 import api from "../../redux/api";
 
+// TODO refactor use fetcher
 export async function getUserInfo() {
   try {
     const response = await api.get("/api/v1/users/info");

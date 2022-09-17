@@ -1,15 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Loader, { LoaderWrapper } from "../components/Loader";
-import { useData } from "../hooks/useData";
-import { getConfigId } from "../redux/hotelConfig";
+import { getBookingList } from "../redux/booking";
 import { BookingCard, Booking } from "./BookingCard";
 
 export const MyBookings = () => {
-  const hotelId = useSelector(getConfigId);
-  const [bookingList, loading] = useData<Booking[]>(
-    `/api/v1/account-reservation/list/${hotelId}/`
-  );
+  const { data: bookingList, isPending: loading } = useSelector(getBookingList);
 
   if (loading) {
     return (
@@ -21,7 +17,7 @@ export const MyBookings = () => {
 
   return (
     <div>
-      {bookingList?.map(booking => (
+      {bookingList?.map((booking: Booking) => (
         <BookingCard key={booking.id} booking={booking} />
       ))}
     </div>
