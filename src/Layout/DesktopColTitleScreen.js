@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import LayoutContext from "./LayoutContext";
 import { Centered } from "../components/Centered";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { SvgIcon } from "../components/SvgIcon";
+import { Plug } from "../components/Plug";
 
 const fadeIn = keyframes`
   from {
@@ -16,7 +16,6 @@ const fadeIn = keyframes`
 `;
 
 const SPEED = 400; // ms
-const iconFontSize = "10rem";
 
 const TitleScreenContainer = styled(Centered)`
   background: white;
@@ -31,16 +30,6 @@ const TitleScreenContainer = styled(Centered)`
 
   font-size: 1.5rem;
   animation: 100ms ${fadeIn};
-`;
-
-const TitleContent = styled(Centered)`
-  width: 100%;
-  flex-direction: column;
-  ${p => p.desktop && "box-shadow: 0 0 10px 4px #ddd;"}
-`;
-
-const ScreenHeader = styled.span`
-  font-size: 2rem;
 `;
 
 export default function TitleScreen({ num }) {
@@ -65,8 +54,7 @@ export default function TitleScreen({ num }) {
     return (
       <TitleScreenContainer visible={!enabled}>
         <TitleContent desktop={isDesktop}>
-          <ScreenHeader>{title}</ScreenHeader>
-          {icon && <Icon component={icon} />}
+          <Plug title={title} icon={icon}/>
         </TitleContent>
       </TitleScreenContainer>
     );
@@ -75,6 +63,8 @@ export default function TitleScreen({ num }) {
   }
 }
 
-const Icon = ({ component }) => (
-  <SvgIcon component={component} style={{ fontSize: iconFontSize }} />
-);
+
+const TitleContent = styled(Centered)`
+  width: 100%;
+  ${p => p.desktop && "box-shadow: 0 0 10px 4px #ddd;"}
+`;
