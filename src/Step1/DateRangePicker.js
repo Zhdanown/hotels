@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createGlobalStyle } from "styled-components";
-import {
-  getPrimaryColor,
-  getArrivalDepartureTime,
-  getConfigId,
-} from "../redux/hotelConfig";
+import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
 import { changeParams, getParams } from "../redux/booking";
 import { pickTextColorBasedOnBgColor } from "../utils/colorHelpers";
 import { stringToDate } from "../utils/dateHelpers";
@@ -13,8 +9,8 @@ import { stringToDate } from "../utils/dateHelpers";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import { Russian } from "flatpickr/dist/l10n/ru";
-import { addMonths, format, isBefore, parse, sub } from "date-fns";
-import { useData } from "../hooks/useData";
+import { format, isBefore, parse, sub } from "date-fns";
+import { useAvailability } from "./Availability";
 
 const FlatpickrTheme = createGlobalStyle`
   .flatpickr-months .flatpickr-month, 
@@ -82,25 +78,6 @@ const FlatpickrTheme = createGlobalStyle`
   }
 `;
 
-function useAvailability(start) {
-  const hotelId = useSelector(getConfigId);
-  const arr = format(start, "yyyy-MM-dd");
-  const dep = format(addMonths(start, 3), "yyyy-MM-dd");
-
-  const [availabilityData, loading] = useData(
-    `/api/v1/color-availability/${hotelId}/?arrival=${arr}&departure=${dep}`
-  );
-
-  const [availability, setAvailaibleDates] = useState([]);
-
-  useEffect(() => {
-    availabilityData &&
-      setAvailaibleDates(dates => [...dates, ...availabilityData]);
-  }, [availabilityData]);
-
-  return [availability, loading];
-}
-
 function DateRangePicker() {
   const { arrival, departure } = useSelector(getParams);
   const [range, setRange] = useState({
@@ -116,7 +93,15 @@ function DateRangePicker() {
     "#000000"
   );
 
-  const [availability, loading] = useAvailability(range.start);
+  const [availability, loading, updateAvailabilityRange] = useAvailability(
+    range.start
+  );
+
+  const updateAvalability = (selected, dateStr, instance) => {
+    const { currentMonth, currentYear } = instance;
+    const startOfTheMonth = new Date(currentYear, currentMonth, 1);
+    updateAvailabilityRange(startOfTheMonth);
+  };
 
   useEffect(() => {
     if (!range) return;
@@ -179,6 +164,8 @@ function DateRangePicker() {
               dayElem.innerHTML += `<span class='availability-badge' style="background-color: ${color}"></span>`;
             }
           }}
+          onMonthChange={updateAvalability}
+          onYearChange={updateAvalability}
         />
       </div>
     </div>

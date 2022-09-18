@@ -20,7 +20,7 @@ export function useData<T>(url: string) {
       }
     };
     get();
-  }, []);
+  }, [url]);
 
   return [bookingList, isLoading] as const;
 }
