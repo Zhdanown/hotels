@@ -5,12 +5,13 @@ import produce from "immer";
 import Category, { ChildCategory } from "./Category";
 import { StyledRoom, RoomHeader } from "./styled";
 import { changeParams, getParams } from "../../redux/booking";
-import { getChildCategories, getMaxRoomsCount } from "../../redux/hotelConfig";
+import { getMaxAdults, getChildCategories, getMaxRoomsCount } from "../../redux/hotelConfig";
 
 function Room() {
   const params = useSelector(getParams);
   const childCategories = useSelector(getChildCategories);
   const maxRoomsCount = useSelector(getMaxRoomsCount);
+  const maxAdults = useSelector(getMaxAdults);
 
   const [childs, setChilds] = useState(childCategories);
   const [adults, setAdults] = useState(params.adults);
@@ -41,11 +42,16 @@ function Room() {
   return (
     <StyledRoom className="room">
       <RoomHeader></RoomHeader>
-      <Category name="Взрослые" initialValue={adults} onChange={setAdults} />
+      <Category
+        name="Взрослые"
+        initialValue={adults}
+        maxValue={maxAdults}
+        onChange={setAdults} />
       {childCategories.map((category, index) => (
         <ChildCategory
           key={category.id}
           category={category}
+          maxValue={category.max_childs}
           onChange={(count, code) => updateChilds(count, index)}
         ></ChildCategory>
       ))}

@@ -51,7 +51,7 @@ function Category({ initialValue, onChange, name, annotation, maxValue = Infinit
 export default Category;
 
 export function ChildCategory({ category, onChange }) {
-  const { code, name, from_age, to_age } = category;
+  const { code, name, from_age, to_age, max_childs } = category;
   const onChildrenCountChange = useCallback(
     count => {
       onChange(count, code);
@@ -64,6 +64,7 @@ export function ChildCategory({ category, onChange }) {
       name={name}
       annotation={`От ${from_age} до ${to_age}`}
       initialValue={0}
+      maxValue={max_childs}
       onChange={onChildrenCountChange}
     ></Category>
   );

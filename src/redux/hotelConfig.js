@@ -56,6 +56,7 @@ export const getConfigId = state => getConfig(state).id;
 export const getConfigNoteCode = state => getConfig(state).note;
 export const getIsBookingAllowed = state => getConfig(state).booking_available;
 export const getMaxRoomsCount = state => getConfig(state).max_rooms;
+export const getMaxAdults = state => getConfig(state).max_adults;
 export const getHotelPms = state => getConfig(state).pms_type;
 export const getConfigLoading = state => state.configLoading;
 export const getConfigError = state => state.configError;
