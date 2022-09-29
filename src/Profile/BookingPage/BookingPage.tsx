@@ -36,6 +36,15 @@ const GuestCounts = ({
   return <Counters items={items} />;
 };
 
+const RoomCount = ({
+  room_count
+}: {
+  room_count: number
+}) => {
+  const items = [{ label: "Количество комнат", count: room_count }];
+  return <Counters items={items} />;
+};
+
 const Counters = ({ items }: { items: { label: string; count: number }[] }) => (
   <div className="field is-grouped is-grouped-multiline mt-4">
     {items.map(({ label, count }) => (
@@ -102,6 +111,7 @@ const BookingDescription = ({
     arrival,
     departure,
     adults,
+    rooms_count,
     childs,
     accompanying_guests,
     price,
@@ -148,6 +158,7 @@ const BookingDescription = ({
       <RateInfo rate={rate} />
 
       <GuestCounts adults={adults} childs={getChildsCount(childs)} />
+      <RoomCount room_count={rooms_count} />
 
       {accompanying_guests.length > 0 && (
         <section className="mt-5 mb-5">
