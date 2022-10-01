@@ -1,8 +1,14 @@
 import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { ReactNode, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ButtonWithIcon } from "../components/Button";
+import Loader, { LoaderWrapper } from "../components/Loader";
 
 import { Attachment } from "../Step3/AccompanyingGuests/AddedGuests";
+import {
+  deleteExtraGuest,
+  getIsDeleteGuestPending,
+} from "../Step3/AccompanyingGuests/AddedGuests.saga";
 import { ExtraGuest } from "../Step3/AccompanyingGuests/ExtraGuest";
 import {
   GuestForm,
@@ -30,6 +36,9 @@ export const GuestList = ({
   children?: ReactNode;
   renderItem?: (item: Guest, node: ReactNode) => ReactNode;
 }) => {
+  const dispatch = useDispatch();
+  const isDeleting = useSelector(getIsDeleteGuestPending);
+
   const [guestForm, setGuestForm] = useState<GuestFormType>({ fields: null });
   const [view, setView] = useState<"list" | "form">("list");
 
@@ -62,6 +71,10 @@ export const GuestList = ({
     setView("form");
   };
 
+  const onDeleteGuest = (guest: Guest) => {
+    dispatch(deleteExtraGuest(guest.id));
+  };
+
   const renderForm = () =>
     guestForm.fields && (
       <>
@@ -80,7 +93,12 @@ export const GuestList = ({
     );
 
   const renderGuest = (guest: Guest) => (
-    <ExtraGuest key={guest.id} guest={guest} editGuest={onEditGuest} />
+    <ExtraGuest
+      key={guest.id}
+      guest={guest}
+      editGuest={onEditGuest}
+      deleteGuest={onDeleteGuest}
+    />
   );
 
   const renderList = () => (
@@ -90,7 +108,7 @@ export const GuestList = ({
           Добавить гостя
         </ButtonWithIcon>
       </div>
-      {guests.map(
+      {guests?.map(
         guest => renderItem?.(guest, renderGuest(guest)) || renderGuest(guest)
       )}
       {children}
@@ -101,6 +119,14 @@ export const GuestList = ({
     list: renderList,
     form: renderForm,
   };
+
+  if (isDeleting) {
+    return (
+      <LoaderWrapper style={{ width: "100%", marginTop: "2rem" }}>
+        <Loader />
+      </LoaderWrapper>
+    );
+  }
 
   return <div>{views[view]()}</div>;
 };

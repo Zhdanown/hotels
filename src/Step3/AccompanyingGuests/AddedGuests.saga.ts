@@ -2,11 +2,14 @@ import { call, put, select, takeEvery } from "redux-saga/effects";
 import { getUserGuest } from "../../Auth/authReducer";
 import { fetchUserInfo } from "../../Auth/sagas/authSaga";
 import api from "../../redux/api";
+import { getConfigId } from "../../redux/hotelConfig";
 import { Attachment } from "./AddedGuests";
 
 const CREATE_EXTRA_GUEST = "extra_guests/CREATE";
+const DELETE_EXTRA_GUEST = "extra_guests/DELETE";
 const UPDATE_EXTRA_GUEST = "extra_guests/UPDATE";
 const CREATE_GUEST_PENDING = "extra_guests/CREATE_PENDING";
+const DELETE_GUEST_PENDING = "extra_guests/DELETE_PENDING";
 
 export type ExtraGuest = {
   guestId: number | null;
@@ -19,6 +22,7 @@ export type ExtraGuest = {
 
 const initialState = {
   isCreateGuestPending: false,
+  isDeleteGuestPending: false,
 };
 
 export function extraGuestReducer(state = initialState, action: any) {
@@ -27,6 +31,11 @@ export function extraGuestReducer(state = initialState, action: any) {
       return {
         ...state,
         isCreateGuestPending: action.isPending,
+      };
+    case DELETE_GUEST_PENDING:
+      return {
+        ...state,
+        isDeleteGuestPending: action.isPending,
       };
     default:
       return state;
@@ -37,13 +46,18 @@ export function extraGuestReducer(state = initialState, action: any) {
 export const createExtraGuest = (payload: ExtraGuest) => {
   return { type: CREATE_EXTRA_GUEST, payload };
 };
-
 export const updateExtraGuest = (payload: ExtraGuest) => {
   return { type: UPDATE_EXTRA_GUEST, payload };
 };
-
 export const creatingGuestPending = (isPending: boolean) => {
   return { type: CREATE_GUEST_PENDING, isPending };
+};
+
+export const deleteExtraGuest = (guestId: number) => {
+  return { type: DELETE_EXTRA_GUEST, guestId };
+};
+export const deleteGuestPending = (isPending: boolean) => {
+  return { type: DELETE_GUEST_PENDING, isPending };
 };
 
 type GuestFileToDelete = {
@@ -55,12 +69,15 @@ type GuestFileToDelete = {
 type State = { guests: typeof initialState };
 export const getIsCreateGuestPending = (state: State) =>
   state.guests.isCreateGuestPending;
+export const getIsDeleteGuestPending = (state: State) =>
+  state.guests.isDeleteGuestPending;
 
 /**============ */
 
 export function* createGuestSaga() {
   yield takeEvery(CREATE_EXTRA_GUEST, createGuestWatcher);
   yield takeEvery(UPDATE_EXTRA_GUEST, updateGuestWatcher);
+  yield takeEvery(DELETE_EXTRA_GUEST, deleteGuestWatcher);
 }
 
 function* createGuestWatcher(action: {
@@ -70,7 +87,7 @@ function* createGuestWatcher(action: {
   const { files, userId, hotelId, firstName, lastName } = action.payload;
 
   yield put(creatingGuestPending(true));
-  
+
   const attachments = yield call(getAttachments, userId, files);
 
   const extraGuestBodyRequest = {
@@ -104,7 +121,6 @@ function* updateGuestWatcher(action: {
 
   yield put(creatingGuestPending(true));
 
-
   if (files.length) {
     // new files were selected -> delete old attachments
     const userGuest: { attachments: Attachment[] } = yield select(
@@ -123,7 +139,9 @@ function* updateGuestWatcher(action: {
     }
   }
 
-  const { id } = !files.length ? { id: null } : yield call(uploadFile, { userId, files });
+  const { id } = !files.length
+    ? { id: null }
+    : yield call(uploadFile, { userId, files });
 
   const extraGuestBodyRequest = {
     id: guestId,
@@ -140,7 +158,7 @@ function* updateGuestWatcher(action: {
 }
 
 type CreateGuestBodyRequest = {
-  id: null | number; 
+  id: null | number;
   email: null;
   first_name: string;
   last_name: string;
@@ -202,5 +220,20 @@ const deattachGuestFile = async (
     `/api/v1/users/delete-guest-attachments/${userId}/`,
     fileToDelete
   );
+  return response.data;
+};
+
+function* deleteGuestWatcher(action: { type: string; guestId: number }): any {
+  yield put(deleteGuestPending(true));
+  const hotelId = yield select(getConfigId);
+  yield call(deleteGuest, hotelId, action.guestId);
+  yield call(fetchUserInfo);
+  yield put(deleteGuestPending(false));
+}
+
+const deleteGuest = async (hotelId: number, guestId: number) => {
+  const response = await api.post(`/api/v1/users/delete-guest/${hotelId}/`, {
+    guest_id: guestId,
+  });
   return response.data;
 };

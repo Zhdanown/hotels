@@ -68,9 +68,10 @@ type ExtraGuestProps = {
   selected?: boolean;
   disabled?: boolean;
   editGuest: (guest: Guest) => void;
+  deleteGuest: (guest: Guest) => void;
 };
 
-export const ExtraGuest = ({ guest, disabled, editGuest }: ExtraGuestProps) => {
+export const ExtraGuest = ({ guest, disabled, editGuest, deleteGuest }: ExtraGuestProps) => {
   const { first_name, last_name, attachments } = guest;
   const label = `${first_name} ${last_name}`;
   return (
@@ -86,7 +87,7 @@ export const ExtraGuest = ({ guest, disabled, editGuest }: ExtraGuestProps) => {
             Редактировать
           </ActionButton>
           <ActionButton
-            onClick={() => editGuest(guest)}
+            onClick={() => deleteGuest(guest)}
             Icon={DeleteOutlined}
             disabled={disabled}
           >

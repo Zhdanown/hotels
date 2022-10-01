@@ -17,6 +17,7 @@ function whitelisted(url) {
     "/users/guest",
     "/users/attachments/upload/",
     "users/delete-guest-attachments",
+    "users/delete-guest",
     "account-reservation",
     "reservation-status",
     "color-availability"
