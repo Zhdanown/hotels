@@ -59,8 +59,6 @@ const ChipContainer = styled.div<{ disabled?: boolean }>`
 `;
 
 const FileName = styled.a<{ color: string }>`
-  margin: 10px 0;
-  padding: 4px 6px;
   color: ${p => p.color};
   font-size: 0.875rem;
   display: flex;

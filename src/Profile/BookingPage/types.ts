@@ -1,4 +1,4 @@
-import { Guest } from "../../Step3/AccompanyingGuests/AddedGuests";
+import { Guest } from "../GuestList";
 
 export type Payment = {
   amount: number;

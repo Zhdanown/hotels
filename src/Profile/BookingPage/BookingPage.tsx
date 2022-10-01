@@ -16,13 +16,49 @@ import {
   reservationDetailsPending,
   setReservationDetails,
 } from "../../redux/booking";
+import { AttachmentChip } from "../../Step3/AccompanyingGuests/Attachment";
 import { Dates } from "../Dates";
-import { GuestList } from "../ProfileTab";
+import { Guest } from "../GuestList";
 import { CancelReservation } from "./CancelReservation";
 import { PaymentSection } from "./PaymentSection";
 import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
 import { BookingDetails } from "./types";
+
+const GuestList = ({ guests }: { guests: Guest[] }) => {
+  return (
+    <table className="table is-striped is-fullwidth">
+      <tbody>
+        {guests?.map(guest => (
+          <tr key={guest.id}>
+            <td>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span>
+                    {guest.first_name} {guest.last_name}
+                  </span>
+                </div>
+                {guest.attachments.map(attachment => (
+                  <AttachmentChip
+                    key={attachment.id}
+                    fileName={attachment.file_name}
+                    url={attachment.file}
+                  />
+                ))}
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 const GuestCounts = ({
   adults,
