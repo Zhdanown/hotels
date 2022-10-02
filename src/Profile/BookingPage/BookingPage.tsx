@@ -84,7 +84,7 @@ const RoomCount = ({
 const Counters = ({ items }: { items: { label: string; count: number }[] }) => (
   <div className="field is-grouped is-grouped-multiline mt-4">
     {items.map(({ label, count }) => (
-      <div className="control">
+      <div className="control" key={label}>
         <div className="tags has-addons">
           <span className="tag is-light">{label}</span>
           <span className="tag is-dark">{count}</span>

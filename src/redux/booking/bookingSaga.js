@@ -57,7 +57,7 @@ function* getBookingList(action) {
 function* getBookingDetails(action) {
   yield put(reservationDetailsPending(true));
 
-  const url = `https://nlb.agex.host/api/v1/account-reservation/detail/${action.bookingId}/`;
+  const url = `/api/v1/account-reservation/detail/${action.bookingId}/`;
   const { data, err } = yield call(fetcher, url);
 
   if (data) {
