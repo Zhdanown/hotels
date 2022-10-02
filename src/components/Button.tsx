@@ -102,7 +102,7 @@ export const ButtonWithIcon = ({
   ...props
 }: ButtonProps & { Icon: typeof AntIcon }) => (
   <Button {...props}>
-    <Icon style={{ marginRight: "0.5rem" }} />
+    <Icon style={children ? { marginRight: "0.5rem" } : {}} />
     {children}
   </Button>
 );

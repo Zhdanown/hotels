@@ -6,6 +6,7 @@ import { ButtonWithIcon } from "../../components/Button";
 import { AttachmentChip } from "./Attachment";
 import AntIcon from "@ant-design/icons";
 import { Guest } from "../../Profile/GuestList";
+import useWindowWidth from "../../Layout/hooks/useWindowWidth";
 
 const StyledService = styled.article`
   padding: 1.5rem 1rem;
@@ -20,8 +21,9 @@ const StyledService = styled.article`
   }
 `;
 
-const HeaderSection = styled.section`
+const HeaderSection = styled.section<{ isCompact: boolean }>`
   display: flex;
+  flex-direction: ${p => (p.isCompact ? "column" : "row")};
   justify-content: space-between;
   align-items: flex-start;
   font-weight: bold;
@@ -41,6 +43,7 @@ const HeaderSection = styled.section`
 `;
 
 const Buttons = styled.div`
+  display: flex;
   button:not(:last-of-type) {
     margin-right: 0.5rem;
   }
@@ -71,27 +74,37 @@ type ExtraGuestProps = {
   deleteGuest: (guest: Guest) => void;
 };
 
-export const ExtraGuest = ({ guest, disabled, editGuest, deleteGuest }: ExtraGuestProps) => {
+export const ExtraGuest = ({
+  guest,
+  disabled,
+  editGuest,
+  deleteGuest,
+}: ExtraGuestProps) => {
   const { first_name, last_name, attachments } = guest;
   const label = `${first_name} ${last_name}`;
+
+  const [width] = useWindowWidth();
+  const isCompact = width ? width < 640 : false;
+  const hideButtonCaptions = width ? width < 400 : false;
+
   return (
     <StyledService>
-      <HeaderSection>
-        {label}
+      <HeaderSection isCompact={isCompact}>
+        <div>{label}</div>
         <Buttons>
           <ActionButton
             onClick={() => editGuest(guest)}
             Icon={EditOutlined}
             disabled={disabled}
           >
-            Редактировать
+            {!hideButtonCaptions && <span>Редактировать</span>}
           </ActionButton>
           <ActionButton
             onClick={() => deleteGuest(guest)}
             Icon={DeleteOutlined}
             disabled={disabled}
           >
-            Удалить
+            {!hideButtonCaptions && <span>Удалить</span>}
           </ActionButton>
         </Buttons>
       </HeaderSection>

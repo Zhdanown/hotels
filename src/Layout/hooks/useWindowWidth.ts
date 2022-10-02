@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 function useWindowWidth() {
-  const [windowWidth, setWidth] = useState(null);
-  const [windowHeight, setHeight] = useState(null);
+  const [windowWidth, setWidth] = useState<null | number>(null);
+  const [windowHeight, setHeight] = useState<null | number>(null);
 
   useEffect(() => {
     function onResize() {
@@ -15,9 +15,9 @@ function useWindowWidth() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const isDesktop = windowWidth > 1024;
+  const isDesktop = windowWidth ? windowWidth > 1024 : null;
 
-  return [windowWidth, windowHeight, isDesktop];
+  return [windowWidth, windowHeight, isDesktop] as const;
 }
 
 export default useWindowWidth;

@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { CheckOutlined } from "@ant-design/icons";
 import { Guest, GuestList } from "../../Profile/GuestList";
 import Checkbox from "../../components/Checkbox";
+import useWindowWidth from "../../Layout/hooks/useWindowWidth";
 
 export type Attachment = {
   id: number;
@@ -134,14 +135,14 @@ const SelectableGuestList = ({
         guests={guests}
         renderItem={(guest, item) => (
           <SelectableGuest>
-            <div style={{ marginTop: 18 }}>
+            <CheckboxContainer>
               <Checkbox
                 value={selectedGuests.includes(guest.id)}
                 label=""
                 disabled={false}
                 onChange={(selected: boolean) => onSelectGuest(selected, guest)}
               />
-            </div>
+            </CheckboxContainer>
             <div style={{ flex: 1 }}>{item}</div>
           </SelectableGuest>
         )}
@@ -151,6 +152,10 @@ const SelectableGuestList = ({
     </>
   );
 };
+
+const CheckboxContainer = styled.div`
+  margin-top: 18px;
+`;
 
 function getTotalGuestsCount(params: any) {
   const { adults, childs } = params;
