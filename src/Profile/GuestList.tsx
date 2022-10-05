@@ -1,8 +1,9 @@
 import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { ReactNode, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ButtonWithIcon } from "../components/Button";
+import Button, { ButtonWithIcon } from "../components/Button";
 import Loader, { LoaderWrapper } from "../components/Loader";
+import Modal from "../components/Modal";
 
 import { Attachment } from "../Step3/AccompanyingGuests/AddedGuests";
 import {
@@ -38,6 +39,7 @@ export const GuestList = ({
 }) => {
   const dispatch = useDispatch();
   const isDeleting = useSelector(getIsDeleteGuestPending);
+  const [itemToDelete, setToDelete] = useState<Guest | null>(null);
 
   const [guestForm, setGuestForm] = useState<GuestFormType>({ fields: null });
   const [view, setView] = useState<"list" | "form">("list");
@@ -71,8 +73,13 @@ export const GuestList = ({
     setView("form");
   };
 
-  const onDeleteGuest = (guest: Guest) => {
-    dispatch(deleteExtraGuest(guest.id));
+  const confirmGuestDeletion = (guest: Guest) => {
+    setToDelete(guest);
+  };
+
+  const deleteGuest = () => {
+    itemToDelete && dispatch(deleteExtraGuest(itemToDelete?.id));
+    setToDelete(null);
   };
 
   const renderForm = () =>
@@ -97,7 +104,7 @@ export const GuestList = ({
       key={guest.id}
       guest={guest}
       editGuest={onEditGuest}
-      deleteGuest={onDeleteGuest}
+      deleteGuest={confirmGuestDeletion}
     />
   );
 
@@ -128,5 +135,27 @@ export const GuestList = ({
     );
   }
 
-  return <div>{views[view]()}</div>;
+  return (
+    <>
+      <div>{views[view]()}</div>
+      <Modal open={itemToDelete} toggle={() => setToDelete(null)}>
+        <h3 className="is-size-4">Вы действительно хотите удалить гостя?</h3>
+        <section className="mt-5 mb-5">
+          <p>
+            {itemToDelete?.first_name} {itemToDelete?.last_name}
+          </p>
+        </section>
+        <section style={{ textAlign: "right" }}>
+          <Button
+            outline
+            style={{ marginRight: "1rem" }}
+            onClick={() => setToDelete(null)}
+          >
+            Отмена
+          </Button>
+          <Button onClick={deleteGuest}>Удалить</Button>
+        </section>
+      </Modal>
+    </>
+  );
 };

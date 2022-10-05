@@ -67,8 +67,6 @@ const ActionButton = ({
 
 type ExtraGuestProps = {
   guest: Guest;
-  onSelect?: (selected: boolean) => void;
-  selected?: boolean;
   disabled?: boolean;
   editGuest: (guest: Guest) => void;
   deleteGuest: (guest: Guest) => void;
