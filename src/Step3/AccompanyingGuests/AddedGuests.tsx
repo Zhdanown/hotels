@@ -41,6 +41,19 @@ export const AddedGuests = () => {
   );
 };
 
+export const VacantPlacesCounter = ({ vacantPlaces }: { vacantPlaces: number }) => (
+  <LimitWarning>
+    {vacantPlaces
+      ? `Осталось выбрать ${vacantPlaces} ${plural(
+          vacantPlaces,
+          "гостя",
+          "гостя",
+          "гостей"
+        )}`
+      : "Все гости выбраны"}
+  </LimitWarning>
+);
+
 const ListOfGuests = ({
   toggleGuestScreen,
 }: {
@@ -85,16 +98,7 @@ const ListOfGuests = ({
   const vacantPlaces = extraGuestsCount - selectedGuests.length;
   const renderConfirmButton = () => (
     <>
-      <LimitWarning>
-        {vacantPlaces
-          ? `Осталось выбрать ${vacantPlaces} ${plural(
-              vacantPlaces,
-              "гостя",
-              "гостя",
-              "гостей"
-            )}`
-          : "Все гости выбраны"}
-      </LimitWarning>
+      <VacantPlacesCounter vacantPlaces={vacantPlaces} />
       <div className="has-text-centered">
         <ButtonWithIcon
           Icon={CheckOutlined}
@@ -112,6 +116,7 @@ const ListOfGuests = ({
     <SelectableGuestList
       guests={userGuests}
       selectedGuests={selectedGuests}
+      vacantPlaces={vacantPlaces}
       renderConfirmButton={renderConfirmButton}
       onSelectGuest={onSelectGuest}
     />
@@ -121,11 +126,13 @@ const ListOfGuests = ({
 export const SelectableGuestList = ({
   guests,
   selectedGuests,
+  vacantPlaces,
   renderConfirmButton,
   onSelectGuest,
 }: {
   guests: Guest[];
   selectedGuests: number[];
+  vacantPlaces: number;
   renderConfirmButton: () => ReactNode;
   onSelectGuest: (selected: boolean, guest: Guest) => void;
 }) => {
@@ -139,7 +146,7 @@ export const SelectableGuestList = ({
               <Checkbox
                 value={selectedGuests.includes(guest.id)}
                 label=""
-                disabled={false}
+                disabled={!vacantPlaces ? !selectedGuests.includes(guest.id) : false}
                 onChange={(selected: boolean) => onSelectGuest(selected, guest)}
               />
             </CheckboxContainer>

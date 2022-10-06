@@ -16,7 +16,10 @@ import {
   reservationDetailsPending,
   setReservationDetails,
 } from "../../redux/booking";
-import { SelectableGuestList } from "../../Step3/AccompanyingGuests/AddedGuests";
+import {
+  SelectableGuestList,
+  VacantPlacesCounter,
+} from "../../Step3/AccompanyingGuests/AddedGuests";
 import {
   getIsUpdateGuestListPending,
   updateBookingGuestList,
@@ -144,18 +147,6 @@ const BookingDescription = ({
   const hasChanges = () =>
     selectedGuests.sort().join("") !== initiallySelectedGuests.sort().join("");
 
-  const onSelectGuest = (checked: boolean, guest: Guest) => {
-    const newSelected = checked
-      ? [...selectedGuests, guest.id]
-      : selectedGuests.filter(x => x !== guest.id);
-
-    // if (extraGuestsCount < newSelected.length) {
-    //   console.warn(`you can choose no more than ${extraGuestsCount} guests`);
-    //   return;
-    // }
-
-    setSelectedGuests(newSelected);
-  };
 
   const dispatch = useDispatch();
 
@@ -179,6 +170,38 @@ const BookingDescription = ({
       notify("При отмене бронирования произошла ошибка");
     }
   }, [cancellationError]);
+
+  const totalGuestCount = adults + getChildsCount(childs);
+
+  const vacantPlaces = totalGuestCount - selectedGuests.length;
+
+  const onSelectGuest = (checked: boolean, guest: Guest) => {
+    const newSelected = checked
+      ? [...selectedGuests, guest.id]
+      : selectedGuests.filter(x => x !== guest.id);
+
+    if (totalGuestCount < newSelected.length) {
+      console.warn(`you can choose no more than ${totalGuestCount} guests`);
+      return;
+    }
+
+    setSelectedGuests(newSelected);
+  };
+
+  const renderConfirmButton = () => (
+    <>
+      <VacantPlacesCounter vacantPlaces={vacantPlaces} />
+      {hasChanges() && (
+        <Button
+          block
+          onClick={submitGuestListChanges}
+          disabled={isUpdateGuestListPending}
+        >
+          Сохранить изменения
+        </Button>
+      )}
+    </>
+  );
 
   return (
     <article className="box mt-5">
@@ -207,17 +230,8 @@ const BookingDescription = ({
         <SelectableGuestList
           guests={userInfo.user_guests}
           selectedGuests={selectedGuests}
-          renderConfirmButton={() =>
-            hasChanges() && (
-              <Button
-                block
-                onClick={submitGuestListChanges}
-                disabled={isUpdateGuestListPending}
-              >
-                Сохранить изменения
-              </Button>
-            )
-          }
+          vacantPlaces={vacantPlaces}
+          renderConfirmButton={renderConfirmButton}
           onSelectGuest={onSelectGuest}
         />
       </div>
