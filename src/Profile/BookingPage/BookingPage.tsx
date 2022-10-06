@@ -32,25 +32,27 @@ import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
 import { BookingDetails } from "./types";
 
-const GuestCounts = ({
+const Counters = ({
   adults,
   childs,
+  rooms_count,
 }: {
   adults: number;
   childs: number;
+  rooms_count: number;
 }) => {
   const items = [{ label: "Взрослых", count: adults }];
   childs && items.push({ label: "Детей", count: childs });
-  return <Counters items={items} />;
+  items.push({ label: "Количество комнат", count: rooms_count });
+  return <CounterGroup items={items} />;
 };
 
-const RoomCount = ({ room_count }: { room_count: number }) => {
-  const items = [{ label: "Количество комнат", count: room_count }];
-  return <Counters items={items} />;
-};
-
-const Counters = ({ items }: { items: { label: string; count: number }[] }) => (
-  <div className="field is-grouped is-grouped-multiline mt-4">
+const CounterGroup = ({
+  items,
+}: {
+  items: { label: string; count: number }[];
+}) => (
+  <div className="field is-grouped is-grouped-multiline mt-4 mr-3">
     {items.map(({ label, count }) => (
       <div className="control" key={label}>
         <div className="tags has-addons">
@@ -147,7 +149,6 @@ const BookingDescription = ({
   const hasChanges = () =>
     selectedGuests.sort().join("") !== initiallySelectedGuests.sort().join("");
 
-
   const dispatch = useDispatch();
 
   const submitGuestListChanges = () => {
@@ -223,8 +224,11 @@ const BookingDescription = ({
       <RoomInfo room={room_type} />
       <RateInfo rate={rate} />
 
-      <GuestCounts adults={adults} childs={getChildsCount(childs)} />
-      <RoomCount room_count={rooms_count} />
+      <Counters
+        adults={adults}
+        childs={getChildsCount(childs)}
+        rooms_count={rooms_count}
+      />
 
       <div className="mt-6 mb-6">
         <SelectableGuestList
