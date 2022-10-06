@@ -1,7 +1,8 @@
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { getUserGuest } from "../../Auth/authReducer";
 import { fetchUserInfo } from "../../Auth/sagas/authSaga";
 import api from "../../redux/api";
+import { getBookingDetails } from "../../redux/booking/bookingSaga";
 import { getConfigId } from "../../redux/hotelConfig";
 import { Attachment } from "./AddedGuests";
 
@@ -10,6 +11,9 @@ const DELETE_EXTRA_GUEST = "extra_guests/DELETE";
 const UPDATE_EXTRA_GUEST = "extra_guests/UPDATE";
 const CREATE_GUEST_PENDING = "extra_guests/CREATE_PENDING";
 const DELETE_GUEST_PENDING = "extra_guests/DELETE_PENDING";
+
+const UPDATE_BOOKING_GUEST_LIST = "extra_guests/UPDATE_LIST_IN_BOOKING";
+const UPDATE_GUEST_LIST_PENDING = "extra_guests/UPDATE_GUEST_LIST_PENDING";
 
 export type ExtraGuest = {
   guestId: number | null;
@@ -23,6 +27,7 @@ export type ExtraGuest = {
 const initialState = {
   isCreateGuestPending: false,
   isDeleteGuestPending: false,
+  isUpdateGuestListPending: false,
 };
 
 export function extraGuestReducer(state = initialState, action: any) {
@@ -36,6 +41,11 @@ export function extraGuestReducer(state = initialState, action: any) {
       return {
         ...state,
         isDeleteGuestPending: action.isPending,
+      };
+    case UPDATE_GUEST_LIST_PENDING:
+      return {
+        ...state,
+        isUpdateGuestListPending: action.isPending,
       };
     default:
       return state;
@@ -60,6 +70,17 @@ export const deleteGuestPending = (isPending: boolean) => {
   return { type: DELETE_GUEST_PENDING, isPending };
 };
 
+export const updateBookingGuestList = (payload: {
+  bookingId: string;
+  guestIds: number[];
+}) => {
+  return { type: UPDATE_BOOKING_GUEST_LIST, payload };
+};
+
+export const updateBookingGuestListPending = (isPending: boolean) => {
+  return { type: UPDATE_GUEST_LIST_PENDING, isPending };
+};
+
 type GuestFileToDelete = {
   attachment_id: number;
   guest_id: number;
@@ -71,6 +92,8 @@ export const getIsCreateGuestPending = (state: State) =>
   state.guests.isCreateGuestPending;
 export const getIsDeleteGuestPending = (state: State) =>
   state.guests.isDeleteGuestPending;
+export const getIsUpdateGuestListPending = (state: State) =>
+  state.guests.isUpdateGuestListPending;
 
 /**============ */
 
@@ -78,6 +101,7 @@ export function* createGuestSaga() {
   yield takeEvery(CREATE_EXTRA_GUEST, createGuestWatcher);
   yield takeEvery(UPDATE_EXTRA_GUEST, updateGuestWatcher);
   yield takeEvery(DELETE_EXTRA_GUEST, deleteGuestWatcher);
+  yield takeEvery(UPDATE_BOOKING_GUEST_LIST, updateBookingGuestListWatcher);
 }
 
 function* createGuestWatcher(action: {
@@ -235,5 +259,28 @@ const deleteGuest = async (hotelId: number, guestId: number) => {
   const response = await api.post(`/api/v1/users/delete-guest/${hotelId}/`, {
     guest_id: guestId,
   });
+  return response.data;
+};
+
+function* updateBookingGuestListWatcher(action: {
+  type: string;
+  payload: { bookingId: string; guestIds: number[] };
+}) {
+  yield put(updateBookingGuestListPending(true));
+  const { bookingId, guestIds } = action.payload;
+
+  yield call(submitNewBookingGuestList, bookingId, guestIds);
+  yield all([call(fetchUserInfo), call(getBookingDetails, { bookingId })]);
+  yield put(updateBookingGuestListPending(false));
+}
+
+const submitNewBookingGuestList = async (
+  bookingId: string,
+  guestIds: number[]
+) => {
+  const response = await api.post(
+    `/api/v1/reservation/edit/guests/${bookingId}/`,
+    guestIds
+  );
   return response.data;
 };

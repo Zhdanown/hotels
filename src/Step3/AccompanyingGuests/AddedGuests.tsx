@@ -118,7 +118,7 @@ const ListOfGuests = ({
   );
 };
 
-const SelectableGuestList = ({
+export const SelectableGuestList = ({
   guests,
   selectedGuests,
   renderConfirmButton,
@@ -134,7 +134,7 @@ const SelectableGuestList = ({
       <GuestList
         guests={guests}
         renderItem={(guest, item) => (
-          <SelectableGuest>
+          <SelectableGuest key={guest.id}>
             <CheckboxContainer>
               <Checkbox
                 value={selectedGuests.includes(guest.id)}

@@ -20,7 +20,8 @@ function whitelisted(url) {
     "users/delete-guest",
     "account-reservation",
     "reservation-status",
-    "color-availability"
+    "color-availability",
+    "reservation/edit/guests",
   ];
   return list.some(listItem => url.includes(listItem));
 }

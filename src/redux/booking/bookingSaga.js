@@ -54,7 +54,7 @@ function* getBookingList(action) {
   yield put(setBookingListPending(false));
 }
 
-function* getBookingDetails(action) {
+export function* getBookingDetails(action) {
   yield put(reservationDetailsPending(true));
 
   const url = `/api/v1/account-reservation/detail/${action.bookingId}/`;

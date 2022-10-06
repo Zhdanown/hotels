@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import Accordion, { Icon } from "../../components/Accordion";
+import { getUser } from "../../Auth/authReducer";
 import Button, { BackButton } from "../../components/Button";
 import Loader, { LoaderWrapper } from "../../components/Loader";
 import { notify } from "../../components/Toast";
@@ -16,7 +16,11 @@ import {
   reservationDetailsPending,
   setReservationDetails,
 } from "../../redux/booking";
-import { AttachmentChip } from "../../Step3/AccompanyingGuests/Attachment";
+import { SelectableGuestList } from "../../Step3/AccompanyingGuests/AddedGuests";
+import {
+  getIsUpdateGuestListPending,
+  updateBookingGuestList,
+} from "../../Step3/AccompanyingGuests/AddedGuests.saga";
 import { Dates } from "../Dates";
 import { Guest } from "../GuestList";
 import { CancelReservation } from "./CancelReservation";
@@ -24,41 +28,6 @@ import { PaymentSection } from "./PaymentSection";
 import { RateInfo } from "./RateInfo";
 import { RoomInfo } from "./RoomInfo";
 import { BookingDetails } from "./types";
-
-const GuestList = ({ guests }: { guests: Guest[] }) => {
-  return (
-    <table className="table is-striped is-fullwidth">
-      <tbody>
-        {guests?.map(guest => (
-          <tr key={guest.id}>
-            <td>
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span>
-                    {guest.first_name} {guest.last_name}
-                  </span>
-                </div>
-                {guest.attachments.map(attachment => (
-                  <AttachmentChip
-                    key={attachment.id}
-                    fileName={attachment.file_name}
-                    url={attachment.file}
-                  />
-                ))}
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
 const GuestCounts = ({
   adults,
@@ -72,11 +41,7 @@ const GuestCounts = ({
   return <Counters items={items} />;
 };
 
-const RoomCount = ({
-  room_count
-}: {
-  room_count: number
-}) => {
+const RoomCount = ({ room_count }: { room_count: number }) => {
   const items = [{ label: "Количество комнат", count: room_count }];
   return <Counters items={items} />;
 };
@@ -99,7 +64,6 @@ export const BookingPage = () => {
   const history = useHistory();
 
   const { data, error, isPending } = useSelector(getReservation);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -157,9 +121,52 @@ const BookingDescription = ({
     status,
   } = details;
 
+  const { booking_id } = useParams<{ booking_id: string }>();
   const isCancelling = useSelector(getIsCancelling);
   const cancellationError = useSelector(getCancellationError);
   const cancellationSuccess = useSelector(getIsCancellationSuccessful);
+  const isUpdateGuestListPending = useSelector(getIsUpdateGuestListPending);
+
+  const userInfo = useSelector(getUser);
+  const initiallySelectedGuests = useMemo(
+    () => accompanying_guests.map(x => x.id),
+    [accompanying_guests]
+  );
+
+  const [selectedGuests, setSelectedGuests] = useState<number[]>([
+    ...initiallySelectedGuests,
+  ]);
+
+  useEffect(() => {
+    setSelectedGuests(initiallySelectedGuests);
+  }, [initiallySelectedGuests]);
+
+  const hasChanges = () =>
+    selectedGuests.sort().join("") !== initiallySelectedGuests.sort().join("");
+
+  const onSelectGuest = (checked: boolean, guest: Guest) => {
+    const newSelected = checked
+      ? [...selectedGuests, guest.id]
+      : selectedGuests.filter(x => x !== guest.id);
+
+    // if (extraGuestsCount < newSelected.length) {
+    //   console.warn(`you can choose no more than ${extraGuestsCount} guests`);
+    //   return;
+    // }
+
+    setSelectedGuests(newSelected);
+  };
+
+  const dispatch = useDispatch();
+
+  const submitGuestListChanges = () => {
+    dispatch(
+      updateBookingGuestList({
+        bookingId: booking_id,
+        guestIds: selectedGuests,
+      })
+    );
+  };
 
   useEffect(() => {
     if (cancellationSuccess) {
@@ -196,21 +203,24 @@ const BookingDescription = ({
       <GuestCounts adults={adults} childs={getChildsCount(childs)} />
       <RoomCount room_count={rooms_count} />
 
-      {accompanying_guests.length > 0 && (
-        <section className="mt-5 mb-5">
-          <Accordion
-            renderTitle={(toggle: () => void, isOpen: boolean) => (
-              <Button small outline onClick={toggle}>
-                Гости ({accompanying_guests.length})
-                <Icon open={isOpen} />
+      <div className="mt-6 mb-6">
+        <SelectableGuestList
+          guests={userInfo.user_guests}
+          selectedGuests={selectedGuests}
+          renderConfirmButton={() =>
+            hasChanges() && (
+              <Button
+                block
+                onClick={submitGuestListChanges}
+                disabled={isUpdateGuestListPending}
+              >
+                Сохранить изменения
               </Button>
-            )}
-            renderTitleAfter={null}
-          >
-            <GuestList guests={accompanying_guests} />
-          </Accordion>
-        </section>
-      )}
+            )
+          }
+          onSelectGuest={onSelectGuest}
+        />
+      </div>
 
       <div>
         {reservation_payments.map(payment => (
