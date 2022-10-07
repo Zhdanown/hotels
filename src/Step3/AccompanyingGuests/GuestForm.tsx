@@ -86,7 +86,6 @@ export const GuestForm = ({ initialValues, goBack }: GuestFormProps) => {
 
           const guest_ = {
             guestId: id || null,
-            hotelId: 1,
             userId,
             firstName: first_name,
             lastName: last_name,

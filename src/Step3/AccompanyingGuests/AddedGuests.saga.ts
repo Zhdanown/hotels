@@ -20,7 +20,6 @@ export type ExtraGuest = {
   firstName: string;
   lastName: string;
   userId: number;
-  hotelId: number;
   files: File[];
 };
 
@@ -108,7 +107,8 @@ function* createGuestWatcher(action: {
   type: string;
   payload: ExtraGuest;
 }): any {
-  const { files, userId, hotelId, firstName, lastName } = action.payload;
+  const { files, userId, firstName, lastName } = action.payload;
+  const hotelId = yield select(getConfigId);
 
   yield put(creatingGuestPending(true));
 
@@ -140,8 +140,8 @@ function* updateGuestWatcher(action: {
   type: string;
   payload: ExtraGuest;
 }): any {
-  const { files, userId, hotelId, firstName, lastName, guestId } =
-    action.payload;
+  const { files, userId, firstName, lastName, guestId } = action.payload;
+  const hotelId = yield select(getConfigId);
 
   yield put(creatingGuestPending(true));
 
