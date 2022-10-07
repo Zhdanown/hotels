@@ -60,6 +60,7 @@ function Room() {
         initialValue={roomCount}
         onChange={setRoomCount}
         maxValue={maxRoomsCount}
+        minValue={1}
       />
     </StyledRoom>
   );

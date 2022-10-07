@@ -17,11 +17,18 @@ const Sign = styled.button`
   color: ${props => props.color};
 `;
 
-function Category({ initialValue, onChange, name, annotation, maxValue = Infinity }) {
-  const [count, setCount] = useState(initialValue > maxValue ? maxValue : initialValue);
+function checkLimits (value, min, max) {
+  if (min > max) throw new Error('Incorrect value limits');
+  if (value > max) return max;
+  if (value < min) return min;
+  return value;
+}
+
+function Category({ initialValue, onChange, name, annotation, maxValue = Infinity, minValue = 0 }) {
+  const [count, setCount] = useState(checkLimits(initialValue, minValue, maxValue));
   const primaryColor = useSelector(getPrimaryColor);
 
-  const decrement = () => setCount(x => (x > 0 ? --x : x));
+  const decrement = () => setCount(x => (x > minValue ? --x : x));
   const increment = () => setCount(x => x < maxValue ? ++x : x);
 
   useEffect(() => {

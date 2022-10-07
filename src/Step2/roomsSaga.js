@@ -18,6 +18,7 @@ function* roomsSaga() {
   yield put(isLoadingRooms(true));
   const params = yield call(getRequestParams);
 
+  yield put(setFetchRoomsError(null));
   const [[rooms, roomError], [services, serviceError]] = yield all([
     call(fetchRooms, params),
     call(fetchServices, params),
