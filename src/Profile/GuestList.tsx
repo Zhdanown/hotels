@@ -26,6 +26,7 @@ export type Guest = {
   last_name: string;
   id: number;
   attachments: Attachment[];
+  email: string | null;
 };
 
 export const GuestList = ({
