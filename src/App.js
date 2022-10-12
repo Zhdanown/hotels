@@ -15,6 +15,7 @@ import { changeParams } from "./redux/booking";
 import { Toast } from "./components/Toast";
 import { Suspense } from "react";
 import HotelConfigLoader from "./HotelConfigLoader";
+import { OnLoginScreen } from "./Auth/OnLoginScreen";
 
 const Profile = React.lazy(() => import("./Profile/ProfileMain"));
 
@@ -42,6 +43,7 @@ function App() {
       <Route path="/:slug?">
         <HotelConfigLoader>
           <Routes />
+          <OnLoginScreen />
         </HotelConfigLoader>
         <Toast />
       </Route>

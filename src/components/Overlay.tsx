@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
 
@@ -6,7 +6,7 @@ import useNavbarHeight from "../Layout/hooks/useNavbarHeight";
 import { useSelector } from "react-redux";
 import { getPrimaryColor } from "../redux/hotelConfig";
 
-const StyledOverlay = styled.div`
+const StyledOverlay = styled.div<{ offsetTop: number }>`
   position: absolute;
   top: ${p => p.offsetTop}px;
   left: 0;
@@ -32,13 +32,19 @@ const CloseIcon = styled(CloseOutlined)`
   }
 `;
 
-function Overlay({ children, close }) {
+function Overlay({
+  children,
+  close,
+}: {
+  children: ReactNode;
+  close?: () => void;
+}) {
   const navbarHeight = useNavbarHeight();
   const color = useSelector(getPrimaryColor);
 
   return (
     <StyledOverlay offsetTop={navbarHeight}>
-      <CloseIcon onClick={close} color={color} />
+      {close && <CloseIcon onClick={close} color={color} />}
       {children}
     </StyledOverlay>
   );

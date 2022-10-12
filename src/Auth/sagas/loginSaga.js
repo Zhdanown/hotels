@@ -35,6 +35,8 @@ export default function* loginWatcher(action) {
   yield put(resetParams());
 
   yield put(loginPending(false));
+
+  yield call(redirectToMainPage)
 }
 
 export function* logoutWatcher(action) {
