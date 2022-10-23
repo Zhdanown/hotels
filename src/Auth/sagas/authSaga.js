@@ -24,7 +24,6 @@ export default function* authSaga() {
 export function* fetchUserInfo() {
   const token = yield call(CookieUtils.getToken);
   if (!token) {
-    yield call(redirectToLoginPage);
     return;
   }
 
