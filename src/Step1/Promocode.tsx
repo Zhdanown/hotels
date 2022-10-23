@@ -1,6 +1,8 @@
+import { EditOutlined } from "@ant-design/icons";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Button, { ButtonWithIcon } from "../components/Button";
 import { FormikInput } from "../components/Input";
 import { changeParams, getParams } from "../redux/booking";
 
@@ -25,24 +27,31 @@ const validate = (values: FormValues) => {
 export default function Promocode() {
   const params = useSelector(getParams);
   const dispatch = useDispatch();
+  const code = params.promo_code;
+
+  const [isInputShown, toggle] = useState(false);
 
   return (
-    <Formik
-      initialValues={{ promo_code: params.promo_code?.toUpperCase() }}
-      validate={validate}
-      onSubmit={values => {
-        const { promo_code } = values;
-        dispatch(changeParams({ promo_code }));
-      }}
-    >
-      <Form id="promocode_form">
-        <FormikInput
-          type="text"
-          label="Промокод"
-          name="promo_code"
-          style={{ marginBottom: "1rem" }}
-        />
-      </Form>
-    </Formik>
+    <div style={{ marginBottom: "2rem" }}>
+      {!isInputShown ? (
+        <Button small onClick={() => toggle(true)} style={{ maxWidth: '100%', overflowX: 'auto' }}>
+          {!code ? "Ввести промокод" : `Промокод: ${code}`}
+        </Button>
+      ) : (
+        <Formik
+          initialValues={{ promo_code: code?.toUpperCase() }}
+          validate={validate}
+          onSubmit={values => {
+            const { promo_code } = values;
+            dispatch(changeParams({ promo_code }));
+            toggle(false);
+          }}
+        >
+          <Form id="promocode_form">
+            <FormikInput type="text" label="Промокод" name="promo_code" autoFocus />
+          </Form>
+        </Formik>
+      )}
+    </div>
   );
 }
