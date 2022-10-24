@@ -31,7 +31,7 @@ function Input({ type, label, name, value, onChange, onBlur, mask, ...props }) {
         onBlur={onBlur}
         onChange={e => setInputValue(e.target.value)}
         {...(mask ? { mask } : {})}
-        {...props}
+        autoFocus={props.autoFocus}
       />
       <LabelContainer>
         <Label color={color} hasValue={value}>

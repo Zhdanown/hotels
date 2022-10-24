@@ -29,6 +29,8 @@ export const SET_BOOKING_LIST = "booking/SET_BOOKING_LIST";
 export const SET_BOOKING_LIST_PENDING = "booking/SET_BOOKING_LIST_PENDING";
 export const SET_BOOKING_LIST_ERROR = "booking/SET_BOOKING_LIST_ERROR";
 
+export const SET_PROMOCODE_ERROR = "booking/SET_PROMOCODE_VALIDITY";
+
 const [arrival, departure] = (function () {
   const arrival = new Date();
   const departure = addDays(new Date(), 1);
@@ -53,6 +55,7 @@ const initialState = {
   isBooking: false,
   response: null,
   error: null,
+  promocodeError: null,
   cancellation: {
     isPending: false,
     error: null,
@@ -110,6 +113,10 @@ const reducer = produce((draft, action) => {
 
     case CHANGE_PARAMS:
       handleChangeOfParams(draft, action);
+      return;
+
+    case SET_PROMOCODE_ERROR:
+      draft.promocodeError = action.error;
       return;
 
     case IS_BOOKING:
@@ -232,11 +239,17 @@ export function cancelReservation(bookingId: any) {
   return { type: CANCEL_RESERVATION, bookingId };
 }
 
+export function setPromocodeError(error: boolean) {
+  return { type: SET_PROMOCODE_ERROR, error }
+}
+
 interface StoreState {
   reservation: typeof initialState;
 }
 
 export const getParams = (state: StoreState) => state.reservation.params;
+export const getPromocodeError = (state: StoreState) => state.reservation.promocodeError;
+
 export const getBookingState = (state: StoreState) =>
   state.reservation.isBooking;
 export const getBookingResponse = (state: StoreState) =>

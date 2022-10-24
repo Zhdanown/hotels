@@ -51,7 +51,7 @@ export default SberForm;
 
 function FormShowingServerErrors({ user }: { user: Guest }) {
   const registerError = useSelector(getRegisterError);
-  const { setErrors, values, isValid, setFieldValue } =
+  const { setErrors, values, isValid } =
     useFormikContext<Guest>();
 
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ function FormShowingServerErrors({ user }: { user: Guest }) {
     const { first_name, last_name } = user || {};
 
     dispatch(changeParams({ guest: { ...values, first_name, last_name  } }));
-  }, [isValid, values, user, dispatch, setFieldValue]);
+  }, [isValid, values, user, dispatch]);
 
   useEffect(() => {
     if (registerError) {

@@ -1,10 +1,9 @@
-import { EditOutlined } from "@ant-design/icons";
-import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import { Form, Formik, useFormikContext } from "formik";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button, { ButtonWithIcon } from "../components/Button";
+import Button from "../components/Button";
 import { FormikInput } from "../components/Input";
-import { changeParams, getParams } from "../redux/booking";
+import { changeParams, getParams, setPromocodeError } from "../redux/booking";
 
 type FormValues = {
   promo_code: string;
@@ -31,10 +30,20 @@ export default function Promocode() {
 
   const [isInputShown, toggle] = useState(false);
 
+  const cancelPromocode = () => {
+    toggle(false);
+    dispatch(setPromocodeError(false));
+    dispatch(changeParams({ promo_code: "" }));
+  };
+
   return (
-    <div style={{ marginBottom: "2rem" }}>
+    <div style={{ marginBottom: "2rem", textAlign: "center" }}>
       {!isInputShown ? (
-        <Button small onClick={() => toggle(true)} style={{ maxWidth: '100%', overflowX: 'auto' }}>
+        <Button
+          small
+          onClick={() => toggle(true)}
+          style={{ maxWidth: "100%", overflowX: "auto" }}
+        >
           {!code ? "Ввести промокод" : `Промокод: ${code}`}
         </Button>
       ) : (
@@ -47,11 +56,38 @@ export default function Promocode() {
             toggle(false);
           }}
         >
-          <Form id="promocode_form">
-            <FormikInput type="text" label="Промокод" name="promo_code" autoFocus />
-          </Form>
+          <>
+            <Button small onClick={cancelPromocode}>
+              Без промокода
+            </Button>
+            <Form2 />
+          </>
         </Formik>
       )}
     </div>
   );
 }
+
+const Form2 = () => {
+  const { isValid, values } = useFormikContext<FormValues>();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setPromocodeError(!isValid));
+
+    if (!isValid) {
+      dispatch(changeParams({ promo_code: "" }));
+      return;
+    }
+
+    const { promo_code } = values;
+    dispatch(changeParams({ promo_code }));
+  }, [isValid, values, dispatch]);
+
+  return (
+    <Form id="promocode_form">
+      <FormikInput type="text" label="Промокод" name="promo_code" autoFocus />
+    </Form>
+  );
+};
