@@ -46,6 +46,7 @@ function ConfirmScreen() {
   const [modal, setModal] = useState(false);
 
   const [guest] = useState({
+    block: "",
     username: "",
     first_name: "",
     last_name: "",

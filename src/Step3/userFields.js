@@ -1,4 +1,5 @@
 const fields = [
+  { type: "text", label: "Блок", name: "block" },
   { type: "text", label: "Логин", name: "username" },
   { type: "text", label: "Имя", name: "first_name" },
   { type: "text", label: "Фамилия", name: "last_name" },

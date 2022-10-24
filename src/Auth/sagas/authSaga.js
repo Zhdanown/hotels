@@ -13,6 +13,8 @@ import { loginPending } from "../authReducer";
 import loginWatcher, { logoutWatcher } from "./loginSaga";
 import registerWatcher from "./registerSaga";
 import { getUserInfo } from "./authSagaHelpers";
+import { fetcher } from "../../redux/utils";
+import { SET_BLOCKS } from "../../redux/booking";
 
 export default function* authSaga() {
   yield takeEvery(START_SESSION, fetchUserInfo);
@@ -21,7 +23,14 @@ export default function* authSaga() {
   yield takeEvery(LOGOUT, logoutWatcher);
 }
 
+function* loadBlocksWatcher() {
+  const url = `https://nlb-develop.ru/api/v1/blocks/5/`;
+  const { data, err } = yield call(fetcher, url);
+  yield put({ type: SET_BLOCKS, payload: data })
+}
+
 export function* fetchUserInfo() {
+  yield call(loadBlocksWatcher)
   const token = yield call(CookieUtils.getToken);
   if (!token) {
     return;

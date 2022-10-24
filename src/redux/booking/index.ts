@@ -31,6 +31,9 @@ export const SET_BOOKING_LIST_ERROR = "booking/SET_BOOKING_LIST_ERROR";
 
 export const SET_PROMOCODE_ERROR = "booking/SET_PROMOCODE_VALIDITY";
 
+export const LOAD_BLOCKS = "crutch/LOAD_BLOCKS";
+export const SET_BLOCKS = "crutch/SET_BLOCKS";
+
 const [arrival, departure] = (function () {
   const arrival = new Date();
   const departure = addDays(new Date(), 1);
@@ -71,6 +74,7 @@ const initialState = {
     isPending: false,
     error: null,
   },
+  blocks: []
 };
 
 const reducer = produce((draft, action) => {
@@ -133,6 +137,10 @@ const reducer = produce((draft, action) => {
 
     case RESET_PARAMS:
       return initialState;
+
+    case SET_BLOCKS:
+      draft.blocks = action.payload;
+      return;
 
     default:
       return draft;
@@ -249,6 +257,8 @@ interface StoreState {
 
 export const getParams = (state: StoreState) => state.reservation.params;
 export const getPromocodeError = (state: StoreState) => state.reservation.promocodeError;
+
+export const getBlocks = (state: StoreState) => state.reservation.blocks;
 
 export const getBookingState = (state: StoreState) =>
   state.reservation.isBooking;

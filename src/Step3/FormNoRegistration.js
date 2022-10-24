@@ -11,7 +11,8 @@ import {
   mapServerErrors,
   phoneIsValid,
 } from "../utils/validationHelpers";
-import { changeParams } from "../redux/booking";
+import { changeParams, getBlocks } from "../redux/booking";
+import { Select } from "../components/Select";
 
 function filterByFieldName(fields) {
   return fields.filter(x => fieldNames.includes(x.name));
@@ -30,8 +31,10 @@ function FormNoRegistration({ guest, onSubmit }) {
       }}
       validate={validate}
       onSubmit={(values, { setSubmitting }) => {
-        dispatch(changeParams({ guest: values }));
-        const filledInValues = filterFalsyObjectKeys(values);
+        const { block, ...guest } = values
+
+        dispatch(changeParams({ guest, block }));
+        const filledInValues = filterFalsyObjectKeys(guest);
         onSubmit(filledInValues);
         setSubmitting(false);
       }}
@@ -45,7 +48,8 @@ export default FormNoRegistration;
 
 function FormShowingServerErrors() {
   const registerError = useSelector(getRegisterError);
-  const { setErrors } = useFormikContext();
+  const { setErrors, setFieldValue } = useFormikContext();
+  const blocks = useSelector(getBlocks);
 
   useEffect(() => {
     if (registerError) {
@@ -53,8 +57,13 @@ function FormShowingServerErrors() {
     }
   }, [registerError, setErrors]);
 
+  const onBlockChange = (id) => {
+    setFieldValue("block", id.id)
+  }
+
   return (
     <FormikForm id="no-registration">
+      <Select options={blocks} onChange={onBlockChange}/>
       {fields.map(field => (
         <FormikInput key={field.name} {...field} />
       ))}
