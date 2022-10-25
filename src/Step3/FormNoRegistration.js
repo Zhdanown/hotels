@@ -31,7 +31,7 @@ function FormNoRegistration({ guest, onSubmit }) {
       }}
       validate={validate}
       onSubmit={(values, { setSubmitting }) => {
-        const { block, ...guest } = values
+        const { block, ...guest } = values;
 
         dispatch(changeParams({ guest, block }));
         const filledInValues = filterFalsyObjectKeys(guest);
@@ -48,7 +48,7 @@ export default FormNoRegistration;
 
 function FormShowingServerErrors() {
   const registerError = useSelector(getRegisterError);
-  const { setErrors, setFieldValue } = useFormikContext();
+  const { setErrors, setFieldValue, values } = useFormikContext();
   const blocks = useSelector(getBlocks);
 
   useEffect(() => {
@@ -57,13 +57,17 @@ function FormShowingServerErrors() {
     }
   }, [registerError, setErrors]);
 
-  const onBlockChange = (id) => {
-    setFieldValue("block", id.id)
-  }
+  const onBlockChange = id => {
+    setFieldValue("block", id.id);
+  };
 
   return (
     <FormikForm id="no-registration">
-      <Select options={blocks} onChange={onBlockChange}/>
+      <div style={{ margin: "1.5rem 0" }}>
+        <Select options={blocks} value={values?.block} onChange={onBlockChange} label="Блок"/>
+        {/* <Input {...field} {...props} /> */}
+        {/* {touched && error ? <Error>{error}</Error> : null} */}
+      </div>
       {fields.map(field => (
         <FormikInput key={field.name} {...field} />
       ))}
