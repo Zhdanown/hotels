@@ -12,12 +12,14 @@ export const Select = ({
   options,
   value,
   onChange,
-  label
+  label,
+  onBlur
 }: {
   options: Option[];
   value?: string,
   onChange: (v?: Option) => void;
   label: string;
+  onBlur?: () => void;
 }) => {
   const color = useSelector(getPrimaryColor);
   options = [{ id: "", name: "Не выбрано" }, ...options];
@@ -32,6 +34,7 @@ export const Select = ({
       <StyledSelect
         onChange={({ target }) => onChange_(target.value)}
         color={color}
+        onBlur={onBlur}
       >
         {options.map((o, i) => (
           <option key={i} value={o.id}>

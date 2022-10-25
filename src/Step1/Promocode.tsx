@@ -2,11 +2,17 @@ import { Form, Formik, useFormikContext } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Button";
-import { FormikInput } from "../components/Input";
-import { changeParams, getParams, setPromocodeError } from "../redux/booking";
+import { FormikInput, FormikSelect } from "../components/Input";
+import {
+  changeParams,
+  getBlocks,
+  getParams,
+  setPromocodeError,
+} from "../redux/booking";
 
 type FormValues = {
   promo_code: string;
+  promo_block: string;
 };
 
 const validate = (values: FormValues) => {
@@ -18,6 +24,10 @@ const validate = (values: FormValues) => {
 
   if (!/^\d*$/.test(values.promo_code)) {
     errors.promo_code = "Промокод должен содержать только цифры";
+  }
+
+  if (!values.promo_block) {
+    errors.promo_block = "Это поле не может быть пустым"
   }
 
   return errors;
@@ -48,11 +58,11 @@ export default function Promocode() {
         </Button>
       ) : (
         <Formik
-          initialValues={{ promo_code: code?.toUpperCase() }}
+          initialValues={{ promo_code: code?.toUpperCase(), promo_block: "" }}
           validate={validate}
           onSubmit={values => {
-            const { promo_code } = values;
-            dispatch(changeParams({ promo_code }));
+            const { promo_code, promo_block } = values;
+            dispatch(changeParams({ promo_code, promo_block }));
             toggle(false);
           }}
         >
@@ -73,6 +83,8 @@ const Form2 = () => {
 
   const dispatch = useDispatch();
 
+  const blocks = useSelector(getBlocks);
+
   useEffect(() => {
     dispatch(setPromocodeError(!isValid));
 
@@ -81,13 +93,14 @@ const Form2 = () => {
       return;
     }
 
-    const { promo_code } = values;
-    dispatch(changeParams({ promo_code }));
+    const { promo_code, promo_block } = values;
+    dispatch(changeParams({ promo_code, promo_block }));
   }, [isValid, values, dispatch]);
 
   return (
     <Form id="promocode_form">
       <FormikInput type="text" label="Промокод" name="promo_code" autoFocus />
+      <FormikSelect name="promo_block" label="Территориальный банк" options={blocks} type="text" />
     </Form>
   );
 };

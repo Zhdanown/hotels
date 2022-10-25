@@ -5,6 +5,7 @@ import { useField } from "formik";
 
 import { getPrimaryColor } from "../redux/hotelConfig";
 import ReactInputMask from "react-input-mask";
+import { Select } from "./Select";
 
 function Input({ type, label, name, value, onChange, onBlur, mask, ...props }) {
   const color = useSelector(getPrimaryColor);
@@ -121,3 +122,22 @@ const Label = styled.label`
   }
   ${p => p.hasValue && `top: -2px;`}
 `;
+
+export const FormikSelect = ({ label, options, ...props }) => {
+  const [field, meta, helpers] = useField(props);
+  const { error, touched } = meta;
+  return (
+    <div style={{ margin: "1.5rem 0" }}>
+      <Select
+        {...field}
+        {...props}
+        options={options}
+        onChange={value => helpers.setValue(value.id)}
+        label={label}
+        onBlur={() => helpers.setTouched(true)}
+        
+      />
+      {touched && error ? <Error>{error}</Error> : null}
+    </div>
+  );
+};
