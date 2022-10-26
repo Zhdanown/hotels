@@ -30,9 +30,9 @@ function FormNoRegistration({ guest, onSubmit }) {
       }}
       validate={validate}
       onSubmit={(values, { setSubmitting }) => {
-        const { block, ...guest } = values;
+        const { ...guest } = values;
 
-        dispatch(changeParams({ guest, block }));
+        dispatch(changeParams({ guest }));
         const filledInValues = filterFalsyObjectKeys(guest);
         onSubmit(filledInValues);
         setSubmitting(false);
@@ -57,7 +57,6 @@ function FormShowingServerErrors() {
 
   return (
     <FormikForm id="no-registration">
-      
       {fields.map(field => (
         <FormikInput key={field.name} {...field} />
       ))}
