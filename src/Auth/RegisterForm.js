@@ -90,7 +90,7 @@ function FormWithServerErrors() {
         Зарегистрироваться
       </Button>
 
-      <AuthLink to="/login">Войти</AuthLink>
+      {/* <AuthLink to="/login">Войти</AuthLink> */}
     </Form>
   );
 }

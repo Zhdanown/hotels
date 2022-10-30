@@ -75,13 +75,14 @@ const SignOutBtn = ({ signOut, name, isSberEmploye }) => {
 };
 
 const SignInBtn = ({ url }) => {
-  const color = useSelector(getPrimaryColor);
+  // const color = useSelector(getPrimaryColor);
+  return null
 
-  return (
-    <NavbarLink to={`${url}/login`} color={color}>
-      Войти
-    </NavbarLink>
-  );
+  // return (
+  //   <NavbarLink to={`${url}/login`} color={color}>
+  //     Войти
+  //   </NavbarLink>
+  // );
 };
 
 const ArrowStyles = css`
