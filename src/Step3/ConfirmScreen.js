@@ -86,18 +86,18 @@ function ConfirmScreen() {
 
         {isSberEmploye && <SberForm guest={guest} onSubmit={onSubmit} />}
 
-        {/* {!user && (
+        {!user && (
           <>
             <label htmlFor="">Забронировать без регистрации</label>
             <FormNoRegistration guest={guest} onSubmit={onSubmit} />
-            <div>
+            {/* <div>
               <label htmlFor="">Или</label>
               <AuthLink style={{ marginTop: 0 }} to="/register">
                 зарегистрироваться
               </AuthLink>
-            </div>
+            </div> */}
           </>
-        )} */}
+        )}
 
         <CommentField />
 
