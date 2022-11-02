@@ -177,7 +177,7 @@ function CommentField() {
   return (
     <Input
       type="textarea"
-      label="Комментарий к заказу"
+      label="Укажите ФИО гостей"
       name="comment"
       value={comment}
       onChange={({ target }) => setComment(target.value)}

@@ -19,11 +19,13 @@ const validate = (values: FormValues) => {
   const errors: { [P in keyof FormValues]?: string } = {};
 
   if (values.promo_code?.length < 7) {
-    errors.promo_code = "Длина должна быть не менее 7 символов";
+    //errors.promo_code = "Длина должна быть не менее 7 символов";
+    errors.promo_code = ''
   }
 
   if (!/^\d*$/.test(values.promo_code)) {
-    errors.promo_code = "Промокод должен содержать только цифры";
+    // errors.promo_code = "Промокод должен содержать только цифры";
+    errors.promo_code = ''
   }
 
   if (!values.promo_block) {
