@@ -45,7 +45,7 @@ export default function Promocode() {
   const cancelPromocode = () => {
     toggle(false);
     dispatch(setPromocodeError(false));
-    dispatch(changeParams({ promo_code: "" }));
+    dispatch(changeParams({ promo_code: "", block: null }));
   };
 
   return (
@@ -91,7 +91,7 @@ const Form2 = () => {
     dispatch(setPromocodeError(!isValid));
 
     if (!isValid) {
-      dispatch(changeParams({ promo_code: "" }));
+      dispatch(changeParams({ promo_code: "", block: null }));
       return;
     }
 
