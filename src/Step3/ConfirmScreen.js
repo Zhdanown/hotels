@@ -7,7 +7,11 @@ import {
   getBookingResponse,
   getParams,
 } from "../redux/booking";
-import { getIsBookingAllowed, getRulesAndServicesFileReference, getUsersTerms } from "../redux/hotelConfig";
+import {
+  getIsBookingAllowed,
+  getRulesAndServicesFileReference,
+  getUsersTerms,
+} from "../redux/hotelConfig";
 import { changeParams } from "../redux/booking";
 import FormNoRegistration from "./FormNoRegistration";
 import PaymentOptions from "./PaymentOptions";
@@ -23,6 +27,9 @@ import { getIsSberEmploye, getUser } from "../Auth/authReducer";
 import { AuthLink } from "../Auth/components";
 import { AddedGuests } from "./AccompanyingGuests/AddedGuests";
 import SberForm from "./SberForm";
+import Overlay from "../components/Overlay";
+import { WarningForSberUser } from "../Auth/OnLoginScreen";
+import { createPortal } from "react-dom";
 
 const Conditions = styled(Centered)`
   margin: 1rem 0;
@@ -44,6 +51,7 @@ function ConfirmScreen() {
   const isSberEmploye = useSelector(getIsSberEmploye);
 
   const [modal, setModal] = useState(false);
+  const [disclaimerScreen, setDisclaimerScreen] = useState(false);
 
   const [guest] = useState({
     username: "",
@@ -59,6 +67,11 @@ function ConfirmScreen() {
   });
 
   const onSubmit = () => {
+    setDisclaimerScreen(true);
+  };
+
+  const onStupidModalClose = () => {
+    setDisclaimerScreen(false);
     setModal(true);
   };
 
@@ -73,6 +86,15 @@ function ConfirmScreen() {
   const goBack = () => {
     setStep(step => --step);
   };
+
+  if (disclaimerScreen) {
+    return createPortal(
+      <Overlay>
+        <WarningForSberUser close={onStupidModalClose} />
+      </Overlay>,
+      document.querySelector("body")
+    );
+  }
 
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
@@ -150,7 +172,9 @@ const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
           style={{ marginRight: ".5rem" }}
         />
         Я подтверждаю своё согласие с{" "}
-        <Link href={userTermsFile} target="_blank">Политикой в отношении обработки персональных данныx</Link>
+        <Link href={userTermsFile} target="_blank">
+          Политикой в отношении обработки персональных данныx
+        </Link>
       </label>
 
       <SubmitButton

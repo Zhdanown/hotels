@@ -34,7 +34,7 @@ const WarningMessage = styled.div`
   }
 `;
 
-const WarningForSberUser = ({ close }: { close: () => void }) => (
+export const WarningForSberUser = ({ close }: { close: () => void }) => (
   <Centered column>
     <WarningMessage className="p-3">
       <h3 className="has-text-centered">Внимание!</h3>
