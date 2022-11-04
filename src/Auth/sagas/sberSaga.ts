@@ -1,6 +1,4 @@
 import api from "../../redux/api";
-import { SET_BLOCKS } from "../../redux/booking";
-import { fetcher } from "../../redux/utils";
 
 export const signInWithSber = async (oneTimePass: string) => {
   try {
@@ -18,12 +16,3 @@ export const signInWithSber = async (oneTimePass: string) => {
     return { signInError: error };
   }
 };
-
-export const loadBlocksWatcher = () => async(dispatch: any, getState: any) => {
-  const state = getState()
-  const hotelId = state.hotelConfig.params.id;
-  const url = `/api/v1/blocks/${hotelId}/`;
-  const { data, err } = await fetcher(url) || { data: null, err: null };
-  dispatch({ type: SET_BLOCKS, payload: data })
-  
-}
