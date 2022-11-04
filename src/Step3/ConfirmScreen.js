@@ -87,15 +87,6 @@ function ConfirmScreen() {
     setStep(step => --step);
   };
 
-  if (disclaimerScreen) {
-    return createPortal(
-      <Overlay>
-        <WarningForSberUser close={onStupidModalClose} />
-      </Overlay>,
-      document.querySelector("body")
-    );
-  }
-
   if (isBooking) {
     return <h4>Идёт обработка заказа...</h4>;
   } else if (bookingResponse) {
@@ -142,6 +133,13 @@ function ConfirmScreen() {
         <Modal open={modal} toggle={setModal}>
           <PaymentOptions />
         </Modal>
+        {disclaimerScreen &&
+          createPortal(
+            <Overlay>
+              <WarningForSberUser close={onStupidModalClose} />
+            </Overlay>,
+            document.querySelector("body")
+          )}
       </div>
     );
   }
