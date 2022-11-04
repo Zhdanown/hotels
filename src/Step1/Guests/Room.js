@@ -46,6 +46,7 @@ function Room() {
         name="Взрослые"
         initialValue={adults}
         maxValue={maxAdults}
+        minValue={1}
         onChange={setAdults} />
       {childCategories.map((category, index) => (
         <ChildCategory
