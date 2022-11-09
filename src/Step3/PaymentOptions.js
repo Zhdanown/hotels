@@ -41,23 +41,23 @@ export default function PaymentOptions() {
 
   return (
     <>
-      <h1 className="is-size-4">Варианты бронирования</h1>
+      <h1 className="is-size-4">Варианты оплаты</h1>
       <div className="mt-3" style={{ display: "flex" }}>
         {
-        options.map(option => (
-          <>
-          {
-            nights==1 && option.payment_alias=='FIRST_NIGTH' ? (
-              null
-            ) : 
-            <Option key={option.id}>
-              <Button block onClick={() => onOptionSelect(option)}>
-                {option.payment_type}
-              </Button>
-            </Option>
-          }
-          </>
-        ))
+          options.map(option => (
+            <>
+              {
+                nights == 1 && option.payment_alias == 'FIRST_NIGTH' ? (
+                  null
+                ) :
+                  <Option key={option.id}>
+                    <Button block onClick={() => onOptionSelect(option)}>
+                      {option.payment_type}
+                    </Button>
+                  </Option>
+              }
+            </>
+          ))
         }
       </div>
     </>

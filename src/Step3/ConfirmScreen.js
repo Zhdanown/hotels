@@ -101,7 +101,7 @@ function ConfirmScreen() {
 
         {!user && (
           <>
-            <label htmlFor="">Забронировать без регистрации</label>
+            <label htmlFor="">Контактные данные</label>
             <FormNoRegistration guest={guest} onSubmit={onSubmit} />
             {/* <div>
               <label htmlFor="">Или</label>
@@ -120,7 +120,7 @@ function ConfirmScreen() {
 
         <Conditions column>
           <Link href={rulesAndServicesFile} target="_blank" underlined>
-            Правила и услуги
+            Правила и договор-оферта
           </Link>
         </Conditions>
 
