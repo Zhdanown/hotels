@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Router, Route, Switch, useRouteMatch } from "react-router-dom";
+import {
+  Router,
+  Route,
+  Switch,
+  useRouteMatch,
+  Redirect,
+} from "react-router-dom";
 
 import Layout from "./Layout/Layout";
 import Step1 from "./Step1/Step1";
@@ -47,9 +53,25 @@ function App() {
         </HotelConfigLoader>
         <Toast />
       </Route>
+      <RedirectOnNoSlug />
     </Router>
   );
 }
+
+const RedirectOnNoSlug = () => (
+  <Route
+    render={({ location }) =>
+      location.pathname === "/" && (
+        <Redirect
+          to={{
+            pathname: "/mriya",
+            state: { from: location },
+          }}
+        />
+      )
+    }
+  />
+);
 
 function Routes() {
   let { path } = useRouteMatch();
