@@ -66,7 +66,7 @@ export default function FullScreenMenu({ isOpen, close }) {
       document.body.style.overflow = 'hidden'
       return;
     }
-    
+
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'hidden'
@@ -79,7 +79,7 @@ export default function FullScreenMenu({ isOpen, close }) {
       <MenuWrapper open={isOpen}>
         <LinksWrapper column>
           {menuItems.map((item, i) => (
-            <Link key={i} color="white" href={item.reference}>
+            <Link key={i} color="white" href={item.reference} target="_blank">
               {item.name}
             </Link>
           ))}
