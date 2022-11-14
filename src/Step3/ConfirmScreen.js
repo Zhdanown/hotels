@@ -45,7 +45,6 @@ function useIsSberFormValid() {
 function ConfirmScreen() {
   const isBooking = useSelector(getBookingState);
   const bookingResponse = useSelector(getBookingResponse);
-  const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
   const user = useSelector(getUser);
 
   const isSberEmploye = useSelector(getIsSberEmploye);
@@ -118,12 +117,6 @@ function ConfirmScreen() {
           <AddedGuests />
         </div>
 
-        <Conditions column>
-          <Link href={rulesAndServicesFile} target="_blank" underlined>
-            Правила и договор-оферта
-          </Link>
-        </Conditions>
-
         <ConfirmReservationButton
           user={user}
           onSubmit={onSubmit}
@@ -152,6 +145,7 @@ const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
   const isBookingAllowed = useSelector(getIsBookingAllowed);
   const isSberFormValid = useIsSberFormValid();
   const userTermsFile = useSelector(getUsersTerms);
+  const rulesAndServicesFile = useSelector(getRulesAndServicesFileReference);
 
   /** скрывать кнопку блокирования во время тестирования */
   if (!isBookingAllowed) {
@@ -171,7 +165,10 @@ const ConfirmReservationButton = ({ user, onSubmit, isSberEmploye }) => {
         />
         Я подтверждаю своё согласие с{" "}
         <Link href={userTermsFile} target="_blank">
-          Политикой в отношении обработки персональных данныx
+          Политикой в отношении обработки персональных данныx.
+        </Link>
+        <Link href={rulesAndServicesFile} target="_blank">
+          &nbsp;С правилами и договором-оферты.
         </Link>
       </label>
 
