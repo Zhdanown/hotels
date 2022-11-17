@@ -35,13 +35,10 @@ function Guests() {
     dispatch(changeParams({ rooms: newRooms, rooms_count: newRooms.length }));
   }, [rooms, dispatch]);
 
-  const limit = rooms.length >= maxRoomsCount;
-
   const addRoom = () => {
     if (rooms.length >= maxRoomsCount) {
       return;
     }
-
     setRooms(rooms => [...rooms, getNewRoom()]);
   };
 
@@ -49,7 +46,7 @@ function Guests() {
     setRooms(rooms => rooms.filter(room => room.id !== roomId));
   };
 
-  const onChange = (roomId: string) => (newParams: RoomType["params"]) => {
+  const onChange = (roomId: string, newParams: RoomType["params"]) => {
     setRooms(rooms => {
       const newRooms = rooms.map(room => {
         if (room.id === roomId) {
@@ -65,8 +62,8 @@ function Guests() {
     <>
       {rooms.map(room => (
         <div key={room.id} className="has-text-centered">
-          <Room onChange={onChange(room.id)} />
-          {limit && (
+          <Room onChange={(params: RoomType["params"]) => onChange(room.id, params)} />
+          {rooms.length > 1 && (
             <ButtonWithIcon
               onClick={() => removeRoom(room.id)}
               small
@@ -79,7 +76,9 @@ function Guests() {
       ))}
 
       <div className="has-text-centered mt-5">
-        <Button small onClick={addRoom} disabled={limit}>
+        <Button small onClick={addRoom} 
+        disabled={rooms.length === maxRoomsCount}
+        >
           Добавить комнату
         </Button>
       </div>
