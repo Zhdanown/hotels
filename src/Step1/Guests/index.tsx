@@ -32,7 +32,7 @@ function Guests() {
 
   useEffect(() => {
     const newRooms = rooms.map(room => room.params);
-    dispatch(changeParams({ rooms: newRooms }));
+    dispatch(changeParams({ rooms: newRooms, rooms_count: newRooms.length }));
   }, [rooms, dispatch]);
 
   const limit = rooms.length >= maxRoomsCount;

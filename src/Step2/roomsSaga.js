@@ -63,21 +63,17 @@ async function fetchWithParams(params, url) {
     throw Error("Unexpected search parameters");
   }
 
-  const config = {
-    headers: {
-      ...getAuthHeaderIfTokenPresent(),
-    },
-    params: {
-      arrival,
-      departure,
-      promo_code,
-      promo_block,
-      rooms,
-    },
+  const bodyRequest = {
+    arrival,
+    departure,
+    promo_code,
+    promo_block,
+    rooms,
   };
 
   try {
-    const response = await api.get(url, config);
+
+    const response = await api.post(url, bodyRequest);
     return { payload: response.data };
   } catch (error) {
     if (error.response.status === 401) {
