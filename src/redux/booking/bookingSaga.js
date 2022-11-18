@@ -7,6 +7,8 @@ import {
   all,
 } from "redux-saga/effects";
 
+import { notify } from "../../components/Toast";
+
 import api, { getAuthHeaderIfTokenPresent } from "../api";
 import {
   CANCELLATION_ERROR,
@@ -42,7 +44,7 @@ export function* bookingSaga() {
 function* getBookingList(action) {
   yield put(setBookingListPending(true));
   const hotelId = yield select(getConfigId);
-  
+
   const url = `/api/v1/account-reservation/list/${hotelId}/`;
   const { data, err } = yield call(fetcher, url);
 
@@ -188,7 +190,12 @@ async function requestRoom(bookingParams) {
     });
     return { payload: response.data };
   } catch (error) {
+    if (error.response.status === 400) {
+      notify(error.response.data)
+      return { error };
+    }
     if (error.response.status === 401) {
+      notify(`Не удалось выполнить запрос\r\n Ошибка авторизации :(`);
       return {
         error: {
           response: {
@@ -199,6 +206,9 @@ async function requestRoom(bookingParams) {
         },
       };
     }
-    return { error };
+    else {
+      notify('При обработке запроса произошла непредвиденная ошибка!');
+      return { error };
+    }
   }
 }
