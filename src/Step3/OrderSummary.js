@@ -44,15 +44,34 @@ function OrderSummary() {
   const {
     arrival,
     departure,
-    adults,
-    childs,
     packages,
     rooms_count,
     room,
     rate,
+    rooms,
   } = orderInfo;
 
-  const childsCount = childs.reduce(
+  const adults = rooms?.reduce(
+    (adultsCount, room) => adultsCount + room.adults,
+    0
+  );
+  const childsFromAllRooms = rooms?.reduce((childs, room) => {
+    room.childs.forEach(({ code, count }) => {
+      if (code in childs) {
+        childs[code] += count;
+      } else {
+        childs[code] = count;
+      }
+    });
+
+    return childs;
+  }, {});
+
+  const childs = Object.entries(childsFromAllRooms).map(([code, count]) => {
+    return { code, count}
+  })
+
+  const childsCount = childs?.reduce(
     (count, category) => (count += category.count),
     0
   );
