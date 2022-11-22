@@ -67,9 +67,9 @@ function OrderSummary() {
     return childs;
   }, {});
 
-  const childs = Object.entries(childsFromAllRooms).map(([code, count]) => {
+  const childs = childsFromAllRooms ? Object.entries(childsFromAllRooms).map(([code, count]) => {
     return { code, count}
-  })
+  }) : null;
 
   const childsCount = childs?.reduce(
     (count, category) => (count += category.count),
