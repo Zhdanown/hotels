@@ -8,7 +8,6 @@ import HTMLParser from "../components/HTMLParser";
 import { getPaymentOptions, getPaymentForm } from "../redux/hotelConfig";
 import { submitOrder, getParams } from "../redux/booking";
 
-
 const Option = styled.div`
   flex-grow: 1;
 
@@ -19,67 +18,35 @@ const Option = styled.div`
 
 export default function PaymentOptions() {
   const options = useSelector(getPaymentOptions);
+  const paymentForm = useSelector(getPaymentForm);
   const orderInfo = useSelector(getParams);
 
   const nights = orderInfo.rate.nights.length;
 
   const dispatch = useDispatch();
 
-  const [selectedPayment, setPayment] = useState(null);
-
-  const bookRoom = payment => dispatch(submitOrder(payment));
-
-  const onOptionSelect = opt => {
+  const bookRoom = opt => {
     const payment = opt.is_not_pay ? null : opt;
-    setPayment({ payment });
+    dispatch(submitOrder(payment));
   };
-
-  if (selectedPayment)
-    return (
-      <PaymentForm selectedPayment={selectedPayment} bookRoom={bookRoom} />
-    );
 
   return (
     <>
-      <h1 className="is-size-4">Варианты оплаты</h1>
-      <div className="mt-3" style={{ display: "flex" }}>
-        {
-          options.map(option => (
+      <HTMLParser html={paymentForm.details} />
+      <h1 className="is-size-4 mb-3">Варианты оплаты</h1>
+        <Centered>
+          {options.map(option => (
             <>
-              {
-                nights == 1 && option.payment_alias == 'FIRST_NIGTH' ? (
-                  null
-                ) :
-                  <Option key={option.id}>
-                    <Button block onClick={() => onOptionSelect(option)}>
-                      {option.payment_type}
-                    </Button>
-                  </Option>
-              }
+              {nights === 1 && option.payment_alias === "FIRST_NIGTH" ? null : (
+                <Option key={option.id}>
+                  <Button block onClick={() => bookRoom(option)}>
+                    {option.payment_type}
+                  </Button>
+                </Option>
+              )}
             </>
-          ))
-        }
-      </div>
+          ))}
+        </Centered>
     </>
   );
-}
-
-function PaymentForm({ selectedPayment: { payment }, bookRoom }) {
-  const paymentForm = useSelector(getPaymentForm);
-
-  useEffect(() => {
-    if (!payment) bookRoom(payment);
-  }, [payment, bookRoom]);
-
-  if (!payment) return null;
-
-  if (payment)
-    return (
-      <>
-        <HTMLParser html={paymentForm.details} />
-        <Centered>
-          <Button onClick={() => bookRoom(payment)}>Перейти к оплате</Button>
-        </Centered>
-      </>
-    );
 }
