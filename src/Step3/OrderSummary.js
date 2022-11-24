@@ -6,6 +6,7 @@ import plural from "plural-ru";
 import { getParams } from "../redux/booking";
 import { getPrimaryColor } from "../redux/hotelConfig";
 import { hexToRgb, withOpacity } from "../utils/colorHelpers";
+import { useNightsAdjustedForRooms } from "../utils/useNights";
 
 const Row = styled.div`
   display: flex;
@@ -77,7 +78,7 @@ function OrderSummary() {
   );
 
   const ratePrice = rate ? rate.total_price : null;
-  const nights = rate ? rate.nights.length : null;
+  const nights = useNightsAdjustedForRooms(orderInfo.rate?.nights.length);
   const nightsPluralised = plural(nights, "ночь", "ночи", "ночей");
 
   const adultsPluralised = plural(adults, "взрослый", "взрослых", "взрослых");

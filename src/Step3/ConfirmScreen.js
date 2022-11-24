@@ -87,9 +87,19 @@ function ConfirmScreen() {
   };
 
   if (isBooking) {
-    return <h4>Идёт обработка заказа...</h4>;
+    return createPortal(
+      <Overlay>
+        <h4>Идёт обработка заказа...</h4>
+      </Overlay>,
+      document.querySelector("body")
+    );
   } else if (bookingResponse) {
-    return <h4>Выполняется переадресация...</h4>;
+    return createPortal(
+      <Overlay>
+        <h4>Выполняется переадресация...</h4>
+      </Overlay>,
+      document.querySelector("body")
+    );
   } else {
     return (
       <div>
