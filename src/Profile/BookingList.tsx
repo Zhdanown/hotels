@@ -21,9 +21,11 @@ export const MyBookings = () => {
 
   return (
     <div>
-      {bookingList?.map((booking: Booking) => (
-        <BookingCard key={booking.id} booking={booking} />
-      ))}
+      <div>
+        {bookingList?.map((booking: Booking) => (
+          <BookingCard key={booking.id} booking={booking} />
+        ))}
+      </div>
       {!bookingList?.length && !loading && (
         <div className="mt-6">
           <Plug title={"Здесь пока пусто"} icon={EmptyNew} />

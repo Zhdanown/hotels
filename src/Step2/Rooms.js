@@ -35,13 +35,15 @@ function Rooms({ onSelect, goBack }) {
     return (
       <div>
         <ColumnHeader goBack={goBack}>Выбор номера</ColumnHeader>
-        {rooms.map(room => (
-          <RoomShowcase
-            key={room.id}
-            room={room}
-            onSelect={onSelect}
-          ></RoomShowcase>
-        ))}
+        <div>
+          {rooms.map(room => (
+            <RoomShowcase
+              key={room.id}
+              room={room}
+              onSelect={onSelect}
+            ></RoomShowcase>
+          ))}
+        </div>
       </div>
     );
   }

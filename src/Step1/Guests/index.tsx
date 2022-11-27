@@ -60,24 +60,34 @@ function Guests() {
 
   return (
     <>
-      {rooms.map(room => (
-        <div key={room.id} className="has-text-centered">
-          <Room onChange={(params: RoomType["params"]) => onChange(room.id, params)} />
-          {rooms.length > 1 && (
-            <ButtonWithIcon
-              onClick={() => removeRoom(room.id)}
-              small
-              Icon={CloseOutlined}
-            >
-              Удалить
-            </ButtonWithIcon>
-          )}
-        </div>
-      ))}
+      <div>
+        {rooms.map(room => (
+          <div key={room.id} className="has-text-centered">
+            <Room
+              onChange={(params: RoomType["params"]) =>
+                onChange(room.id, params)
+              }
+            />
+            <div>
+              {rooms.length > 1 && (
+                <ButtonWithIcon
+                  onClick={() => removeRoom(room.id)}
+                  small
+                  Icon={CloseOutlined}
+                >
+                  Удалить
+                </ButtonWithIcon>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="has-text-centered mt-5">
-        <Button small onClick={addRoom} 
-        disabled={rooms.length === maxRoomsCount}
+        <Button
+          small
+          onClick={addRoom}
+          disabled={rooms.length === maxRoomsCount}
         >
           Добавить комнату
         </Button>

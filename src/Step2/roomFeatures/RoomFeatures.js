@@ -63,13 +63,15 @@ export function RoomFeatures({ features }) {
           </Title>
         )}
       >
-        {collapsibleFeatures.map(chunk => (
-          <Container key={chunk.id}>
-            {chunk.items.map(feature => (
-              <FeatureItem key={feature.code} feature={feature} />
-            ))}
-          </Container>
-        ))}
+        <div>
+          {collapsibleFeatures.map(chunk => (
+            <Container key={chunk.id}>
+              {chunk.items.map(feature => (
+                <FeatureItem key={feature.code} feature={feature} />
+              ))}
+            </Container>
+          ))}
+        </div>
       </Accordion>
     </div>
   );

@@ -81,7 +81,9 @@ export default function RoomShowcase({ room, onSelect }) {
               </span>
             )}
             {guest_limit && (
-              <span className="tag is-light">количество спальных мест: {guest_limit} </span>
+              <span className="tag is-light">
+                количество спальных мест: {guest_limit}{" "}
+              </span>
             )}
           </div>
           <RoomDetails style={{ paddingBottom: "1rem" }}>
@@ -112,9 +114,11 @@ function Rates({ rates, onRateSelect }) {
         </Button>
       )}
     >
-      {sortedRates.map(rate => (
-        <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
-      ))}
+      <div>
+        {sortedRates.map(rate => (
+          <RoomRate key={rate.rate_code} rate={rate} onClick={onRateSelect} />
+        ))}
+      </div>
     </Accordion>
   ) : (
     <RoomRate

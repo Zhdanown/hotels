@@ -116,9 +116,11 @@ export const GuestList = ({
           Добавить гостя
         </ButtonWithIcon>
       </div>
-      {guests?.map(
-        guest => renderItem?.(guest, renderGuest(guest)) || renderGuest(guest)
-      )}
+      <div>
+        {guests?.map(
+          guest => renderItem?.(guest, renderGuest(guest)) || renderGuest(guest)
+        )}
+      </div>
       {children}
     </>
   );

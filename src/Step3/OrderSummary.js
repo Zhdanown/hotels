@@ -42,15 +42,8 @@ function OrderSummary() {
 
   const color = useSelector(getPrimaryColor);
 
-  const {
-    arrival,
-    departure,
-    packages,
-    rooms_count,
-    room,
-    rate,
-    rooms,
-  } = orderInfo;
+  const { arrival, departure, packages, rooms_count, room, rate, rooms } =
+    orderInfo;
 
   const adults = rooms?.reduce(
     (adultsCount, room) => adultsCount + room.adults,
@@ -68,9 +61,11 @@ function OrderSummary() {
     return childs;
   }, {});
 
-  const childs = childsFromAllRooms ? Object.entries(childsFromAllRooms).map(([code, count]) => {
-    return { code, count}
-  }) : null;
+  const childs = childsFromAllRooms
+    ? Object.entries(childsFromAllRooms).map(([code, count]) => {
+        return { code, count };
+      })
+    : null;
 
   const childsCount = childs?.reduce(
     (count, category) => (count += category.count),
@@ -144,9 +139,11 @@ function SelectedExtraServices({ services }) {
   return (
     <>
       <SectionHeader color={color}>Дополнительные услуги</SectionHeader>
-      {services.map(service => (
-        <ExtraService key={service.id} {...service} />
-      ))}
+      <div>
+        {services.map(service => (
+          <ExtraService key={service.id} {...service} />
+        ))}
+      </div>
       <RowTotal label="Всего за услуги" sum={totalSumOfServices} />
     </>
   );

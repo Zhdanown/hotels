@@ -44,14 +44,16 @@ function Room({ onChange }) {
         minValue={1}
         onChange={setAdults}
       />
-      {childCategories.map((category, index) => (
-        <ChildCategory
-          key={category.id}
-          category={category}
-          maxValue={category.max_childs}
-          onChange={(count, code) => updateChilds(count, index)}
-        ></ChildCategory>
-      ))}
+      <div>
+        {childCategories.map((category, index) => (
+          <ChildCategory
+            key={category.id}
+            category={category}
+            maxValue={category.max_childs}
+            onChange={(count, code) => updateChilds(count, index)}
+          ></ChildCategory>
+        ))}
+      </div>
     </StyledRoom>
   );
 }
