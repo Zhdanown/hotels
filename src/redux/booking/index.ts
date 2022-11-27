@@ -6,6 +6,7 @@ import {
   calculateNightsCount,
   persistDateStringFormat,
   isNotLater,
+  dateToString,
 } from "../../utils/dateHelpers";
 
 export const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
@@ -36,7 +37,7 @@ export const LOAD_BLOCKS = "crutch/LOAD_BLOCKS";
 const [arrival, departure] = (function () {
   const arrival = new Date();
   const departure = addDays(new Date(), 1);
-  return [arrival.toLocaleDateString(), departure.toLocaleDateString()];
+  return [dateToString(arrival), dateToString(departure)];
 })();
 
 const initialState = {
@@ -172,15 +173,15 @@ function handleChangeOfParams(draft: typeof initialState, action: Action) {
 function checkIfArrivalIsExpired(dateString: string) {
   const date = stringToDate(dateString);
   if (+date < +new Date()) {
-    return new Date().toLocaleDateString();
+    return dateToString(new Date());
   } else {
-    return date.toLocaleDateString();
+    return dateToString(date);
   }
 }
 
 function checkDeparture(departure: string, arrival: string) {
   if (isNotLater(departure, arrival)) {
-    return addDays(new Date(), 1).toLocaleDateString();
+    return dateToString(addDays(new Date(), 1));
   } else {
     return departure;
   }

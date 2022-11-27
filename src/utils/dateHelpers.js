@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+
 export const stringToDate = string => {
   const [date, month, year] = parseString(string);
   return new Date(year, month - 1, date);
@@ -18,6 +20,10 @@ export const stringToDate = string => {
   }
 };
 
+export const dateToString = (date) => {
+  return format(date, 'dd.MM.yyyy')
+}
+
 export const calculateNightsCount = (date1, date2) => {
   const timeDiff = Math.abs(date1 - date2);
   const nightsCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
@@ -26,7 +32,7 @@ export const calculateNightsCount = (date1, date2) => {
 
 export const persistDateStringFormat = dateString => {
   const date = stringToDate(dateString);
-  return date.toLocaleDateString();
+  return dateToString(date);
 };
 
 export const isNotLater = (dateString1, dateString2) =>
