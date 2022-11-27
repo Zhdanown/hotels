@@ -9,6 +9,9 @@ export const stringToDate = string => {
     } else if (/^\d{4}-\d{2}-\d{2}$/.test(string)) {
       // yyyy-mm-dd
       return string.split("-").reverse();
+    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(string)) {
+      // dd\mm\yyyy
+      return string.split("/")
     } else {
       throw Error("unknown dateString format");
     }
