@@ -10,6 +10,7 @@ import HTMLParser from "../components/HTMLParser";
 import Button from "../components/Button";
 import { Card } from "../components/styled";
 import Accordion, { Icon, Title } from "../components/Accordion";
+import { FullscreenOutlined } from "@ant-design/icons";
 import {
   ImagePreviewContainerQueries,
   mediumMobileWidth,
@@ -52,6 +53,9 @@ export default function RoomShowcase({ room, onSelect }) {
         <ImageContainer>
           <img src={preview_img} alt="room preview" />
         </ImageContainer>
+        <FullScreenIconWrapper>
+          <FullScreenIcon />
+        </FullScreenIconWrapper>
         <TitleSection>
           <RoomName>{name}</RoomName>
 
@@ -146,6 +150,20 @@ const TitleSection = styled.div`
   text-align: center;
 `;
 
+const FullScreenIconWrapper = styled.div`
+  top: 0;
+  right: 0;
+  position: absolute;
+  background: radial-gradient(at 100% 0%, white 0%, transparent 73%);
+  padding: 1rem;
+`;
+
+const FullScreenIcon = styled(FullscreenOutlined)`
+  color: ${titleColor};
+  font-size: 2rem;
+  transition: transform 1s;
+`;
+
 const RoomName = styled.h4`
   font-size: 1.5rem;
   font-weight: 600;
@@ -168,9 +186,11 @@ const Content = styled.div`
 const ImagePreview = styled.div`
   position: relative;
   background: white;
+  cursor: pointer;
 
   &:hover {
-    ${TitleSection} {
+    ${FullScreenIcon} {
+      transform: scale(1.3);
     }
     img {
       transform: scale(1.1);
