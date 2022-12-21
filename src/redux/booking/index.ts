@@ -2,10 +2,11 @@ import { addDays } from "date-fns";
 import produce from "immer";
 import { BookingDetails } from "../../Profile/BookingPage/types";
 import {
-  stringToDate,
   calculateNightsCount,
-  persistDateStringFormat,
-  isNotLater,
+  dateToString,
+  stringToDate,
+  checkDeparture,
+  checkIfArrivalIsExpired,
 } from "../../utils/dateHelpers";
 
 export const CHANGE_PARAMS = "booking/CHANGE_PARAMS";
@@ -36,7 +37,7 @@ export const LOAD_BLOCKS = "crutch/LOAD_BLOCKS";
 const [arrival, departure] = (function () {
   const arrival = new Date();
   const departure = addDays(new Date(), 1);
-  return [arrival.toLocaleDateString(), departure.toLocaleDateString()];
+  return [dateToString(arrival), dateToString(departure)];
 })();
 
 const initialState = {
@@ -150,9 +151,6 @@ type Action = {
 
 function handleChangeOfParams(draft: typeof initialState, action: Action) {
   for (let key in action.payload) {
-    if (key === "arrival" || key === "departure") {
-      action.payload[key] = persistDateStringFormat(action.payload[key]);
-    }
     if (key === "arrival") {
       action.payload[key] = checkIfArrivalIsExpired(action.payload[key]);
     }
@@ -167,23 +165,6 @@ function handleChangeOfParams(draft: typeof initialState, action: Action) {
     }
   }
   draft.params = { ...draft.params, ...action.payload };
-}
-
-function checkIfArrivalIsExpired(dateString: string) {
-  const date = stringToDate(dateString);
-  if (+date < +new Date()) {
-    return new Date().toLocaleDateString();
-  } else {
-    return date.toLocaleDateString();
-  }
-}
-
-function checkDeparture(departure: string, arrival: string) {
-  if (isNotLater(departure, arrival)) {
-    return addDays(new Date(), 1).toLocaleDateString();
-  } else {
-    return departure;
-  }
 }
 
 export function loadBookingList() {

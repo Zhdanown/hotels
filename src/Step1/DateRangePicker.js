@@ -4,7 +4,7 @@ import { createGlobalStyle } from "styled-components";
 import { getPrimaryColor, getArrivalDepartureTime } from "../redux/hotelConfig";
 import { changeParams, getParams } from "../redux/booking";
 import { pickTextColorBasedOnBgColor } from "../utils/colorHelpers";
-import { stringToDate } from "../utils/dateHelpers";
+import { dateToString, stringToDate } from "../utils/dateHelpers";
 
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
@@ -107,11 +107,10 @@ function DateRangePicker() {
     if (!range) return;
 
     const { start, end } = range;
-
     dispatch(
       changeParams({
-        arrival: start.toLocaleDateString(),
-        departure: end.toLocaleDateString(),
+        arrival: dateToString(start),
+        departure: dateToString(end),
       })
     );
   }, [dispatch, range]);

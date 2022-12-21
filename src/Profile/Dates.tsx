@@ -1,10 +1,11 @@
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import React from "react";
 import useWindowWidth from "../Layout/hooks/useWindowWidth";
+import { stringToDate } from "../utils/dateHelpers";
 
 function parseDateString(dateString: string) {
-  const date = parse(dateString, "yyyy-MM-dd", new Date());
+  const date = stringToDate(dateString)
   return format(date, "d LLL yyyy", { locale: ru });
 }
 

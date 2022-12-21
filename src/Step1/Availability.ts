@@ -1,8 +1,9 @@
-import { addMonths, differenceInDays, format, subMonths } from "date-fns";
+import { addMonths, differenceInDays, subMonths } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useData } from "../hooks/useData";
 import { getConfigId } from "../redux/hotelConfig";
+import { dateToString } from "../utils/dateHelpers";
 
 type Availability = {
   availability: {
@@ -23,8 +24,8 @@ const getNewRange = (inputDate: Date, loadBefore = true) => {
     rangeStart = new Date();
   }
 
-  const arr = format(rangeStart, "yyyy-MM-dd");
-  const dep = format(addMonths(inputDate, 3), "yyyy-MM-dd");
+  const arr = dateToString(rangeStart);
+  const dep = dateToString(addMonths(inputDate, 3));
   return { arr, dep };
 };
 
